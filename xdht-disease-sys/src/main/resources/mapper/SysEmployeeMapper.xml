@@ -25,7 +25,7 @@
   </resultMap>
 
 
-  <select id="queryEmployeeList" resultMap="BaseResultMap" parameterType="java.util.List">
+  <select id="selectCompanyEmployeeList" resultMap="BaseResultMap" parameterType="com.xdht.disease.sys.vo.request.SysEmployeeCompanyRequest">
     select
     id
     office_id,
@@ -44,10 +44,19 @@
     update_by,
     update_date,
     remarks
-    from sys_employee
-    where office_id in
-    <foreach collection="list" index="index" item="item" open="(" separator="," close=")">
-      #{item}
-    </foreach>
+    from sys_employee se
+    <where>
+      status = '0'
+      <if test="companyOfficeId != null">
+        and office_id = #{companyOfficeId, jdbcType=BIGINT}
+      </if>
+      <if test="companyId != null">
+        and EXISTS ( select 1
+        from sys_company_office sco
+        where sco.id = se.office_id
+        and sco.status = '0'
+        and sco.company_id = #{companyId, jdbcType=BIGINT})
+      </if>
+    </where>
   </select>
 </mapper>
