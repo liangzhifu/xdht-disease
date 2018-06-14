@@ -35,6 +35,10 @@
             <groupId>org.springframework.cloud</groupId>
             <artifactId>spring-cloud-starter-eureka</artifactId>
         </dependency>
+        <dependency>
+            <groupId>org.springframework.cloud</groupId>
+            <artifactId>spring-cloud-starter-feign</artifactId>
+        </dependency>
         <!--阿里 Druid Spring Boot Starter依赖-->
         <dependency>
             <groupId>org.mybatis.spring.boot</groupId>

@@ -11,6 +11,7 @@ import com.xdht.disease.sys.service.RecordSceneService;
 import com.xdht.disease.sys.vo.request.RecordScenQuestionnaireRequest;
 import com.xdht.disease.sys.vo.request.RecordSceneInputRequest;
 import com.xdht.disease.sys.vo.request.RecordSceneRequest;
+import com.xdht.disease.sys.vo.response.RecordSceneDetailResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -85,6 +86,11 @@ public class RecordSceneServiceImpl extends AbstractService<RecordScene> impleme
     }
 
     @Override
+    public PageResult<RecordScene> queryListPage(RecordSceneRequest recordSceneRequest, Integer pageNum, Integer pageSize) {
+        return null;
+    }
+
+    @Override
     public RecordScene addRecordScene(RecordScene recordScene) {
             this.insertUseGeneratedKeys(recordScene);
             return recordScene;
@@ -129,5 +135,13 @@ public class RecordSceneServiceImpl extends AbstractService<RecordScene> impleme
         }*/
 
         return recordScene;
+    }
+
+    @Override
+    public RecordSceneDetailResponse queryRecordSceneDetail(Long id) {
+        RecordSceneDetailResponse recordSceneDetailResponse = new RecordSceneDetailResponse();
+        recordSceneDetailResponse.setRecordSceneMap(this.recordSceneMapper.selectRecordSceneMapByPrimaryKey(id));
+        recordSceneDetailResponse.setScenQuestionnaireMapList(this.recordScenQuestionnaireMapper.selectRecordScenQuestionnaireMapListByRecordScen(id));
+        return recordSceneDetailResponse;
     }
 }

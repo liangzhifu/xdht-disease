@@ -1,7 +1,11 @@
 package com.xdht.disease.sys.vo.request;
 
+import com.xdht.disease.sys.model.RecordPostPersonnel;
+import com.xdht.disease.sys.model.RecordPostPersonnelData;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
+
+import java.util.List;
 
 /**
  * Created by L on 2018/5/30.
@@ -9,16 +13,10 @@ import lombok.Data;
 @Data
 public class RecordPostPersonnelRequest {
 
-    @ApiModelProperty(value = "主键id")
-    private Long id;
+    @ApiModelProperty(value = "工作制度表信息")
+    private RecordPostPersonnel recordPostPersonnel;
 
-    @ApiModelProperty(value = "编号")
-    private String postPersonnelNo;
-
-    @ApiModelProperty(value = "核实情况")
-    private String verificationResult;
-
-    @ApiModelProperty(value = "状态（0正常 1删除）")
-    private String status;
+    @ApiModelProperty(value = "工作制度--部门表信息")
+    private List<RecordPostPersonnelData> recordPostPersonnelDataList;
 
 }

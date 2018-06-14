@@ -30,7 +30,7 @@ public class SysCompanyController {
     @Autowired
     private SysCompanyService sysCompanyService;
 
-    @RequestMapping(value = "/companyPage", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    @RequestMapping(value = "/pageList", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     @ApiOperation(value = "分页查询单位列表")
     public ResponseEntity<Result<PageResult<SysCompany>>> companyPage(@RequestBody SysCompanyRequest sysCompanyRequest) {
         return new ResponseEntity<>(Result.ok(sysCompanyService.querySysCompanyListPage(sysCompanyRequest)), HttpStatus.OK);

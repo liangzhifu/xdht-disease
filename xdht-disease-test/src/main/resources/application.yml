@@ -1,0 +1,21 @@
+spring:
+    profiles:
+        active: dev
+    application:
+        name: xdht-disease-test
+#Log
+logging:
+    file: xdht-disease-test.log
+    level:
+        org.springframework.web: DEBUG
+        org.springframework.jdbc: DEBUG
+        com.onepro.custom.mapper: DEBUG
+        com.xdht: DEBUG
+server:
+  port: 7072
+eureka:
+    client:
+      serviceUrl:
+        defaultZone: http://localhost:7061/eureka/
+    instance:
+      prefer-ip-address: true

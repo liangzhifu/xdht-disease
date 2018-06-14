@@ -10,6 +10,7 @@ import com.xdht.disease.sys.service.RecordSceneService;
 import com.xdht.disease.sys.vo.request.RecordScenQuestionnaireRequest;
 import com.xdht.disease.sys.vo.request.RecordSceneInputRequest;
 import com.xdht.disease.sys.vo.request.RecordSceneRequest;
+import com.xdht.disease.sys.vo.response.RecordSceneDetailResponse;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.log4j.Log4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -67,6 +68,11 @@ public class RecordSceneController {
         return new ResponseEntity<>(Result.ok(recordSceneService.updateRecordScene(recordScene)), HttpStatus.OK);
     }
 
-
+    @RequestMapping(value = "/detail/{id}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    @ApiOperation(value = "获取职业卫生现场调查记录表--详细内容")
+    public ResponseEntity<Result<RecordSceneDetailResponse>> getRecordSceneDetail(@PathVariable Long id) {
+        RecordSceneDetailResponse recordSceneDetailResponse = this.recordSceneService.queryRecordSceneDetail(id);
+        return new ResponseEntity<>(Result.ok(recordSceneDetailResponse), HttpStatus.OK);
+    }
 
 }
