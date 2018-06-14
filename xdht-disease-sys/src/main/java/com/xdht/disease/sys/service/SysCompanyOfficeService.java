@@ -2,6 +2,7 @@ package com.xdht.disease.sys.service;
 import com.xdht.disease.common.core.PageResult;
 import com.xdht.disease.sys.model.SysCompanyOffice;
 import com.xdht.disease.common.core.Service;
+import com.xdht.disease.sys.model.SysEmployee;
 import com.xdht.disease.sys.vo.request.SysCompanyOfficeRequest;
 import com.xdht.disease.sys.vo.response.SysCompanyOfficeResponse;
 
@@ -47,5 +48,10 @@ public interface SysCompanyOfficeService extends Service<SysCompanyOffice> {
      */
     public SysCompanyOfficeResponse updateCompanyOffice(SysCompanyOffice sysCompanyOffice);
 
-
+    /**
+     * 根据部门查询员工列表
+     * @param sysCompanyOffice 查询条件
+     * @return 返回结果
+     */
+    public List<SysEmployee> queryEmpleoyeeList(SysCompanyOffice sysCompanyOffice);
 }

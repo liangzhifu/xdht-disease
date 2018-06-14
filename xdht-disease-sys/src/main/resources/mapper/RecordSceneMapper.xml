@@ -19,4 +19,20 @@
     <result column="update_by" jdbcType="BIGINT" property="updateBy" />
     <result column="update_date" jdbcType="TIMESTAMP" property="updateDate" />
   </resultMap>
+
+  <select id="selectRecordSceneMapByPrimaryKey" resultType="java.util.HashMap" parameterType="java.lang.Long">
+    SELECT rs.`project_name` AS projectName,
+    rs.`record_no` AS recordNo,
+    rs.inquiry_type AS inquiryType,
+    rs.inquiry_person AS inquiryPerson,
+    rs.inquiry_date AS inquiryDate,
+    rs.inquiry_company AS inquiryCompany,
+    (SELECT sc.`company_name` FROM sys_company sc WHERE sc.id = rs.inquiry_company) AS inquiryCompanyName,
+    rs.inquiry_company_employee AS inquiryCompanyEmployee,
+    (SELECT se.`emp_name` FROM sys_employee se WHERE se.`id` = rs.inquiry_company_employee) AS inquiryCompanyEmployeeName
+    FROM record_scene rs
+    WHERE rs.`id` = #{id, jdbcType=BIGINT}
+    AND rs.status = 0
+  </select>
+
 </mapper>

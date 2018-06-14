@@ -7,7 +7,10 @@ import com.xdht.disease.common.core.Result;
 import com.xdht.disease.common.model.User;
 import com.xdht.disease.sys.model.RecordScene;
 import com.xdht.disease.sys.service.RecordSceneService;
+import com.xdht.disease.sys.vo.request.RecordScenQuestionnaireRequest;
+import com.xdht.disease.sys.vo.request.RecordSceneInputRequest;
 import com.xdht.disease.sys.vo.request.RecordSceneRequest;
+import com.xdht.disease.sys.vo.response.RecordSceneDetailResponse;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.log4j.Log4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,34 +34,45 @@ public class RecordSceneController {
 
     @RequestMapping(value = "/recordList", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     @ApiOperation(value = "查询列表")
-    public  ResponseEntity<Result<List<RecordScene>>> recordList(@CurrentUser User user, @RequestBody RecordSceneRequest recordSceneRequest) {
+    public  ResponseEntity<Result<List<RecordScene>>> recordList(@RequestBody RecordSceneRequest recordSceneRequest) {
         return new ResponseEntity<>(Result.ok(recordSceneService.queryList(recordSceneRequest)), HttpStatus.OK);
     }
 
     @RequestMapping(value = "/recordPage", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     @ApiOperation(value = "分页查询")
-    public ResponseEntity<Result<PageResult<RecordScene>>> recordPage(@CurrentUser User user, @RequestBody RecordSceneRequest recordSceneRequest,@RequestParam Integer pageNum,@RequestParam Integer pageSize) {
-        return new ResponseEntity<>(Result.ok(recordSceneService.queryListPage(recordSceneRequest,pageNum,pageSize)), HttpStatus.OK);
+    public ResponseEntity<Result<PageResult<RecordScene>>> recordPage(@RequestBody RecordSceneRequest recordSceneRequest) {
+        return new ResponseEntity<>(Result.ok(recordSceneService.queryListPage(recordSceneRequest)), HttpStatus.OK);
     }
 
     @RequestMapping(value = "/add", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     @ApiOperation(value = "添加")
-    public ResponseEntity<Result<RecordScene>> addRecordScene(@CurrentUser User user, @RequestBody RecordScene recordScene) {
+    public ResponseEntity<Result<RecordScene>> addRecordScene(@RequestBody RecordScene recordScene) {
         return new ResponseEntity<>(Result.ok(recordSceneService.addRecordScene(recordScene)), HttpStatus.OK);
+    }
+    @RequestMapping(value = "/addAll", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    @ApiOperation(value = "添加")
+    public ResponseEntity<Result<RecordScene>> addAll(@RequestBody RecordSceneInputRequest recordSceneInputRequest) {
+
+        return new ResponseEntity<>(Result.ok(recordSceneService.addAll(recordSceneInputRequest)), HttpStatus.OK);
     }
 
     @RequestMapping(value = "/delete", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     @ApiOperation(value = "删除")
-    public ResponseEntity<Result<RecordScene>> deleteRecordScene(@CurrentUser User user, @RequestParam Long id) {
+    public ResponseEntity<Result<RecordScene>> deleteRecordScene(@RequestParam Long id) {
         return new ResponseEntity<>(Result.ok(recordSceneService.deleteRecordScene(id)), HttpStatus.OK);
     }
 
     @RequestMapping(value = "/update", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     @ApiOperation(value = "修改")
-    public ResponseEntity<Result<RecordScene>> updateRecordScene(@CurrentUser User user, @RequestBody RecordScene recordScene) {
+    public ResponseEntity<Result<RecordScene>> updateRecordScene(@RequestBody RecordScene recordScene) {
         return new ResponseEntity<>(Result.ok(recordSceneService.updateRecordScene(recordScene)), HttpStatus.OK);
     }
 
-
+    @RequestMapping(value = "/detail/{id}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    @ApiOperation(value = "获取职业卫生现场调查记录表--详细内容")
+    public ResponseEntity<Result<RecordSceneDetailResponse>> getRecordSceneDetail(@PathVariable Long id) {
+        RecordSceneDetailResponse recordSceneDetailResponse = this.recordSceneService.queryRecordSceneDetail(id);
+        return new ResponseEntity<>(Result.ok(recordSceneDetailResponse), HttpStatus.OK);
+    }
 
 }

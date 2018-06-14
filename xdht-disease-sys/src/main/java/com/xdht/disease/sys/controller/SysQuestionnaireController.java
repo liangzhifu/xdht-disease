@@ -30,30 +30,35 @@ public class SysQuestionnaireController {
 
     @RequestMapping(value = "/recordList", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     @ApiOperation(value = "查询列表")
-    public  ResponseEntity<Result<List<SysQuestionnaire>>> recordList(@CurrentUser User user, @RequestBody SysQuestionnaireRequest sysQuestionnaireRequest) {
+    public  ResponseEntity<Result<List<SysQuestionnaire>>> recordList(@RequestBody SysQuestionnaireRequest sysQuestionnaireRequest) {
         return new ResponseEntity<>(Result.ok(sysQuestionnaireService.queryList(sysQuestionnaireRequest)), HttpStatus.OK);
+    }
+    @RequestMapping(value = "/listAll", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    @ApiOperation(value = "查询列表")
+    public  ResponseEntity<Result<List<SysQuestionnaire>>> listAll() {
+        return new ResponseEntity<>(Result.ok(sysQuestionnaireService.queryListAll()), HttpStatus.OK);
     }
     @RequestMapping(value = "/recordPage", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     @ApiOperation(value = "分页查询")
-    public ResponseEntity<Result<PageResult<SysQuestionnaire>>> recordPage(@CurrentUser User user, @RequestBody SysQuestionnaireRequest sysQuestionnaireRequest, @RequestParam Integer pageNum, @RequestParam Integer pageSize) {
+    public ResponseEntity<Result<PageResult<SysQuestionnaire>>> recordPage(@RequestBody SysQuestionnaireRequest sysQuestionnaireRequest, @RequestParam Integer pageNum, @RequestParam Integer pageSize) {
         return new ResponseEntity<>(Result.ok(sysQuestionnaireService.queryListPage(sysQuestionnaireRequest,pageNum,pageSize)), HttpStatus.OK);
     }
 
     @RequestMapping(value = "/add", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     @ApiOperation(value = "添加")
-    public ResponseEntity<Result<SysQuestionnaire>> add(@CurrentUser User user, @RequestBody SysQuestionnaire sysQuestionnaire) {
+    public ResponseEntity<Result<SysQuestionnaire>> add(@RequestBody SysQuestionnaire sysQuestionnaire) {
         return new ResponseEntity<>(Result.ok(sysQuestionnaireService.add(sysQuestionnaire)), HttpStatus.OK);
     }
 
     @RequestMapping(value = "/delete", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     @ApiOperation(value = "删除")
-    public ResponseEntity<Result<SysQuestionnaire>> delete(@CurrentUser User user, @RequestParam Long id) {
+    public ResponseEntity<Result<SysQuestionnaire>> delete(@RequestParam Long id) {
         return new ResponseEntity<>(Result.ok(sysQuestionnaireService.delete(id)), HttpStatus.OK);
     }
 
     @RequestMapping(value = "/update", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     @ApiOperation(value = "修改")
-    public ResponseEntity<Result<SysQuestionnaire>> update(@CurrentUser User user, @RequestBody SysQuestionnaire sysQuestionnaire) {
+    public ResponseEntity<Result<SysQuestionnaire>> update(@RequestBody SysQuestionnaire sysQuestionnaire) {
         return new ResponseEntity<>(Result.ok(sysQuestionnaireService.update(sysQuestionnaire)), HttpStatus.OK);
     }
 

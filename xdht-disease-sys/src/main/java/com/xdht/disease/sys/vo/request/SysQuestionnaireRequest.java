@@ -12,7 +12,7 @@ public class SysQuestionnaireRequest {
     @ApiModelProperty(value = "主键id")
     private Long id;
 
-    @ApiModelProperty(value = "岗位名称")
+    @ApiModelProperty(value = "调查表名称")
     private String questionnaireName;
 
     @ApiModelProperty(value = "状态（0正常 1删除）")

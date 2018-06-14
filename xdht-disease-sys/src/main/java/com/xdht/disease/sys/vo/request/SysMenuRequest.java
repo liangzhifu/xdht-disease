@@ -13,7 +13,7 @@ public class SysMenuRequest {
     private String menuName;
 
     @ApiModelProperty(value = "分页数")
-    private Integer  pageNum;
+    private Integer  pageNumber;
 
     @ApiModelProperty(value = "每页数量")
     private Integer pageSize;

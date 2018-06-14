@@ -51,15 +51,16 @@ public class SysQuestionnaireServiceImpl extends AbstractService<SysQuestionnair
         }
         PageHelper.startPage(pageNum, pageSize);
         List<SysQuestionnaire> dataList = this.sysQuestionnaireMapper.selectByCondition(condition);
+        Integer count = this.sysQuestionnaireMapper.selectCountByCondition(condition);
         PageResult<SysQuestionnaire> pageList = new  PageResult<SysQuestionnaire>();
-        pageList.setTotal(dataList.size());
+        pageList.setTotal(count);
         pageList.setDataList(dataList);
         return pageList;
     }
 
     @Override
     public SysQuestionnaire add(SysQuestionnaire sysQuestionnaire) {
-        this.sysQuestionnaireMapper.insertUseGeneratedKeys(sysQuestionnaire);
+        this.insertUseGeneratedKeys(sysQuestionnaire);
         return sysQuestionnaire;
     }
 
@@ -75,5 +76,10 @@ public class SysQuestionnaireServiceImpl extends AbstractService<SysQuestionnair
     public SysQuestionnaire update(SysQuestionnaire sysQuestionnaire) {
         this.sysQuestionnaireMapper.updateByPrimaryKeySelective(sysQuestionnaire);
         return sysQuestionnaire;
+    }
+
+    @Override
+    public List<SysQuestionnaire> queryListAll() {
+        return this.sysQuestionnaireMapper.selectAll();
     }
 }

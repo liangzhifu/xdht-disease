@@ -1,9 +1,8 @@
 package com.xdht.disease.sys.controller;
 
-import com.xdht.disease.common.authorization.annotation.CurrentUser;
+import com.xdht.disease.common.authorization.annotation.Authorization;
 import com.xdht.disease.common.core.PageResult;
 import com.xdht.disease.common.core.Result;
-import com.xdht.disease.common.model.User;
 import com.xdht.disease.sys.model.SysRole;
 import com.xdht.disease.sys.service.SysRoleService;
 import com.xdht.disease.sys.vo.request.SysRoleRequest;
@@ -31,32 +30,41 @@ public class SysRoleController {
 
     @RequestMapping(value = "/rolePage", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     @ApiOperation(value = "分页查询角色列表")
-    public ResponseEntity<Result<PageResult<SysRoleResponse>>> rolePage(@CurrentUser User user, @RequestBody SysRoleRequest sysRoleRequest) {
+    public ResponseEntity<Result<PageResult<SysRole>>> rolePage(@RequestBody SysRoleRequest sysRoleRequest) {
         return new ResponseEntity<>(Result.ok(sysRoleService.querySysRolePage(sysRoleRequest)), HttpStatus.OK);
     }
     @RequestMapping(value = "/roleList", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     @ApiOperation(value = "查询角色列表")
-    public ResponseEntity<Result<List<SysRoleResponse>>> roleList(@CurrentUser User user, @RequestBody SysRole sysRole) {
+    public ResponseEntity<Result<List<SysRole>>> roleList(@RequestBody SysRole sysRole) {
         return new ResponseEntity<>(Result.ok(sysRoleService.querySysRoleList(sysRole)), HttpStatus.OK);
     }
 
     @RequestMapping(value = "/add", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     @ApiOperation(value = "添加角色")
-    public ResponseEntity<Result<SysRoleResponse>> addRole(@CurrentUser User user, @RequestBody SysRole sysRole) {
+    @Authorization
+    public ResponseEntity<Result<SysRoleResponse>> addRole(@RequestBody SysRole sysRole) {
         return new ResponseEntity<>(Result.ok(sysRoleService.addRole(sysRole)), HttpStatus.OK);
     }
 
-    @RequestMapping(value = "/delete", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    @RequestMapping(value = "/delete", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     @ApiOperation(value = "删除角色")
-    public ResponseEntity<Result<SysRoleResponse>> deleteRole(@CurrentUser User user, @RequestParam Long id) {
+    @Authorization
+    public ResponseEntity<Result<SysRoleResponse>> deleteRole(@RequestParam Long id) {
         return new ResponseEntity<>(Result.ok(sysRoleService.deleteRole(id)), HttpStatus.OK);
     }
 
     @RequestMapping(value = "/update", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     @ApiOperation(value = "修改角色")
-    public ResponseEntity<Result<SysRoleResponse>> updateRole(@CurrentUser User user, @RequestBody SysRole sysRole) {
+    @Authorization
+    public ResponseEntity<Result<SysRoleResponse>> updateRole(@RequestBody SysRole sysRole) {
         return new ResponseEntity<>(Result.ok(sysRoleService.updateRole(sysRole)), HttpStatus.OK);
     }
 
+    @RequestMapping(value = "/detail/{id}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    @ApiOperation(value = "获取角色信息")
+    @Authorization
+    public ResponseEntity<Result<SysRole>> getRoleDetail(@PathVariable Long id) {
+        return new ResponseEntity<>(Result.ok(sysRoleService.getRoleDetail(id)), HttpStatus.OK);
+    }
 
 }

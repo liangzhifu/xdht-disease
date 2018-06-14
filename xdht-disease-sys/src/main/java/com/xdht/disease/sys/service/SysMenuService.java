@@ -49,4 +49,5 @@ public interface SysMenuService extends Service<SysMenu> {
     public SysMenuResponse  updateMenu(SysMenu sysMenu);
 
 
+    public SysMenu getMenuDetail(Long id);
 }

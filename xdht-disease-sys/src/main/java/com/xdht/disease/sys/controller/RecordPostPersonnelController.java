@@ -28,16 +28,16 @@ public class RecordPostPersonnelController {
     @Autowired
     private RecordPostPersonnelService recordService;
 
-    @RequestMapping(value = "/recordList", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
-    @ApiOperation(value = "查询列表")
-    public  ResponseEntity<Result<List<RecordPostPersonnel>>> recordList(@CurrentUser User user, @RequestBody RecordPostPersonnelRequest recordRequest) {
-        return new ResponseEntity<>(Result.ok(recordService.queryList(recordRequest)), HttpStatus.OK);
-    }
-    @RequestMapping(value = "/recordPage", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
-    @ApiOperation(value = "分页查询")
-    public ResponseEntity<Result<PageResult<RecordPostPersonnel>>> recordPage(@CurrentUser User user, @RequestBody RecordPostPersonnelRequest recordRequest, @RequestParam Integer pageNum, @RequestParam Integer pageSize) {
-        return new ResponseEntity<>(Result.ok(recordService.queryListPage(recordRequest,pageNum,pageSize)), HttpStatus.OK);
-    }
+//    @RequestMapping(value = "/recordList", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+//    @ApiOperation(value = "查询列表")
+//    public  ResponseEntity<Result<List<RecordPostPersonnel>>> recordList(@CurrentUser User user, @RequestBody RecordPostPersonnelRequest recordRequest) {
+//        return new ResponseEntity<>(Result.ok(recordService.queryList(recordRequest)), HttpStatus.OK);
+//    }
+//    @RequestMapping(value = "/recordPage", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+//    @ApiOperation(value = "分页查询")
+//    public ResponseEntity<Result<PageResult<RecordPostPersonnel>>> recordPage(@CurrentUser User user, @RequestBody RecordPostPersonnelRequest recordRequest, @RequestParam Integer pageNum, @RequestParam Integer pageSize) {
+//        return new ResponseEntity<>(Result.ok(recordService.queryListPage(recordRequest,pageNum,pageSize)), HttpStatus.OK);
+//    }
 
     @RequestMapping(value = "/add", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     @ApiOperation(value = "添加")

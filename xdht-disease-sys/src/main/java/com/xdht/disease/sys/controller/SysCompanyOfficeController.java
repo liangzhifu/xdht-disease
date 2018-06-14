@@ -5,6 +5,7 @@ import com.xdht.disease.common.core.PageResult;
 import com.xdht.disease.common.core.Result;
 import com.xdht.disease.common.model.User;
 import com.xdht.disease.sys.model.SysCompanyOffice;
+import com.xdht.disease.sys.model.SysEmployee;
 import com.xdht.disease.sys.service.SysCompanyOfficeService;
 import com.xdht.disease.sys.vo.request.SysCompanyOfficeRequest;
 import com.xdht.disease.sys.vo.response.SysCompanyOfficeResponse;
@@ -31,13 +32,18 @@ public class SysCompanyOfficeController {
 
     @RequestMapping(value = "/companyOfficePage", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     @ApiOperation(value = "分页查询单位部门列表")
-    public ResponseEntity<Result<PageResult<SysCompanyOffice>>> companyOfficePage(@CurrentUser User user, @RequestBody SysCompanyOfficeRequest sysCompanyOfficeRequest) {
+    public ResponseEntity<Result<PageResult<SysCompanyOffice>>> companyOfficePage(@RequestBody SysCompanyOfficeRequest sysCompanyOfficeRequest) {
         return new ResponseEntity<>(Result.ok(sysCompanyOfficeService.querySysCompanyOfficePage(sysCompanyOfficeRequest)), HttpStatus.OK);
     }
     @RequestMapping(value = "/companyOfficeList", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     @ApiOperation(value = "查询单位部门列表")
-    public ResponseEntity<Result<List<SysCompanyOffice>>> companyOfficeList(@CurrentUser User user, @RequestBody SysCompanyOffice sysCompanyOffice) {
+    public ResponseEntity<Result<List<SysCompanyOffice>>> companyOfficeList(@RequestBody SysCompanyOffice sysCompanyOffice) {
         return new ResponseEntity<>(Result.ok(sysCompanyOfficeService.querySysCompanyOfficeList(sysCompanyOffice)), HttpStatus.OK);
+    }
+    @RequestMapping(value = "/queryList", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    @ApiOperation(value = "查询单位部门对应的员工列表")
+    public ResponseEntity<Result<List<SysEmployee>>> queryList(@RequestBody SysCompanyOffice sysCompanyOffice) {
+        return new ResponseEntity<>(Result.ok(sysCompanyOfficeService.queryEmpleoyeeList(sysCompanyOffice)), HttpStatus.OK);
     }
 
     @RequestMapping(value = "/add", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)

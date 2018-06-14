@@ -23,4 +23,31 @@
     <result column="update_date" jdbcType="TIMESTAMP" property="updateDate" />
     <result column="remarks" jdbcType="VARCHAR" property="remarks" />
   </resultMap>
+
+
+  <select id="queryEmployeeList" resultMap="BaseResultMap" parameterType="java.util.List">
+    select
+    id
+    office_id,
+    emp_name,
+    emp_sex,
+    emp_native,
+    emp_marriage,
+    emp_education,
+    emp_hobby,
+    emp_work_date,
+    emp_identity_number,
+    emp_photo_url,
+    status,
+    create_by,
+    create_date,
+    update_by,
+    update_date,
+    remarks
+    from sys_employee
+    where office_id in
+    <foreach collection="list" index="index" item="item" open="(" separator="," close=")">
+      #{item}
+    </foreach>
+  </select>
 </mapper>

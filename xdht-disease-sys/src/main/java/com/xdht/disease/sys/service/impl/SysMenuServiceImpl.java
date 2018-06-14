@@ -3,6 +3,7 @@ package com.xdht.disease.sys.service.impl;
 import com.github.pagehelper.PageHelper;
 import com.xdht.disease.common.core.AbstractService;
 import com.xdht.disease.common.core.PageResult;
+import com.xdht.disease.sys.constant.SysEnum;
 import com.xdht.disease.sys.dao.SysMenuMapper;
 import com.xdht.disease.sys.model.SysMenu;
 import com.xdht.disease.sys.service.SysMenuService;
@@ -32,11 +33,12 @@ public class SysMenuServiceImpl extends AbstractService<SysMenu> implements SysM
             if (sysMenuRequest.getMenuName() != null) {
                 condition.createCriteria().andLike("menuName","%"+sysMenuRequest.getMenuName()+"%");
             }
-            PageHelper.startPage(sysMenuRequest.getPageNum(), sysMenuRequest.getPageSize());
-            List<SysMenu> dataList = this.sysMenuMapper.selectByCondition(condition);
+            PageHelper.startPage(sysMenuRequest.getPageNumber(), sysMenuRequest.getPageSize());
+            List<SysMenu> dataList = this.selectByCondition(condition);
+            Integer count = this.selectCountByCondition(condition);
             PageResult<SysMenu> pageList = new PageResult<SysMenu>();
             pageList.setDataList(dataList);
-            pageList.setTotal(dataList.size());
+            pageList.setTotal(count);
             return pageList;
         }
         @Override
@@ -46,14 +48,13 @@ public class SysMenuServiceImpl extends AbstractService<SysMenu> implements SysM
             if (sysMenu.getMenuName() != null) {
                 condition.createCriteria().andLike("menuName","%"+sysMenu.getMenuName()+"%");
             }
-            condition.setOrderByClause("id desc");
             List<SysMenu> sysMenuList = this.sysMenuMapper.selectByCondition(condition);
             return sysMenuList;
         }
 
         @Override
         public SysMenuResponse addMenu(SysMenu sysMenu) {
-            this.sysMenuMapper.insertUseGeneratedKeys(sysMenu);
+            this.insertUseGeneratedKeys(sysMenu);
             SysMenuResponse sysMenuResponse = new SysMenuResponse();
             sysMenuResponse.setId(sysMenu.getId());
             sysMenuResponse.setMenuName(sysMenu.getMenuName());
@@ -62,7 +63,9 @@ public class SysMenuServiceImpl extends AbstractService<SysMenu> implements SysM
 
         @Override
         public SysMenuResponse deleteMenu(Long id) {
-            this.sysMenuMapper.deleteByPrimaryKey(id);
+            SysMenu sysMenu = this.sysMenuMapper.selectByPrimaryKey(id);
+            sysMenu.setStatus(SysEnum.StatusEnum.STATUS_DELETE.getCode());
+            this.sysMenuMapper.updateByPrimaryKeySelective(sysMenu);
             SysMenuResponse sysMenuResponse = new SysMenuResponse();
             sysMenuResponse.setId(id);
             return sysMenuResponse;
@@ -76,5 +79,10 @@ public class SysMenuServiceImpl extends AbstractService<SysMenu> implements SysM
             sysMenuResponse.setMenuName(sysMenu.getMenuName());
             return sysMenuResponse;
         }
+
+    @Override
+    public SysMenu getMenuDetail(Long id) {
+       return  this.sysMenuMapper.selectByPrimaryKey(id);
+    }
 
 }

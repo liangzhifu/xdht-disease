@@ -15,4 +15,15 @@
     <result column="update_by" jdbcType="BIGINT" property="updateBy" />
     <result column="update_date" jdbcType="TIMESTAMP" property="updateDate" />
   </resultMap>
+
+  <select id="selectRecordScenQuestionnaireMapListByRecordScen" parameterType="java.lang.Long" resultType="java.util.HashMap">
+    SELECT sq.`questionnaire_name` AS questionnaireName,
+    rsq.generator_record AS generatorRecord,
+    sq.questionnaire_alias AS questionnaireAlias
+    FROM record_scen_questionnaire rsq, sys_questionnaire sq
+    WHERE rsq.`questionnaire_id` = sq.`id`
+    AND rsq.`scene_id` = #{id, jdbcType=BIGINT}
+    ORDER BY sq.`id`
+  </select>
+
 </mapper>

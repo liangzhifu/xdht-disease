@@ -27,7 +27,7 @@ public class CodeGenerator {
     /**
      * 模块名称
      */
-    static final String MODULE_NAME = "sys";
+    static final String MODULE_NAME = "test";
     /**
      * 模块路径
      */
@@ -82,7 +82,7 @@ public class CodeGenerator {
     private static final String DATE = new SimpleDateFormat("yyyy/MM/dd").format(new Date());
 
     public static void main(String[] args) {
-        genCode("sys_role_menu");
+        genCode("sys_test");
         //genCode("输入表名","输入自定义Model名称");
     }
 

@@ -1,5 +1,6 @@
 package com.xdht.disease.sys.controller;
 
+import com.xdht.disease.common.authorization.annotation.Authorization;
 import com.xdht.disease.common.authorization.annotation.CurrentUser;
 import com.xdht.disease.common.core.Result;
 import com.xdht.disease.common.model.User;
@@ -30,33 +31,41 @@ public class SysMenuController {
 
     @RequestMapping(value = "/menuPage", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     @ApiOperation(value = "分页查询菜单列表")
-    public ResponseEntity<Result<List<SysMenu>>> menuPage(@CurrentUser User user, @RequestBody SysMenuRequest sysMenuRequest) {
+    public ResponseEntity<Result<List<SysMenu>>> menuPage(@RequestBody SysMenuRequest sysMenuRequest) {
         return new ResponseEntity<>(Result.ok(sysMenuService.querySysMenuPage(sysMenuRequest)), HttpStatus.OK);
     }
     @RequestMapping(value = "/menusList", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     @ApiOperation(value = "查询菜单列表")
-    public ResponseEntity<Result<List<SysMenu>>> menusList(@CurrentUser User user, @RequestBody SysMenu sysMenu) {
+    public ResponseEntity<Result<List<SysMenu>>> menusList(@RequestBody SysMenu sysMenu) {
         return new ResponseEntity<>(Result.ok(sysMenuService.querySysMenuList(sysMenu)), HttpStatus.OK);
     }
 
     @RequestMapping(value = "/add", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     @ApiOperation(value = "添加菜单")
-    public ResponseEntity<Result<SysMenuResponse>> addMenu(@CurrentUser User user, @RequestBody SysMenu sysMenu) {
+    @Authorization
+    public ResponseEntity<Result<SysMenuResponse>> addMenu(@RequestBody SysMenu sysMenu) {
         return new ResponseEntity<>(Result.ok(sysMenuService.addMenu(sysMenu)), HttpStatus.OK);
     }
 
     @RequestMapping(value = "/delete", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     @ApiOperation(value = "删除菜单")
-    public ResponseEntity<Result<SysMenuResponse>> deleteMenu(@CurrentUser User user, @RequestParam Long id) {
+    @Authorization
+    public ResponseEntity<Result<SysMenuResponse>> deleteMenu(@RequestParam Long id) {
         return new ResponseEntity<>(Result.ok(sysMenuService.deleteMenu(id)), HttpStatus.OK);
     }
 
     @RequestMapping(value = "/update", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     @ApiOperation(value = "修改菜单")
-    public ResponseEntity<Result<SysMenuResponse>> updateMenu(@CurrentUser User user, @RequestBody SysMenu sysMenu) {
+    @Authorization
+    public ResponseEntity<Result<SysMenuResponse>> updateMenu(@RequestBody SysMenu sysMenu) {
         return new ResponseEntity<>(Result.ok(sysMenuService.updateMenu(sysMenu)), HttpStatus.OK);
     }
 
-
+    @RequestMapping(value = "/detail/{id}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    @ApiOperation(value = "获取菜单信息")
+    @Authorization
+    public ResponseEntity<Result<SysMenu>> getRoleDetail(@PathVariable Long id) {
+        return new ResponseEntity<>(Result.ok(sysMenuService.getMenuDetail(id)), HttpStatus.OK);
+    }
 
 }

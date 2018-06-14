@@ -51,6 +51,11 @@ public class SysCompanyServiceImpl extends AbstractService<SysCompany> implement
         }
 
         @Override
+        public List<SysCompany> querylistAll() {
+            return this.selectAll();
+        }
+
+    @Override
         public SysCompanyResponse addCompany(SysCompany sysCompany) {
             this.sysCompanyMapper.insertUseGeneratedKeys(sysCompany);
             SysCompanyResponse sysCompanyResponse = new SysCompanyResponse();

@@ -1,7 +1,8 @@
 package com.xdht.disease.sys.service;
+
 import com.xdht.disease.common.core.PageResult;
-import com.xdht.disease.sys.model.SysCompany;
 import com.xdht.disease.common.core.Service;
+import com.xdht.disease.sys.model.SysCompany;
 import com.xdht.disease.sys.vo.request.SysCompanyRequest;
 import com.xdht.disease.sys.vo.response.SysCompanyResponse;
 
@@ -47,4 +48,10 @@ public interface SysCompanyService extends Service<SysCompany> {
      * @return 返回结果
      */
     public List<SysCompany> querySysCompanyList(SysCompany sysCompany);
+
+    /**
+     * 查询所有列表
+     * @return 返回结果
+     */
+    public List<SysCompany> querylistAll();
 }

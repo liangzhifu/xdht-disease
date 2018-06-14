@@ -48,4 +48,10 @@ public interface SysQuestionnaireService extends Service<SysQuestionnaire> {
      * @return 返回结果
      */
     public SysQuestionnaire update(SysQuestionnaire sysQuestionnaire);
+
+    /**
+     * 查询所有
+     * @return 返回结果
+     */
+    public List<SysQuestionnaire> queryListAll();
 }

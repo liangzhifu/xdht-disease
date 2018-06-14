@@ -43,9 +43,9 @@ public class SysUserServiceImpl extends AbstractService<SysUser> implements SysU
         sysUser.setLoginCode(loginRequest.getLoginCode());
         sysUser.setPassword(loginRequest.getPassword());
         sysUser = this.sysUserMapper.selectOne(sysUser);
-        if (sysUser == null) {
-            loginResponse.setStatus("0");
-        } else {
+//        if (sysUser == null) {
+//            loginResponse.setStatus("0");
+//        } else {
             User user = new User();
             user.setName(sysUser.getUserName());
             user.setId(sysUser.getId());
@@ -53,7 +53,7 @@ public class SysUserServiceImpl extends AbstractService<SysUser> implements SysU
             loginResponse.setToken(tokenModel.getToken());
             loginResponse.setUserName(sysUser.getUserName());
             loginResponse.setStatus("1");
-        }
+//        }
         return loginResponse;
     }
 
@@ -96,7 +96,10 @@ public class SysUserServiceImpl extends AbstractService<SysUser> implements SysU
 
     @Override
     public SysUserResponse deleteUser(Long id) {
-        this.sysUserMapper.deleteByPrimaryKey(id);
+        SysUser sysUser = this.sysUserMapper.selectByPrimaryKey(id);
+        sysUser.setStatus(SysEnum.StatusEnum.STATUS_DELETE.getCode());
+        this.updateByPrimaryKeySelective(sysUser);
+//        this.sysUserMapper.deleteByPrimaryKey(id);
         SysUserResponse sysUserResponse = new SysUserResponse();
         sysUserResponse.setId(id);
         return sysUserResponse;
