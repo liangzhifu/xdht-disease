@@ -47,7 +47,10 @@ public class RecordSceneRequest {
     @ApiModelProperty(value = "每页数量")
     private Integer pageSize;
 
+    @ApiModelProperty(value = "现场调查基础表")
     private RecordScene recordScene;
+
+    @ApiModelProperty(value = "现场调查表关联数据")
     private List<RecordScenQuestionnaire> recordScenQuestionnaireList;
 
 

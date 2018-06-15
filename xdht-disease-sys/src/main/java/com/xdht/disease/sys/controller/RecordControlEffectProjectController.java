@@ -27,27 +27,27 @@ public class RecordControlEffectProjectController {
     @Autowired
     private RecordControlEffectProjectService recordControlEffectProjectService;
 
-    @RequestMapping(value = "/recordList", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    @RequestMapping(value = "/list", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     @ApiOperation(value = "查询列表")
-    public  ResponseEntity<Result<List<RecordControlEffectProject>>> recordList(@CurrentUser User user, @RequestBody RecordControlEffectProjectRequest recordControlEffectProjectRequest) {
+    public  ResponseEntity<Result<List<RecordControlEffectProject>>> recordList(@RequestBody RecordControlEffectProjectRequest recordControlEffectProjectRequest) {
         return new ResponseEntity<>(Result.ok(recordControlEffectProjectService.queryList(recordControlEffectProjectRequest)), HttpStatus.OK);
     }
 
     @RequestMapping(value = "/add", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     @ApiOperation(value = "添加")
-    public ResponseEntity<Result<RecordControlEffectProject>> add(@CurrentUser User user, @RequestBody RecordControlEffectProject recordControlEffectProject) {
+    public ResponseEntity<Result<RecordControlEffectProject>> add(@RequestBody RecordControlEffectProject recordControlEffectProject) {
         return new ResponseEntity<>(Result.ok(recordControlEffectProjectService.add(recordControlEffectProject)), HttpStatus.OK);
     }
 
     @RequestMapping(value = "/delete", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     @ApiOperation(value = "删除")
-    public ResponseEntity<Result<RecordControlEffectProject>> delete(@CurrentUser User user, @RequestParam Long id) {
+    public ResponseEntity<Result<RecordControlEffectProject>> delete(@RequestParam Long id) {
         return new ResponseEntity<>(Result.ok(recordControlEffectProjectService.delete(id)), HttpStatus.OK);
     }
 
     @RequestMapping(value = "/update", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     @ApiOperation(value = "修改")
-    public ResponseEntity<Result<RecordControlEffectProject>> update(@CurrentUser User user, @RequestBody RecordControlEffectProject recordControlEffectProject) {
+    public ResponseEntity<Result<RecordControlEffectProject>> update(@RequestBody RecordControlEffectProject recordControlEffectProject) {
         return new ResponseEntity<>(Result.ok(recordControlEffectProjectService.update(recordControlEffectProject)), HttpStatus.OK);
     }
 

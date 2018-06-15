@@ -38,4 +38,5 @@ public interface RecordControlEffectProjectService extends Service<RecordControl
      * @return 返回结果
      */
     public RecordControlEffectProject update(RecordControlEffectProject recordControlEffectProject);
+
 }

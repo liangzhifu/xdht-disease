@@ -29,25 +29,30 @@ public class RecordPreEvaluationProjectController {
 
     @RequestMapping(value = "/recordList", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     @ApiOperation(value = "查询列表")
-    public  ResponseEntity<Result<List<RecordPreEvaluationProject>>> recordList(@CurrentUser User user, @RequestBody RecordPreEvaluationProjectRequest recordPreEvaluationProjectRequest) {
+    public  ResponseEntity<Result<List<RecordPreEvaluationProject>>> recordList(@RequestBody RecordPreEvaluationProjectRequest recordPreEvaluationProjectRequest) {
         return new ResponseEntity<>(Result.ok(recordPreEvaluationProjectService.queryList(recordPreEvaluationProjectRequest)), HttpStatus.OK);
+    }
+    @RequestMapping(value = "/listAll", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    @ApiOperation(value = "查询列表")
+    public  ResponseEntity<Result<List<RecordPreEvaluationProject>>> listAll() {
+        return new ResponseEntity<>(Result.ok(recordPreEvaluationProjectService.queryListAll()), HttpStatus.OK);
     }
 
     @RequestMapping(value = "/add", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     @ApiOperation(value = "添加")
-    public ResponseEntity<Result<RecordPreEvaluationProject>> add(@CurrentUser User user, @RequestBody RecordPreEvaluationProject recordPreEvaluationProject) {
+    public ResponseEntity<Result<RecordPreEvaluationProject>> add(@RequestBody RecordPreEvaluationProject recordPreEvaluationProject) {
         return new ResponseEntity<>(Result.ok(recordPreEvaluationProjectService.add(recordPreEvaluationProject)), HttpStatus.OK);
     }
 
     @RequestMapping(value = "/delete", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     @ApiOperation(value = "删除")
-    public ResponseEntity<Result<RecordPreEvaluationProject>> delete(@CurrentUser User user, @RequestParam Long id) {
+    public ResponseEntity<Result<RecordPreEvaluationProject>> delete(@RequestParam Long id) {
         return new ResponseEntity<>(Result.ok(recordPreEvaluationProjectService.delete(id)), HttpStatus.OK);
     }
 
     @RequestMapping(value = "/update", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     @ApiOperation(value = "修改")
-    public ResponseEntity<Result<RecordPreEvaluationProject>> update(@CurrentUser User user, @RequestBody RecordPreEvaluationProject recordPreEvaluationProject) {
+    public ResponseEntity<Result<RecordPreEvaluationProject>> update(@RequestBody RecordPreEvaluationProject recordPreEvaluationProject) {
         return new ResponseEntity<>(Result.ok(recordPreEvaluationProjectService.update(recordPreEvaluationProject)), HttpStatus.OK);
     }
 
