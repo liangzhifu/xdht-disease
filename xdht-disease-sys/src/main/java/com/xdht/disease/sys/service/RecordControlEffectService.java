@@ -2,7 +2,9 @@ package com.xdht.disease.sys.service;
 import com.xdht.disease.common.core.PageResult;
 import com.xdht.disease.sys.model.RecordControlEffect;
 import com.xdht.disease.common.core.Service;
+import com.xdht.disease.sys.vo.request.RecordControlEffectInputRequest;
 import com.xdht.disease.sys.vo.request.RecordControlEffectRequest;
+import com.xdht.disease.sys.vo.response.RecordControlEffectDetailResponse;
 
 import java.util.List;
 
@@ -22,17 +24,15 @@ public interface RecordControlEffectService extends Service<RecordControlEffect>
     /**
      * 分页查询
      * @param recordControlEffectRequest 查询条件
-     * @param pageNum 页数
-     * @param pageSize 每页大小
      * @return 返回结果
      */
-    public PageResult<RecordControlEffect> queryListPage(RecordControlEffectRequest recordControlEffectRequest, Integer pageNum, Integer pageSize);
+    public PageResult<RecordControlEffect> queryListPage(RecordControlEffectRequest recordControlEffectRequest);
     /**
      * 添加
-     * @param recordControlEffect 实体
+     * @param recordControlEffectInputRequest 实体
      * @return 返回结果
      */
-    public  RecordControlEffect addRecordControlEffect(RecordControlEffect recordControlEffect);
+    public  RecordControlEffect addRecordControlEffect(RecordControlEffectInputRequest recordControlEffectInputRequest);
 
     /**
      * 删除
@@ -43,9 +43,15 @@ public interface RecordControlEffectService extends Service<RecordControlEffect>
 
     /**
      * 修改
-     * @param recordControlEffect 实体
+     * @param recordControlEffectInputRequest 实体
      * @return 返回结果
      */
-    public RecordControlEffect updateRecordControlEffect(RecordControlEffect recordControlEffect);
+    public RecordControlEffect updateRecordControlEffect(RecordControlEffectInputRequest recordControlEffectInputRequest);
 
+    /**
+     * 获取 建设项目概况调查表（控制效果评价） 的详细信息
+     * @param id 主键id
+     * @return 返回结果
+     */
+    RecordControlEffectDetailResponse queryRecordControlEffectDetail(Long id);
 }

@@ -38,4 +38,10 @@ public interface RecordPreEvaluationProjectService extends Service<RecordPreEval
      * @return 返回结果
      */
     public  RecordPreEvaluationProject update(RecordPreEvaluationProject recordPreEvaluationProject);
+
+    /**
+     * 查询所有
+     * @return 返回结果
+     */
+    public List<RecordPreEvaluationProject> queryListAll();
 }
