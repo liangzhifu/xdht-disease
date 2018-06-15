@@ -58,13 +58,14 @@ public class SysCompanyController {
         return new ResponseEntity<>(Result.ok(sysCompanyService.addCompany(sysCompany)), HttpStatus.OK);
     }
 
-    @RequestMapping(value = "/delete", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    @RequestMapping(value = "/delete/{id}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     @ApiOperation(value = "删除单位")
     @Authorization
     @ApiImplicitParams({
             @ApiImplicitParam(name = "authorization", value = "authorization", required = true, dataType = "string", paramType = "header"),
     })
-    public ResponseEntity<Result<SysCompanyResponse>> deleteCompany(@RequestParam Long id) {
+    public ResponseEntity<Result<SysCompanyResponse>> deleteCompany(@PathVariable Long id) {
+        System.out.println("a");
         return new ResponseEntity<>(Result.ok(sysCompanyService.deleteCompany(id)), HttpStatus.OK);
     }
 
@@ -78,6 +79,15 @@ public class SysCompanyController {
         return new ResponseEntity<>(Result.ok(sysCompanyService.updateCompany(sysCompany)), HttpStatus.OK);
     }
 
+    @RequestMapping(value = "/detail/{id}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    @ApiOperation(value = "获取企业信息")
+    @Authorization
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "authorization", value = "authorization", required = true, dataType = "string", paramType = "header"),
+    })
+    public ResponseEntity<Result<SysCompanyResponse>> getCompanyDetail(@PathVariable Long id) {
+        return new ResponseEntity<>(Result.ok(sysCompanyService.getCompanyDetail(id)), HttpStatus.OK);
+    }
 
 
 }

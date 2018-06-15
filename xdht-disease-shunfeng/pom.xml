@@ -47,6 +47,10 @@
 			<groupId>com.sf</groupId>
 			<artifactId>sf-sdk</artifactId>
 		</dependency>
+		<dependency>
+			<groupId>com.sf</groupId>
+			<artifactId>sf-csim-printer</artifactId>
+		</dependency>
 		<!-- 顺风速运jjar -->
 	</dependencies>
 

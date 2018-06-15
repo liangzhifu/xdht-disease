@@ -54,4 +54,6 @@ public interface SysCompanyService extends Service<SysCompany> {
      * @return 返回结果
      */
     public List<SysCompany> querylistAll();
+
+    SysCompany getCompanyDetail(Long id);
 }

@@ -1,5 +1,6 @@
 package com.xdht.disease.sys.vo.response;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
@@ -53,6 +54,7 @@ public class SysCompanyResponse {
     @ApiModelProperty(value = "单位网址")
     private String companyUrl;
 
+    @JsonFormat(pattern="yyyy-MM-dd",timezone = "GMT+8")
     @ApiModelProperty(value = "成立日期")
     private Date establishDate;
 
