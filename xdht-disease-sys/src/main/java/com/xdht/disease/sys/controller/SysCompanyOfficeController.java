@@ -35,15 +35,11 @@ public class SysCompanyOfficeController {
     public ResponseEntity<Result<PageResult<SysCompanyOffice>>> companyOfficePage(@RequestBody SysCompanyOfficeRequest sysCompanyOfficeRequest) {
         return new ResponseEntity<>(Result.ok(sysCompanyOfficeService.querySysCompanyOfficePage(sysCompanyOfficeRequest)), HttpStatus.OK);
     }
+
     @RequestMapping(value = "/companyOfficeList", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     @ApiOperation(value = "查询单位部门列表")
     public ResponseEntity<Result<List<SysCompanyOffice>>> companyOfficeList(@RequestBody SysCompanyOffice sysCompanyOffice) {
         return new ResponseEntity<>(Result.ok(sysCompanyOfficeService.querySysCompanyOfficeList(sysCompanyOffice)), HttpStatus.OK);
-    }
-    @RequestMapping(value = "/queryList", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
-    @ApiOperation(value = "查询单位部门对应的员工列表")
-    public ResponseEntity<Result<List<SysEmployee>>> queryList(@RequestBody SysCompanyOffice sysCompanyOffice) {
-        return new ResponseEntity<>(Result.ok(sysCompanyOfficeService.queryEmpleoyeeList(sysCompanyOffice)), HttpStatus.OK);
     }
 
     @RequestMapping(value = "/add", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
@@ -63,7 +59,5 @@ public class SysCompanyOfficeController {
     public ResponseEntity<Result<SysCompanyOfficeResponse>> updateCompanyOffice(@CurrentUser User user, @RequestBody SysCompanyOffice sysCompanyOffice) {
         return new ResponseEntity<>(Result.ok(sysCompanyOfficeService.updateCompanyOffice(sysCompanyOffice)), HttpStatus.OK);
     }
-
-
 
 }

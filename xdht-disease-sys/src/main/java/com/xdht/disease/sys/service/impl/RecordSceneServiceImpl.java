@@ -3,12 +3,12 @@ package com.xdht.disease.sys.service.impl;
 import com.github.pagehelper.PageHelper;
 import com.xdht.disease.common.core.AbstractService;
 import com.xdht.disease.common.core.PageResult;
-import com.xdht.disease.sys.dao.RecordScenQuestionnaireMapper;
+import com.xdht.disease.sys.constant.SysEnum;
 import com.xdht.disease.sys.dao.RecordSceneMapper;
 import com.xdht.disease.sys.model.RecordScenQuestionnaire;
 import com.xdht.disease.sys.model.RecordScene;
+import com.xdht.disease.sys.service.RecordScenQuestionnaireService;
 import com.xdht.disease.sys.service.RecordSceneService;
-import com.xdht.disease.sys.vo.request.RecordScenQuestionnaireRequest;
 import com.xdht.disease.sys.vo.request.RecordSceneInputRequest;
 import com.xdht.disease.sys.vo.request.RecordSceneRequest;
 import com.xdht.disease.sys.vo.response.RecordSceneDetailResponse;
@@ -17,6 +17,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import tk.mybatis.mapper.entity.Condition;
 
+import java.util.LinkedList;
 import java.util.List;
 
 
@@ -31,30 +32,7 @@ public class RecordSceneServiceImpl extends AbstractService<RecordScene> impleme
     private RecordSceneMapper recordSceneMapper;
 
     @Autowired
-    private RecordScenQuestionnaireMapper recordScenQuestionnaireMapper;
-
-    @Override
-    public List<RecordScene> queryList(RecordSceneRequest recordSceneRequest) {
-        Condition condition = new Condition(RecordScene.class);
-        condition.createCriteria() .andEqualTo("id", recordSceneRequest.getId())
-                .andEqualTo("recordNo",recordSceneRequest.getRecordNo());
-        if (recordSceneRequest.getProjectName() != null) {
-            condition.getOredCriteria().get(0).andLike("projectName","%"+recordSceneRequest.getProjectName()+"%");
-        }
-        if (recordSceneRequest.getStatus() != null){
-            condition.getOredCriteria().get(0).andEqualTo("status",recordSceneRequest.getStatus());
-        }
-        if (recordSceneRequest.getInquiryType() != null){
-            condition.getOredCriteria().get(0).andEqualTo("inquiryType",recordSceneRequest.getInquiryType());
-        }
-        if (recordSceneRequest.getInquiryPerson() != null){
-            condition.getOredCriteria().get(0).andLike("inquiryPerson","%"+recordSceneRequest.getInquiryPerson()+"%");
-        }
-        if (recordSceneRequest.getInquiryCompany() != null){
-            condition.getOredCriteria().get(0).andLike("inquiryCompany","%"+recordSceneRequest.getInquiryCompany()+"%");
-        }
-        return this.recordSceneMapper.selectByCondition(condition);
-    }
+    private RecordScenQuestionnaireService recordScenQuestionnaireService;
 
     @Override
     public PageResult<RecordScene> queryListPage(RecordSceneRequest recordSceneRequest) {
@@ -86,17 +64,6 @@ public class RecordSceneServiceImpl extends AbstractService<RecordScene> impleme
     }
 
     @Override
-    public PageResult<RecordScene> queryListPage(RecordSceneRequest recordSceneRequest, Integer pageNum, Integer pageSize) {
-        return null;
-    }
-
-    @Override
-    public RecordScene addRecordScene(RecordScene recordScene) {
-            this.insertUseGeneratedKeys(recordScene);
-            return recordScene;
-    }
-
-    @Override
     public RecordScene deleteRecordScene(Long id) {
         this.recordSceneMapper.deleteByPrimaryKey(id);
         RecordScene recordScene = new RecordScene();
@@ -111,9 +78,9 @@ public class RecordSceneServiceImpl extends AbstractService<RecordScene> impleme
     }
 
     @Override
-    public RecordScene addAll(RecordSceneInputRequest recordSceneInputRequest) {
+    public RecordScene add(RecordSceneInputRequest recordSceneInputRequest) {
         RecordScene recordScene = new RecordScene();
-        recordScene.setStatus("0");
+        recordScene.setStatus(SysEnum.StatusEnum.STATUS_NORMAL.getCode());
         recordScene.setInquiryDate(recordSceneInputRequest.getRecordScene().getInquiryDate());
         recordScene.setInquiryPerson(recordSceneInputRequest.getRecordScene().getInquiryPerson());
         recordScene.setInquiryCompanyEmployee(recordSceneInputRequest.getRecordScene().getInquiryCompanyEmployee());
@@ -122,18 +89,14 @@ public class RecordSceneServiceImpl extends AbstractService<RecordScene> impleme
         recordScene.setRecordNo(recordSceneInputRequest.getRecordScene().getRecordNo());
         recordScene.setInquiryCompany(recordSceneInputRequest.getRecordScene().getInquiryCompany());
         this.insertUseGeneratedKeys(recordScene);
-        Long sceneId = recordScene.getId();
-        List<RecordScenQuestionnaire> recordScenQuestionnaireList =  recordSceneInputRequest.getRecordScenQuestionnaireList();
-        this.recordScenQuestionnaireMapper.insertList(recordScenQuestionnaireList);
-      /*  RecordScenQuestionnaire recordScenQuestionnaire = new RecordScenQuestionnaire();
-        for (int i = 0 ; i< recordScenQuestionnaireList.size(); i++){
-            recordScenQuestionnaire.setQuestionnaireId(recordScenQuestionnaireList.get(i).getQuestionnaireId());
-            recordScenQuestionnaire.setSceneId(sceneId);
-            recordScenQuestionnaire.setGeneratorRecord(recordScenQuestionnaireList.get(i).getGeneratorRecord());
-            this.recordScenQuestionnaireMapper.insertUseGeneratedKeys(recordScenQuestionnaire);
 
-        }*/
-
+        List<RecordScenQuestionnaire> recordScenQuestionnaireList = new LinkedList<>();
+        for (RecordScenQuestionnaire recordScenQuestionnaire : recordSceneInputRequest.getRecordScenQuestionnaireList()) {
+            recordScenQuestionnaire.setSceneId(recordScene.getId());
+            recordScenQuestionnaire.setStatus(SysEnum.StatusEnum.STATUS_NORMAL.getCode());
+            recordScenQuestionnaireList.add(recordScenQuestionnaire);
+        }
+        this.recordScenQuestionnaireService.insertList(recordScenQuestionnaireList);
         return recordScene;
     }
 
@@ -141,7 +104,7 @@ public class RecordSceneServiceImpl extends AbstractService<RecordScene> impleme
     public RecordSceneDetailResponse queryRecordSceneDetail(Long id) {
         RecordSceneDetailResponse recordSceneDetailResponse = new RecordSceneDetailResponse();
         recordSceneDetailResponse.setRecordSceneMap(this.recordSceneMapper.selectRecordSceneMapByPrimaryKey(id));
-        recordSceneDetailResponse.setScenQuestionnaireMapList(this.recordScenQuestionnaireMapper.selectRecordScenQuestionnaireMapListByRecordScen(id));
+        recordSceneDetailResponse.setScenQuestionnaireMapList(this.recordScenQuestionnaireService.queryRecordScenQuestionnaireMapListByRecordScen(id));
         return recordSceneDetailResponse;
     }
 }

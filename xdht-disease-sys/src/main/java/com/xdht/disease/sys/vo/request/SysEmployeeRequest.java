@@ -50,4 +50,5 @@ public class SysEmployeeRequest {
 
     @ApiModelProperty(value = "每页数量")
     private Integer pageSize;
+
 }

@@ -6,6 +6,7 @@ import com.xdht.disease.common.core.PageResult;
 import com.xdht.disease.sys.dao.SysEmployeeMapper;
 import com.xdht.disease.sys.model.SysEmployee;
 import com.xdht.disease.sys.service.SysEmployeeService;
+import com.xdht.disease.sys.vo.request.SysEmployeeCompanyRequest;
 import com.xdht.disease.sys.vo.request.SysEmployeeRequest;
 import com.xdht.disease.sys.vo.response.SysEmployeeResponse;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -66,6 +67,11 @@ public class SysEmployeeServiceImpl extends AbstractService<SysEmployee> impleme
             List<SysEmployee> sysEmployeeList = this.sysEmployeeMapper.selectByCondition(condition);
             return sysEmployeeList;
         }
+
+    @Override
+    public List<SysEmployee> queryCompanyEmployeeList(SysEmployeeCompanyRequest sysEmployeeCompanyRequest) {
+        return this.sysEmployeeMapper.selectCompanyEmployeeList(sysEmployeeCompanyRequest);
+    }
 
     @Override
     public SysEmployeeResponse addEmployee(SysEmployee sysEmployee) {

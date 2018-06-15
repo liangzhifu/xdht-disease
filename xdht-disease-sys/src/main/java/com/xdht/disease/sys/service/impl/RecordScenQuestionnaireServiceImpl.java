@@ -13,6 +13,7 @@ import org.springframework.transaction.annotation.Transactional;
 import tk.mybatis.mapper.entity.Condition;
 
 import java.util.List;
+import java.util.Map;
 
 
 /**
@@ -41,29 +42,8 @@ public class RecordScenQuestionnaireServiceImpl extends AbstractService<RecordSc
     }
 
     @Override
-    public PageResult<RecordScenQuestionnaire> queryListPage(RecordScenQuestionnaireRequest recordScenQuestionnaireRequest, Integer pageNum, Integer pageSize) {
-        Condition condition = new Condition(RecordScenQuestionnaire.class);
-        condition.createCriteria() .andEqualTo("id", recordScenQuestionnaireRequest.getId())
-                .andEqualTo("sceneId",recordScenQuestionnaireRequest.getSceneId())
-                .andEqualTo("questionnaireId",recordScenQuestionnaireRequest.getQuestionnaireId());
-        if (recordScenQuestionnaireRequest.getGeneratorRecord() != null){
-            condition.getOredCriteria().get(0).andEqualTo("generatorRecord",recordScenQuestionnaireRequest.getGeneratorRecord());
-        }
-        if (recordScenQuestionnaireRequest.getStatus() != null){
-            condition.getOredCriteria().get(0).andEqualTo("status",recordScenQuestionnaireRequest.getStatus());
-        }
-        PageHelper.startPage(pageNum, pageSize);
-        List<RecordScenQuestionnaire> dataList = this.recordScenQuestionnaireMapper.selectByCondition(condition);
-        PageResult<RecordScenQuestionnaire> pageList = new  PageResult<RecordScenQuestionnaire>();
-        pageList.setTotal(dataList.size());
-        pageList.setDataList(dataList);
-        return pageList;
-    }
-
-    @Override
-    public RecordScenQuestionnaire addRecordScenQuestionnaire(RecordScenQuestionnaire recordScenQuestionnaire) {
-        this.recordScenQuestionnaireMapper.insertUseGeneratedKeys(recordScenQuestionnaire);
-        return recordScenQuestionnaire;
+    public void addRecordScenQuestionnaireList(List<RecordScenQuestionnaire> recordScenQuestionnaireList) {
+        this.insertList(recordScenQuestionnaireList);
     }
 
     @Override
@@ -78,5 +58,10 @@ public class RecordScenQuestionnaireServiceImpl extends AbstractService<RecordSc
     public RecordScenQuestionnaire updateRecordScenQuestionnaire(RecordScenQuestionnaire recordScenQuestionnaire) {
             this.recordScenQuestionnaireMapper.updateByPrimaryKeySelective(recordScenQuestionnaire);
             return recordScenQuestionnaire;
+    }
+
+    @Override
+    public List<Map<String, Object>> queryRecordScenQuestionnaireMapListByRecordScen(Long id) {
+        return this.recordScenQuestionnaireMapper.selectRecordScenQuestionnaireMapListByRecordScen(id);
     }
 }

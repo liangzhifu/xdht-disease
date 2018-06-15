@@ -30,9 +30,6 @@ public class SysCompanyOfficeServiceImpl extends AbstractService<SysCompanyOffic
     @Autowired
     private SysCompanyOfficeMapper sysCompanyOfficeMapper;
 
-    @Autowired
-    private SysEmployeeMapper sysEmployeeMapper;
-
         @Override
         public PageResult<SysCompanyOffice> querySysCompanyOfficePage(SysCompanyOfficeRequest sysCompanyOfficeRequest) {
             Condition condition = new Condition(SysCompanyOffice.class);
@@ -84,26 +81,5 @@ public class SysCompanyOfficeServiceImpl extends AbstractService<SysCompanyOffic
             sysCompanyOfficeResponse.setOfficeName(sysCompanyOffice.getOfficeName());
             return sysCompanyOfficeResponse;
         }
-
-    @Override
-    public List<SysEmployee> queryEmpleoyeeList(SysCompanyOffice sysCompanyOffice) {
-        Condition condition = new Condition(SysCompanyOffice.class);
-        condition.createCriteria() .andEqualTo("companyId", sysCompanyOffice.getCompanyId());
-        List<SysCompanyOffice> offices = this.sysCompanyOfficeMapper.selectByCondition(condition);
-        System.out.println("offices:"+offices.size());
-        if (offices.size() == 0){
-            return null;
-        }else{
-            List<Long> officeIds = new ArrayList<Long>();
-            for (int i=0; i< offices.size(); i++){
-                Long officeId = offices.get(i).getId();
-                officeIds.add(officeId);
-            }
-            List<SysEmployee> employees = this.sysEmployeeMapper.queryEmployeeList(officeIds);
-            return employees;
-        }
-
-    }
-
 
 }

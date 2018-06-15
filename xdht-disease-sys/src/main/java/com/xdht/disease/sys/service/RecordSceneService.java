@@ -16,26 +16,11 @@ import java.util.List;
 public interface RecordSceneService extends Service<RecordScene> {
 
     /**
-     * 查询列表
-     * @param recordSceneRequest 查询条件
-     * @return 返回结果
-     */
-    List<RecordScene> queryList(RecordSceneRequest recordSceneRequest);
-
-    /**
      * 分页查询
      * @param recordSceneRequest 查询条件
      * @return 返回结果
      */
-    public PageResult<RecordScene> queryListPage(RecordSceneRequest recordSceneRequest);
-    PageResult<RecordScene> queryListPage(RecordSceneRequest recordSceneRequest, Integer pageNum, Integer pageSize);
-
-    /**
-     * 添加
-     * @param recordScene 实体
-     * @return 返回结果
-     */
-    RecordScene addRecordScene(RecordScene recordScene);
+    PageResult<RecordScene> queryListPage(RecordSceneRequest recordSceneRequest);
 
     /**
      * 删除
@@ -56,7 +41,7 @@ public interface RecordSceneService extends Service<RecordScene> {
      * @param recordSceneInputRequest
      * @return 返回结果
      */
-    RecordScene addAll(RecordSceneInputRequest recordSceneInputRequest);
+    RecordScene add(RecordSceneInputRequest recordSceneInputRequest);
 
     /**
      * 获取职业卫生现场调查记录表--详细内容

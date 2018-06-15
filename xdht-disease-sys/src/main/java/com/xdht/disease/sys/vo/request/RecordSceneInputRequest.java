@@ -14,9 +14,10 @@ import java.util.List;
 @Data
 public class RecordSceneInputRequest {
 
+    @ApiModelProperty(value = "职业卫生现场调查记录")
     private RecordScene recordScene;
 
+    @ApiModelProperty(value = "职业卫生现场调查记录--职业卫生调查内容")
     private List<RecordScenQuestionnaire> recordScenQuestionnaireList;
-
 
 }
