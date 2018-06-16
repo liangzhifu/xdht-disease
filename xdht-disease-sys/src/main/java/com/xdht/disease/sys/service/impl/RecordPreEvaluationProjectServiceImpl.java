@@ -52,4 +52,9 @@ public class RecordPreEvaluationProjectServiceImpl extends AbstractService<Recor
         this.recordPreEvaluationProjectMapper.updateByPrimaryKeySelective(recordPreEvaluationProject);
         return recordPreEvaluationProject;
     }
+
+    @Override
+    public List<RecordPreEvaluationProject> queryListAll() {
+        return this.selectAll();
+    }
 }

@@ -4,11 +4,13 @@ import com.github.pagehelper.PageHelper;
 import com.xdht.disease.common.core.AbstractService;
 import com.xdht.disease.common.core.PageResult;
 import com.xdht.disease.sys.constant.SysEnum;
+import com.xdht.disease.sys.dao.RecordScenQuestionnaireMapper;
 import com.xdht.disease.sys.dao.RecordSceneMapper;
 import com.xdht.disease.sys.model.RecordScenQuestionnaire;
 import com.xdht.disease.sys.model.RecordScene;
 import com.xdht.disease.sys.service.RecordScenQuestionnaireService;
 import com.xdht.disease.sys.service.RecordSceneService;
+import com.xdht.disease.sys.vo.request.RecordScenQuestionnaireRequest;
 import com.xdht.disease.sys.vo.request.RecordSceneInputRequest;
 import com.xdht.disease.sys.vo.request.RecordSceneRequest;
 import com.xdht.disease.sys.vo.response.RecordSceneDetailResponse;
@@ -37,28 +39,15 @@ public class RecordSceneServiceImpl extends AbstractService<RecordScene> impleme
     @Override
     public PageResult<RecordScene> queryListPage(RecordSceneRequest recordSceneRequest) {
         Condition condition = new Condition(RecordScene.class);
-//        condition.createCriteria() .andEqualTo("id", recordSceneRequest.getId())
-//                .andEqualTo("recordNo",recordSceneRequest.getRecordNo());
         if (recordSceneRequest.getProjectName() != null) {
             condition.createCriteria().andLike("projectName","%"+recordSceneRequest.getProjectName()+"%");
         }
-//        if (recordSceneRequest.getStatus() != null){
-//            condition.getOredCriteria().get(0).andEqualTo("status",recordSceneRequest.getStatus());
-//        }
-//        if (recordSceneRequest.getInquiryType() != null){
-//            condition.getOredCriteria().get(0).andEqualTo("inquiryType",recordSceneRequest.getInquiryType());
-//        }
-//        if (recordSceneRequest.getInquiryPerson() != null){
-//            condition.getOredCriteria().get(0).andLike("inquiryPerson","%"+recordSceneRequest.getInquiryPerson()+"%");
-//        }
-//        if (recordSceneRequest.getInquiryCompany() != null){
-//            condition.getOredCriteria().get(0).andLike("inquiryCompany","%"+recordSceneRequest.getInquiryCompany()+"%");
-//        }
         condition.setOrderByClause("id desc");
         PageHelper.startPage(recordSceneRequest.getPageNumber(), recordSceneRequest.getPageSize());
         List<RecordScene> dataList = this.recordSceneMapper.selectByCondition(condition);
+        Integer count = this.recordSceneMapper.selectCountByCondition(condition);
         PageResult<RecordScene> pageList = new  PageResult<RecordScene>();
-        pageList.setTotal(dataList.size());
+        pageList.setTotal(count);
         pageList.setDataList(dataList);
         return pageList;
     }
