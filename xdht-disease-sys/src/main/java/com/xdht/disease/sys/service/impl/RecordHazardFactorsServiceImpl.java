@@ -40,7 +40,7 @@ public class RecordHazardFactorsServiceImpl extends AbstractService<RecordHazard
     }
 
     @Override
-    public PageResult<RecordHazardFactors> queryListPage(RecordHazardFactorsRequest recordHazardFactorsRequest, Integer pageNum, Integer pageSize) {
+    public PageResult<RecordHazardFactors> queryListPage(RecordHazardFactorsRequest recordHazardFactorsRequest) {
         Condition condition = new Condition(RecordHazardFactors.class);
         condition.createCriteria() .andEqualTo("id", recordHazardFactorsRequest.getId())
                 .andEqualTo("hazardFactorsNo",recordHazardFactorsRequest.getHazardFactorsNo());
@@ -50,10 +50,11 @@ public class RecordHazardFactorsServiceImpl extends AbstractService<RecordHazard
         if (recordHazardFactorsRequest.getStatus() != null){
             condition.getOredCriteria().get(0).andEqualTo("status",recordHazardFactorsRequest.getStatus());
         }
-        PageHelper.startPage(pageNum, pageSize);
+        PageHelper.startPage(recordHazardFactorsRequest.getPageNumber(), recordHazardFactorsRequest.getPageSize());
         List<RecordHazardFactors> dataList = this.recordHazardFactorsMapper.selectByCondition(condition);
+        Integer count = this.recordHazardFactorsMapper.selectCountByCondition(condition);
         PageResult<RecordHazardFactors> pageList = new  PageResult<RecordHazardFactors>();
-        pageList.setTotal(dataList.size());
+        pageList.setTotal(count);
         pageList.setDataList(dataList);
         return pageList;
 

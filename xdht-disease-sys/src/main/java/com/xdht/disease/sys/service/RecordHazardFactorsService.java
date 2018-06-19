@@ -22,11 +22,9 @@ public interface RecordHazardFactorsService extends Service<RecordHazardFactors>
     /**
      * 分页查询
      * @param recordHazardFactorsRequest 查询条件
-     * @param pageNum 页数
-     * @param pageSize 每页大小
      * @return 返回结果
      */
-    public PageResult<RecordHazardFactors> queryListPage(RecordHazardFactorsRequest recordHazardFactorsRequest, Integer pageNum, Integer pageSize);
+    public PageResult<RecordHazardFactors> queryListPage(RecordHazardFactorsRequest recordHazardFactorsRequest);
 
     /**
      * 添加

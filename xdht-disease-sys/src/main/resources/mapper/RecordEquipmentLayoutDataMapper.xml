@@ -10,5 +10,7 @@
     <result column="hazard_factors" jdbcType="VARCHAR" property="hazardFactors" />
     <result column="layout_detail" jdbcType="VARCHAR" property="layoutDetail" />
     <result column="remarkds" jdbcType="VARCHAR" property="remarkds" />
+    <result column="officd_id" jdbcType="BIGINT" property="officdId" />
+    <result column="relation_id" jdbcType="BIGINT" property="relationId" />
   </resultMap>
 </mapper>

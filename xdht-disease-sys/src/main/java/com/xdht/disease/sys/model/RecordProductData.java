@@ -63,6 +63,12 @@ public class RecordProductData {
     private String annualAmount;
 
     /**
+     * 关联id
+     */
+    @Column(name = "relation_id")
+    private Long relationId;
+
+    /**
      * @return id
      */
     public Long getId() {
@@ -237,4 +243,17 @@ public class RecordProductData {
     public void setAnnualAmount(String annualAmount) {
         this.annualAmount = annualAmount;
     }
+
+    /**
+     * 获取关联id
+     * @return relationId
+     */
+    public Long getRelationId() {
+        return relationId;
+    }
+
+    /** 设置关联id
+     * @param relationId
+     */
+    public void setRelationId(Long relationId) { this.relationId = relationId; }
 }

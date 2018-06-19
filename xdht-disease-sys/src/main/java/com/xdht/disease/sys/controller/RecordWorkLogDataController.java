@@ -28,7 +28,7 @@ public class RecordWorkLogDataController {
     @Autowired
     private RecordWorkLogDataService recordWorkLogDataService;
 
-    @RequestMapping(value = "/recordList", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    @RequestMapping(value = "/list", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     @ApiOperation(value = "查询列表")
     public  ResponseEntity<Result<List<RecordWorkLogData>>> recordList(@CurrentUser User user, @RequestBody RecordWorkLogDataRequest recordDataRequest) {
         return new ResponseEntity<>(Result.ok(recordWorkLogDataService.queryList(recordDataRequest)), HttpStatus.OK);

@@ -10,5 +10,6 @@
     <result column="process_name" jdbcType="VARCHAR" property="processName" />
     <result column="equipment_name" jdbcType="VARCHAR" property="equipmentName" />
     <result column="epuipment_number" jdbcType="BIGINT" property="epuipmentNumber" />
+    <result column="relation_id" jdbcType="BIGINT" property="relationId" />
   </resultMap>
 </mapper>

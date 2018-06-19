@@ -113,7 +113,7 @@ public class RecordPreEvaluationServiceImpl extends AbstractService<RecordPreEva
         RecordPreEvaluationDetailResponse recordPreEvaluationDetailResponse = new RecordPreEvaluationDetailResponse();
         RecordPreEvaluation recordPreEvaluation = this.recordPreEvaluationMapper.selectByPrimaryKey(id);
         recordPreEvaluationDetailResponse.setRecordPreEvaluation(recordPreEvaluation);
-        Long recordPreEvaluationId = recordPreEvaluation.getId();
+//        Long recordPreEvaluationId = recordPreEvaluation.getId();
         Condition condition = new Condition(RecordPreEvaluationData.class);
         condition.createCriteria() .andEqualTo("preEvaluationId", id);
         List<RecordPreEvaluationData> recordPreEvaluationDataList = this.recordPreEvaluationDataService.selectByCondition(condition);
@@ -124,7 +124,6 @@ public class RecordPreEvaluationServiceImpl extends AbstractService<RecordPreEva
         }
         projectIds = projectIds.substring(0,projectIds.lastIndexOf(","));
         List<RecordPreEvaluationProject> projectList = this.recordPreEvaluationProjectService.selectByIds(projectIds);
-        System.out.println("projectList:"+projectList.size());
         recordPreEvaluationDetailResponse.setRecordPreEvaluationProjectList(projectList);
         return recordPreEvaluationDetailResponse;
     }

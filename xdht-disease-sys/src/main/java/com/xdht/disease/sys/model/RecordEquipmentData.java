@@ -33,6 +33,12 @@ public class RecordEquipmentData {
     private Long epuipmentNumber;
 
     /**
+     * 关联id
+     */
+    @Column(name = "relation_id")
+    private Long relationId;
+
+    /**
      * @return id
      */
     public Long getId() {
@@ -116,5 +122,20 @@ public class RecordEquipmentData {
      */
     public void setEpuipmentNumber(Long epuipmentNumber) {
         this.epuipmentNumber = epuipmentNumber;
+    }
+
+    /**
+     * 获取关联id
+     * @return relationId
+     */
+    public Long getRelationId() {
+        return relationId;
+    }
+
+    /** 设置关联id
+     * @param relationId
+     */
+    public void setRelationId(Long relationId) {
+        this.relationId = relationId;
     }
 }
