@@ -13,9 +13,9 @@ import java.util.Map;
 public class RecordSceneDetailResponse {
 
     @ApiModelProperty(value = "职业卫生现场调查记录")
-    private Map<String, Object> recordSceneMap;
+    private Map<String, Object> recordScene;
 
     @ApiModelProperty(value = "职业卫生现场调查记录--职业卫生调查内容")
-    private List<Map<String, Object>> scenQuestionnaireMapList;
+    private List<Map<String, Object>> recordScenQuestionnaireList;
 
 }

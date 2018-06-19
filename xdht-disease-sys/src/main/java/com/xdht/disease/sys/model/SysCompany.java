@@ -1,5 +1,8 @@
 package com.xdht.disease.sys.model;
 
+import com.alibaba.fastjson.annotation.JSONField;
+import com.fasterxml.jackson.annotation.JsonFormat;
+
 import java.util.Date;
 import javax.persistence.*;
 
@@ -90,6 +93,7 @@ public class SysCompany {
     /**
      * 成立日期
      */
+    @JSONField(format="yyyy-MM-dd")
     @Column(name = "establish_date")
     private Date establishDate;
 

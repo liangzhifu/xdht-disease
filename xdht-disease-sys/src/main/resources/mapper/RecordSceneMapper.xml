@@ -25,7 +25,7 @@
     rs.`record_no` AS recordNo,
     rs.inquiry_type AS inquiryType,
     rs.inquiry_person AS inquiryPerson,
-    rs.inquiry_date AS inquiryDate,
+    DATE_FORMAT(rs.inquiry_date, '%Y-%m-%d') AS inquiryDate,
     rs.inquiry_company AS inquiryCompany,
     (SELECT sc.`company_name` FROM sys_company sc WHERE sc.id = rs.inquiry_company) AS inquiryCompanyName,
     rs.inquiry_company_employee AS inquiryCompanyEmployee,

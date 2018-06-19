@@ -1,5 +1,8 @@
 package com.xdht.disease.sys.vo.response;
 
+import com.alibaba.fastjson.annotation.JSONField;
+import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonGetter;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
@@ -53,6 +56,7 @@ public class SysCompanyResponse {
     @ApiModelProperty(value = "单位网址")
     private String companyUrl;
 
+    @JSONField(format="yyyy-MM-dd")
     @ApiModelProperty(value = "成立日期")
     private Date establishDate;
 
