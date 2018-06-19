@@ -56,6 +56,12 @@ public class RecordWorkLogData {
     private String remarks;
 
     /**
+     * 关联id
+     */
+    @Column(name = "relation_id")
+    private Long relationId;
+
+    /**
      * @return id
      */
     public Long getId() {
@@ -212,4 +218,19 @@ public class RecordWorkLogData {
     public void setRemarks(String remarks) {
         this.remarks = remarks;
     }
+
+    /**
+     * 获取关联id
+     * @return relationId
+     */
+    public Long getRelationId() {
+        return relationId;
+    }
+
+    /** 设置关联id
+     * @param relationId
+     */
+    public void setRelationId(Long relationId) { this.relationId = relationId; }
+
+
 }

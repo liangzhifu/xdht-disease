@@ -30,30 +30,30 @@ public class RecordHazardFactorsController {
 
     @RequestMapping(value = "/recordList", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     @ApiOperation(value = "查询列表")
-    public  ResponseEntity<Result<List<RecordHazardFactors>>> recordList(@CurrentUser User user, @RequestBody RecordHazardFactorsRequest recordHazardFactorsRequest) {
+    public  ResponseEntity<Result<List<RecordHazardFactors>>> recordList(@RequestBody RecordHazardFactorsRequest recordHazardFactorsRequest) {
         return new ResponseEntity<>(Result.ok(recordHazardFactorsService.queryList(recordHazardFactorsRequest)), HttpStatus.OK);
     }
-    @RequestMapping(value = "/recordPage", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    @RequestMapping(value = "/pageList", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     @ApiOperation(value = "分页查询")
-    public ResponseEntity<Result<PageResult<RecordHazardFactors>>> recordPage(@CurrentUser User user, @RequestBody RecordHazardFactorsRequest recordHazardFactorsRequest, @RequestParam Integer pageNum, @RequestParam Integer pageSize) {
-        return new ResponseEntity<>(Result.ok(recordHazardFactorsService.queryListPage(recordHazardFactorsRequest,pageNum,pageSize)), HttpStatus.OK);
+    public ResponseEntity<Result<PageResult<RecordHazardFactors>>> recordPage(@RequestBody RecordHazardFactorsRequest recordHazardFactorsRequest) {
+        return new ResponseEntity<>(Result.ok(recordHazardFactorsService.queryListPage(recordHazardFactorsRequest)), HttpStatus.OK);
     }
 
     @RequestMapping(value = "/add", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     @ApiOperation(value = "添加")
-    public ResponseEntity<Result<RecordHazardFactors>> add(@CurrentUser User user, @RequestBody RecordHazardFactors recordHazardFactors) {
+    public ResponseEntity<Result<RecordHazardFactors>> add(@RequestBody RecordHazardFactors recordHazardFactors) {
         return new ResponseEntity<>(Result.ok(recordHazardFactorsService.add(recordHazardFactors)), HttpStatus.OK);
     }
 
     @RequestMapping(value = "/delete", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     @ApiOperation(value = "删除")
-    public ResponseEntity<Result<RecordHazardFactors>> delete(@CurrentUser User user, @RequestParam Long id) {
+    public ResponseEntity<Result<RecordHazardFactors>> delete(@RequestParam Long id) {
         return new ResponseEntity<>(Result.ok(recordHazardFactorsService.delete(id)), HttpStatus.OK);
     }
 
     @RequestMapping(value = "/update", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     @ApiOperation(value = "修改")
-    public ResponseEntity<Result<RecordHazardFactors>> update(@CurrentUser User user, @RequestBody RecordHazardFactors recordHazardFactors) {
+    public ResponseEntity<Result<RecordHazardFactors>> update(@RequestBody RecordHazardFactors recordHazardFactors) {
         return new ResponseEntity<>(Result.ok(recordHazardFactorsService.update(recordHazardFactors)), HttpStatus.OK);
     }
 

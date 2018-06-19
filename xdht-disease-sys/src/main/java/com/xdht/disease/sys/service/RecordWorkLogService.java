@@ -2,7 +2,9 @@ package com.xdht.disease.sys.service;
 import com.xdht.disease.common.core.PageResult;
 import com.xdht.disease.sys.model.RecordWorkLog;
 import com.xdht.disease.common.core.Service;
+import com.xdht.disease.sys.vo.request.RecordWorkLogInputRequest;
 import com.xdht.disease.sys.vo.request.RecordWorkLogRequest;
+import com.xdht.disease.sys.vo.response.RecordWorkLogDetailResponse;
 
 import java.util.List;
 
@@ -22,18 +24,16 @@ public interface RecordWorkLogService extends Service<RecordWorkLog> {
     /**
      * 分页查询
      * @param recordWorkLogRequest 查询条件
-     * @param pageNum 页数
-     * @param pageSize 每页大小
      * @return 返回结果
      */
-    public PageResult<RecordWorkLog> queryListPage(RecordWorkLogRequest recordWorkLogRequest, Integer pageNum, Integer pageSize);
+    public PageResult<RecordWorkLog> queryListPage(RecordWorkLogRequest recordWorkLogRequest);
 
     /**
      * 添加
-     * @param recordWorkLog 实体
+     * @param recordWorkLogInputRequest 实体
      * @return 返回结果
      */
-    public RecordWorkLog add(RecordWorkLog recordWorkLog);
+    public RecordWorkLog add(RecordWorkLogInputRequest recordWorkLogInputRequest);
 
     /**
      * 删除
@@ -44,8 +44,15 @@ public interface RecordWorkLogService extends Service<RecordWorkLog> {
 
     /**
      * 修改
-     * @param recordWorkLog 实体
+     * @param recordWorkLogInputRequest 实体
      * @return 返回结果
      */
-    public RecordWorkLog update(RecordWorkLog recordWorkLog);
+    public RecordWorkLog update(RecordWorkLogInputRequest recordWorkLogInputRequest);
+
+    /**
+     * 获取 工作日写实记录表 信息
+     * @param id
+     * @return
+     */
+    RecordWorkLogDetailResponse queryWorkLogDetail(Long id);
 }

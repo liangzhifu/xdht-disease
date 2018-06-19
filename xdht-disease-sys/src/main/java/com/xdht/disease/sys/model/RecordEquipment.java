@@ -50,6 +50,8 @@ public class RecordEquipment {
     @Column(name = "update_date")
     private Date updateDate;
 
+
+
     /**
      * @return id
      */
@@ -189,4 +191,6 @@ public class RecordEquipment {
     public void setUpdateDate(Date updateDate) {
         this.updateDate = updateDate;
     }
+
+
 }

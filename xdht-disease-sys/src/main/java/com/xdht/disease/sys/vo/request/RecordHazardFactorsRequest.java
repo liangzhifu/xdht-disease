@@ -21,5 +21,10 @@ public class RecordHazardFactorsRequest {
     @ApiModelProperty(value = "状态（0正常 1删除）")
     private String status;
 
+    @ApiModelProperty(value = "分页数")
+    private Integer  pageNumber;
+
+    @ApiModelProperty(value = "每页数量")
+    private Integer pageSize;
 
 }

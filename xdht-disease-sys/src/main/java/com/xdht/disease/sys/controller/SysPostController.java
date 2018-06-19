@@ -30,30 +30,30 @@ public class SysPostController {
 
     @RequestMapping(value = "/recordList", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     @ApiOperation(value = "查询列表")
-    public  ResponseEntity<Result<List<SysPost>>> recordList(@CurrentUser User user, @RequestBody SysPostRequest sysPostRequest) {
+    public  ResponseEntity<Result<List<SysPost>>> recordList(@RequestBody SysPostRequest sysPostRequest) {
         return new ResponseEntity<>(Result.ok(sysPostService.queryList(sysPostRequest)), HttpStatus.OK);
     }
     @RequestMapping(value = "/recordPage", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     @ApiOperation(value = "分页查询")
-    public ResponseEntity<Result<PageResult<SysPost>>> recordPage(@CurrentUser User user, @RequestBody SysPostRequest sysPostRequest, @RequestParam Integer pageNum, @RequestParam Integer pageSize) {
+    public ResponseEntity<Result<PageResult<SysPost>>> recordPage(@RequestBody SysPostRequest sysPostRequest, @RequestParam Integer pageNum, @RequestParam Integer pageSize) {
         return new ResponseEntity<>(Result.ok(sysPostService.queryListPage(sysPostRequest,pageNum,pageSize)), HttpStatus.OK);
     }
 
     @RequestMapping(value = "/add", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     @ApiOperation(value = "添加")
-    public ResponseEntity<Result<SysPost>> add(@CurrentUser User user, @RequestBody SysPost sysPost) {
+    public ResponseEntity<Result<SysPost>> add(@RequestBody SysPost sysPost) {
         return new ResponseEntity<>(Result.ok(sysPostService.add(sysPost)), HttpStatus.OK);
     }
 
     @RequestMapping(value = "/delete", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     @ApiOperation(value = "删除")
-    public ResponseEntity<Result<SysPost>> delete(@CurrentUser User user, @RequestParam Long id) {
+    public ResponseEntity<Result<SysPost>> delete(@RequestParam Long id) {
         return new ResponseEntity<>(Result.ok(sysPostService.delete(id)), HttpStatus.OK);
     }
 
     @RequestMapping(value = "/update", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     @ApiOperation(value = "修改")
-    public ResponseEntity<Result<SysPost>> update(@CurrentUser User user, @RequestBody SysPost sysPost) {
+    public ResponseEntity<Result<SysPost>> update(@RequestBody SysPost sysPost) {
         return new ResponseEntity<>(Result.ok(sysPostService.update(sysPost)), HttpStatus.OK);
     }
 

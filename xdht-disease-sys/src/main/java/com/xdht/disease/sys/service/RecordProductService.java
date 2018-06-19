@@ -1,8 +1,11 @@
 package com.xdht.disease.sys.service;
+
 import com.xdht.disease.common.core.PageResult;
-import com.xdht.disease.sys.model.RecordProduct;
 import com.xdht.disease.common.core.Service;
+import com.xdht.disease.sys.model.RecordProduct;
+import com.xdht.disease.sys.vo.request.RecordProductInputRequest;
 import com.xdht.disease.sys.vo.request.RecordProductRequest;
+import com.xdht.disease.sys.vo.response.RecordProductDetailResponse;
 
 import java.util.List;
 
@@ -22,18 +25,16 @@ public interface RecordProductService extends Service<RecordProduct> {
     /**
      * 分页查询
      * @param recordProductRequest 查询条件
-     * @param pageNum  页数
-     * @param pageSize  每页大小
      * @return 返回结果
      */
-    public PageResult<RecordProduct> queryListPage(RecordProductRequest recordProductRequest, Integer pageNum, Integer pageSize);
+    public PageResult<RecordProduct> queryListPage(RecordProductRequest recordProductRequest);
 
     /**
      * 添加
-     * @param recordProduct 实体
+     * @param recordProductInputRequest 实体
      * @return 返回结果
      */
-    public  RecordProduct add(RecordProduct recordProduct);
+    public  RecordProduct add(RecordProductInputRequest recordProductInputRequest);
 
     /**
      * 删除
@@ -44,8 +45,15 @@ public interface RecordProductService extends Service<RecordProduct> {
 
     /**
      * 修改
-     * @param recordProduct 实体
+     * @param recordProductInputRequest 实体
      * @return 返回结果
      */
-    public  RecordProduct update(RecordProduct recordProduct);
+    public  RecordProduct update(RecordProductInputRequest recordProductInputRequest);
+
+    /**
+     * 获取 - 物料及产品调查表 信息
+     * @param id 主键id
+     * @return 返回结果
+     */
+    RecordProductDetailResponse queryProductDetail(Long id);
 }
