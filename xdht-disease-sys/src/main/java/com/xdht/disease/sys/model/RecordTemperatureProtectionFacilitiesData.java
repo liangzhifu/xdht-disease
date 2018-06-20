@@ -45,6 +45,12 @@ public class RecordTemperatureProtectionFacilitiesData {
     private String temperatureProtectionFacilities;
 
     /**
+     * 关联id
+     */
+    @Column(name = "relation_id")
+    private Long relationId;
+
+    /**
      * @return id
      */
     public Long getId() {
@@ -165,4 +171,16 @@ public class RecordTemperatureProtectionFacilitiesData {
     public void setTemperatureProtectionFacilities(String temperatureProtectionFacilities) {
         this.temperatureProtectionFacilities = temperatureProtectionFacilities;
     }
+    /**
+     * 获取关联id
+     * @return relationId
+     */
+    public Long getRelationId() {
+        return relationId;
+    }
+
+    /** 设置关联id
+     * @param relationId
+     */
+    public void setRelationId(Long relationId) { this.relationId = relationId; }
 }

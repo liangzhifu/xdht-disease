@@ -1,8 +1,6 @@
 package com.xdht.disease.sys.controller;
 
-import com.xdht.disease.common.authorization.annotation.CurrentUser;
 import com.xdht.disease.common.core.Result;
-import com.xdht.disease.common.model.User;
 import com.xdht.disease.sys.model.RecordHealthManagementProject;
 import com.xdht.disease.sys.service.RecordHealthManagementProjectService;
 import com.xdht.disease.sys.vo.request.RecordHealthManagementProjectRequest;
@@ -29,25 +27,25 @@ public class RecordHealthManagementProjectController {
 
     @RequestMapping(value = "/recordList", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     @ApiOperation(value = "查询列表")
-    public  ResponseEntity<Result<List<RecordHealthManagementProject>>> recordList(@CurrentUser User user, @RequestBody RecordHealthManagementProjectRequest recordRequest) {
+    public  ResponseEntity<Result<List<RecordHealthManagementProject>>> recordList(@RequestBody RecordHealthManagementProjectRequest recordRequest) {
         return new ResponseEntity<>(Result.ok(recordService.queryList(recordRequest)), HttpStatus.OK);
     }
 
     @RequestMapping(value = "/add", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     @ApiOperation(value = "添加")
-    public ResponseEntity<Result<RecordHealthManagementProject>> add(@CurrentUser User user, @RequestBody RecordHealthManagementProject recordHealthManagementProject) {
+    public ResponseEntity<Result<RecordHealthManagementProject>> add(@RequestBody RecordHealthManagementProject recordHealthManagementProject) {
         return new ResponseEntity<>(Result.ok(recordService.add(recordHealthManagementProject)), HttpStatus.OK);
     }
 
     @RequestMapping(value = "/delete", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     @ApiOperation(value = "删除")
-    public ResponseEntity<Result<RecordHealthManagementProject>> delete(@CurrentUser User user, @RequestParam Long id) {
+    public ResponseEntity<Result<RecordHealthManagementProject>> delete(@RequestParam Long id) {
         return new ResponseEntity<>(Result.ok(recordService.delete(id)), HttpStatus.OK);
     }
 
     @RequestMapping(value = "/update", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     @ApiOperation(value = "修改")
-    public ResponseEntity<Result<RecordHealthManagementProject>> update(@CurrentUser User user, @RequestBody RecordHealthManagementProject recordHealthManagementProject) {
+    public ResponseEntity<Result<RecordHealthManagementProject>> update(@RequestBody RecordHealthManagementProject recordHealthManagementProject) {
         return new ResponseEntity<>(Result.ok(recordService.update(recordHealthManagementProject)), HttpStatus.OK);
     }
 

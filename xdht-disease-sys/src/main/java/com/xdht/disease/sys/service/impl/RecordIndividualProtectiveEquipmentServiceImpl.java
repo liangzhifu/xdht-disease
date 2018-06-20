@@ -3,15 +3,21 @@ package com.xdht.disease.sys.service.impl;
 import com.github.pagehelper.PageHelper;
 import com.xdht.disease.common.core.AbstractService;
 import com.xdht.disease.common.core.PageResult;
+import com.xdht.disease.sys.constant.SysEnum;
 import com.xdht.disease.sys.dao.RecordIndividualProtectiveEquipmentMapper;
 import com.xdht.disease.sys.model.RecordIndividualProtectiveEquipment;
+import com.xdht.disease.sys.model.RecordIndividualProtectiveEquipmentData;
+import com.xdht.disease.sys.service.RecordIndividualProtectiveEquipmentDataService;
 import com.xdht.disease.sys.service.RecordIndividualProtectiveEquipmentService;
 import com.xdht.disease.sys.vo.request.RecordIndividualProtectiveEquipmentRequest;
+import com.xdht.disease.sys.vo.request.RecordIndividualProtectiveInputRequest;
+import com.xdht.disease.sys.vo.response.RecordIndividualProtectiveDetailResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import tk.mybatis.mapper.entity.Condition;
 
+import java.util.LinkedList;
 import java.util.List;
 
 
@@ -24,6 +30,8 @@ public class RecordIndividualProtectiveEquipmentServiceImpl extends AbstractServ
 
     @Autowired
     private RecordIndividualProtectiveEquipmentMapper recordMapper;
+    @Autowired
+    private RecordIndividualProtectiveEquipmentDataService recordIndividualProtectiveEquipmentDataService;
 
     @Override
     public List<RecordIndividualProtectiveEquipment> queryList(RecordIndividualProtectiveEquipmentRequest recordRequest) {
@@ -40,42 +48,78 @@ public class RecordIndividualProtectiveEquipmentServiceImpl extends AbstractServ
     }
 
     @Override
-    public PageResult<RecordIndividualProtectiveEquipment> queryListPage(RecordIndividualProtectiveEquipmentRequest recordRequest, Integer pageNum, Integer pageSize) {
+    public PageResult<RecordIndividualProtectiveEquipment> queryListPage(RecordIndividualProtectiveEquipmentRequest recordRequest) {
 
         Condition condition = new Condition(RecordIndividualProtectiveEquipment.class);
-        condition.createCriteria() .andEqualTo("id", recordRequest.getId())
-                .andEqualTo("individualProtectiveEquipmentNo",recordRequest.getIndividualProtectiveEquipmentNo());
+        condition.createCriteria() .andEqualTo("id", recordRequest.getId());
+        if (recordRequest.getIndividualProtectiveEquipmentNo() != null) {
+            condition.getOredCriteria().get(0).andLike("individualProtectiveEquipmentNo","%"+recordRequest.getIndividualProtectiveEquipmentNo()+"%");
+        }
         if (recordRequest.getVerificationResult() != null) {
             condition.getOredCriteria().get(0).andLike("verificationResult","%"+recordRequest.getVerificationResult()+"%");
         }
         if (recordRequest.getStatus() != null){
             condition.getOredCriteria().get(0).andEqualTo("status",recordRequest.getStatus());
         }
-        PageHelper.startPage(pageNum, pageSize);
+        PageHelper.startPage(recordRequest.getPageNumber(), recordRequest.getPageSize());
         List<RecordIndividualProtectiveEquipment> dataList = this.recordMapper.selectByCondition(condition);
+        Integer count = this.recordMapper.selectCountByCondition(condition);
         PageResult<RecordIndividualProtectiveEquipment> pageList = new  PageResult<RecordIndividualProtectiveEquipment>();
-        pageList.setTotal(dataList.size());
+        pageList.setTotal(count);
         pageList.setDataList(dataList);
         return pageList;
     }
 
     @Override
-    public RecordIndividualProtectiveEquipment add(RecordIndividualProtectiveEquipment record) {
-        this.recordMapper.insertUseGeneratedKeys(record);
-        return  record;
+    public RecordIndividualProtectiveEquipment add(RecordIndividualProtectiveInputRequest recordIndividualProtectiveInputRequest) {
+        RecordIndividualProtectiveEquipment recordIndividualProtective = recordIndividualProtectiveInputRequest.getRecordIndividualProtective();
+        recordIndividualProtective.setStatus(SysEnum.StatusEnum.STATUS_NORMAL.getCode());
+        this.insertUseGeneratedKeys(recordIndividualProtective);
+        List<RecordIndividualProtectiveEquipmentData> recordIndividualProtectiveDataList = new LinkedList<>();
+        for ( RecordIndividualProtectiveEquipmentData recordIndividualProtectiveData :  recordIndividualProtectiveInputRequest.getRecordIndividualProtectiveDataList()) {
+            recordIndividualProtectiveData.setRelationId(recordIndividualProtective.getId());
+            recordIndividualProtectiveDataList.add(recordIndividualProtectiveData);
+        }
+        if (recordIndividualProtectiveDataList.size()>0){
+            this.recordIndividualProtectiveEquipmentDataService.insertList(recordIndividualProtectiveDataList);
+        }
+        return  recordIndividualProtective;
     }
 
     @Override
     public RecordIndividualProtectiveEquipment delete(Long id) {
-            this.recordMapper.deleteByPrimaryKey(id);
-            RecordIndividualProtectiveEquipment recordIndividualProtectiveEquipment = new RecordIndividualProtectiveEquipment();
-            recordIndividualProtectiveEquipment.setId(id);
-            return recordIndividualProtectiveEquipment;
+        RecordIndividualProtectiveEquipment recordIndividualProtectiveEquipment = this.recordMapper.selectByPrimaryKey(id);
+        recordIndividualProtectiveEquipment.setStatus(SysEnum.StatusEnum.STATUS_DELETE.getCode());
+        return recordIndividualProtectiveEquipment;
     }
 
     @Override
-    public RecordIndividualProtectiveEquipment update(RecordIndividualProtectiveEquipment record) {
-            this.recordMapper.updateByPrimaryKeySelective(record);
-            return record;
+    public RecordIndividualProtectiveEquipment update(RecordIndividualProtectiveInputRequest recordIndividualProtectiveInputRequest) {
+        RecordIndividualProtectiveEquipment recordIndividualProtective = recordIndividualProtectiveInputRequest.getRecordIndividualProtective();
+        this.recordMapper.updateByPrimaryKeySelective(recordIndividualProtective);
+        List<RecordIndividualProtectiveEquipmentData> recordIndividualProtectiveDataList = new LinkedList<>();
+        for ( RecordIndividualProtectiveEquipmentData recordIndividualProtectiveData: recordIndividualProtectiveInputRequest.getRecordIndividualProtectiveDataList() ) {
+            if (recordIndividualProtectiveData.getId() == null){
+                recordIndividualProtectiveData.setRelationId(recordIndividualProtective.getId());
+                recordIndividualProtectiveDataList.add(recordIndividualProtectiveData);
+            }
+            this.recordIndividualProtectiveEquipmentDataService.updateByPrimaryKeySelective(recordIndividualProtectiveData);
+        }
+        if (recordIndividualProtectiveDataList.size()>0){
+            this.recordIndividualProtectiveEquipmentDataService.insertList(recordIndividualProtectiveDataList);
+        }
+        return recordIndividualProtective;
+    }
+
+    @Override
+    public RecordIndividualProtectiveDetailResponse queryIndividualProtetiveDetail(Long id) {
+        RecordIndividualProtectiveDetailResponse response = new RecordIndividualProtectiveDetailResponse();
+        RecordIndividualProtectiveEquipment recordIndividualProtective = this.recordMapper.selectByPrimaryKey(id);
+        response.setRecordIndividualProtective(recordIndividualProtective);
+        Condition condition = new Condition(RecordIndividualProtectiveEquipmentData.class);
+        condition.createCriteria() .andEqualTo("relationId", id);
+        List<RecordIndividualProtectiveEquipmentData> recordIndividualProtectiveDataList = this.recordIndividualProtectiveEquipmentDataService.selectByCondition(condition);
+        response.setRecordIndividualProtectiveDataList(recordIndividualProtectiveDataList);
+        return response;
     }
 }

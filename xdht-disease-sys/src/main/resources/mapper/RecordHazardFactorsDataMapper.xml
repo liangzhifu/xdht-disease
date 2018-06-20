@@ -11,5 +11,6 @@
     <result column="exposure_mode" jdbcType="VARCHAR" property="exposureMode" />
     <result column="exposure_time" jdbcType="VARCHAR" property="exposureTime" />
     <result column="remarks" jdbcType="VARCHAR" property="remarks" />
+    <result column="relation_id" jdbcType="BIGINT" property="relationId" />
   </resultMap>
 </mapper>

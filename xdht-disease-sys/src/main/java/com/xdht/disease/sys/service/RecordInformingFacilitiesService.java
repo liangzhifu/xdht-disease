@@ -2,7 +2,9 @@ package com.xdht.disease.sys.service;
 import com.xdht.disease.common.core.PageResult;
 import com.xdht.disease.sys.model.RecordInformingFacilities;
 import com.xdht.disease.common.core.Service;
+import com.xdht.disease.sys.vo.request.RecordInformingFacilitiesInputRequest;
 import com.xdht.disease.sys.vo.request.RecordInformingFacilitiesRequest;
+import com.xdht.disease.sys.vo.response.RecordInformingFacilitiesDetailResponse;
 
 import java.util.List;
 
@@ -22,18 +24,16 @@ public interface RecordInformingFacilitiesService extends Service<RecordInformin
     /**
      * 分页查询
      * @param recordRequest 查询条件
-     * @param pageNum   页数
-     * @param pageSize  每页大小
      * @return 返回结果
      */
-    public PageResult<RecordInformingFacilities> queryListPage(RecordInformingFacilitiesRequest recordRequest, Integer pageNum, Integer pageSize);
+    public PageResult<RecordInformingFacilities> queryListPage(RecordInformingFacilitiesRequest recordRequest);
 
     /**
      * 添加
-     * @param recordInformingFacilities 实体
+     * @param recordInformingFacilitiesInputRequest 实体
      * @return 返回结果
      */
-    public RecordInformingFacilities add(RecordInformingFacilities recordInformingFacilities);
+    public RecordInformingFacilities add(RecordInformingFacilitiesInputRequest recordInformingFacilitiesInputRequest);
 
     /**
      * 删除
@@ -44,8 +44,15 @@ public interface RecordInformingFacilitiesService extends Service<RecordInformin
 
     /**
      * 修改
-     * @param recordInformingFacilities 实体
+     * @param recordInformingFacilitiesInputRequest 实体
      * @return 返回结果
      */
-    public RecordInformingFacilities update(RecordInformingFacilities recordInformingFacilities);
+    public RecordInformingFacilities update(RecordInformingFacilitiesInputRequest recordInformingFacilitiesInputRequest);
+
+    /**
+     * 获取 职业病危害告知设施调查表 信息
+     * @param id 主键id
+     * @return 返回结果
+     */
+    RecordInformingFacilitiesDetailResponse queryInformingFacilitiesDetail(Long id);
 }

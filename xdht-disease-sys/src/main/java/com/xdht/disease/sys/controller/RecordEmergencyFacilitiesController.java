@@ -6,7 +6,9 @@ import com.xdht.disease.common.core.Result;
 import com.xdht.disease.common.model.User;
 import com.xdht.disease.sys.model.RecordEmergencyFacilities;
 import com.xdht.disease.sys.service.RecordEmergencyFacilitiesService;
+import com.xdht.disease.sys.vo.request.RecordEmergencyFacilitiesInputRequest;
 import com.xdht.disease.sys.vo.request.RecordEmergencyFacilitiesRequest;
+import com.xdht.disease.sys.vo.response.RecordEmergencyFacilitiesDetailResponse;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.log4j.Log4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,33 +32,38 @@ public class RecordEmergencyFacilitiesController {
 
     @RequestMapping(value = "/recordList", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     @ApiOperation(value = "查询列表")
-    public  ResponseEntity<Result<List<RecordEmergencyFacilities>>> recordList(@CurrentUser User user, @RequestBody RecordEmergencyFacilitiesRequest recordEmergencyFacilitiesRequest) {
+    public  ResponseEntity<Result<List<RecordEmergencyFacilities>>> recordList( @RequestBody RecordEmergencyFacilitiesRequest recordEmergencyFacilitiesRequest) {
         return new ResponseEntity<>(Result.ok(recordEmergencyFacilitiesService.queryList(recordEmergencyFacilitiesRequest)), HttpStatus.OK);
     }
-    @RequestMapping(value = "/recordPage", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    @RequestMapping(value = "/pageList", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     @ApiOperation(value = "分页查询")
-    public ResponseEntity<Result<PageResult<RecordEmergencyFacilities>>> recordPage(@CurrentUser User user, @RequestBody RecordEmergencyFacilitiesRequest recordEmergencyFacilitiesRequest, @RequestParam Integer pageNum, @RequestParam Integer pageSize) {
-        return new ResponseEntity<>(Result.ok(recordEmergencyFacilitiesService.queryListPage(recordEmergencyFacilitiesRequest,pageNum,pageSize)), HttpStatus.OK);
+    public ResponseEntity<Result<PageResult<RecordEmergencyFacilities>>> recordPage( @RequestBody RecordEmergencyFacilitiesRequest recordEmergencyFacilitiesRequest) {
+        return new ResponseEntity<>(Result.ok(recordEmergencyFacilitiesService.queryListPage(recordEmergencyFacilitiesRequest)), HttpStatus.OK);
     }
 
     @RequestMapping(value = "/add", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     @ApiOperation(value = "添加")
-    public ResponseEntity<Result<RecordEmergencyFacilities>> add(@CurrentUser User user, @RequestBody RecordEmergencyFacilities recordEmergencyFacilities) {
-        return new ResponseEntity<>(Result.ok(recordEmergencyFacilitiesService.add(recordEmergencyFacilities)), HttpStatus.OK);
+    public ResponseEntity<Result<RecordEmergencyFacilities>> add( @RequestBody RecordEmergencyFacilitiesInputRequest recordEmergencyFacilitiesInputRequest) {
+        return new ResponseEntity<>(Result.ok(recordEmergencyFacilitiesService.add(recordEmergencyFacilitiesInputRequest)), HttpStatus.OK);
     }
 
-    @RequestMapping(value = "/delete", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    @RequestMapping(value = "/delete/{id}", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     @ApiOperation(value = "删除")
-    public ResponseEntity<Result<RecordEmergencyFacilities>> delete(@CurrentUser User user, @RequestParam Long id) {
+    public ResponseEntity<Result<RecordEmergencyFacilities>> delete( @PathVariable Long id) {
         return new ResponseEntity<>(Result.ok(recordEmergencyFacilitiesService.delete(id)), HttpStatus.OK);
     }
 
     @RequestMapping(value = "/update", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     @ApiOperation(value = "修改")
-    public ResponseEntity<Result<RecordEmergencyFacilities>> update(@CurrentUser User user, @RequestBody RecordEmergencyFacilities recordEmergencyFacilities) {
-        return new ResponseEntity<>(Result.ok(recordEmergencyFacilitiesService.update(recordEmergencyFacilities)), HttpStatus.OK);
+    public ResponseEntity<Result<RecordEmergencyFacilities>> update( @RequestBody RecordEmergencyFacilitiesInputRequest recordEmergencyFacilitiesInputRequest) {
+        return new ResponseEntity<>(Result.ok(recordEmergencyFacilitiesService.update(recordEmergencyFacilitiesInputRequest)), HttpStatus.OK);
     }
 
-
+    @RequestMapping(value = "/detail/{id}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    @ApiOperation(value = "获取 --详细内容")
+    public ResponseEntity<Result<RecordEmergencyFacilitiesDetailResponse>> getEmergencyFancilitiesDetail(@PathVariable Long id) {
+        RecordEmergencyFacilitiesDetailResponse recordEmergencyFacilitiesDetailResponse = this.recordEmergencyFacilitiesService.queryEmergencyFacilitiesDetail(id);
+        return new ResponseEntity<>(Result.ok(recordEmergencyFacilitiesDetailResponse), HttpStatus.OK);
+    }
 
 }
