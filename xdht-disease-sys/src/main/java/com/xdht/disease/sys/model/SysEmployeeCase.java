@@ -1,5 +1,7 @@
 package com.xdht.disease.sys.model;
 
+import com.alibaba.fastjson.annotation.JSONField;
+
 import java.util.Date;
 import javax.persistence.*;
 
@@ -24,6 +26,7 @@ public class SysEmployeeCase {
     /**
      * 诊断时间
      */
+    @JSONField(format="yyyy-MM-dd")
     @Column(name = "diagnosis_date")
     private Date diagnosisDate;
 

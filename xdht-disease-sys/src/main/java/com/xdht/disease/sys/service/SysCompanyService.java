@@ -4,7 +4,6 @@ import com.xdht.disease.common.core.PageResult;
 import com.xdht.disease.common.core.Service;
 import com.xdht.disease.sys.model.SysCompany;
 import com.xdht.disease.sys.vo.request.SysCompanyRequest;
-import com.xdht.disease.sys.vo.response.SysCompanyResponse;
 
 import java.util.List;
 
