@@ -1,6 +1,5 @@
 package com.xdht.disease.sys.controller;
 
-import com.xdht.disease.common.authorization.annotation.Authorization;
 import com.xdht.disease.common.authorization.annotation.CurrentUser;
 import com.xdht.disease.common.core.PageResult;
 import com.xdht.disease.common.core.Result;

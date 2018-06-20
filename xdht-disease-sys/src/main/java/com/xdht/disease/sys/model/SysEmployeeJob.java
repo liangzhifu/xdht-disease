@@ -1,5 +1,7 @@
 package com.xdht.disease.sys.model;
 
+import com.alibaba.fastjson.annotation.JSONField;
+
 import java.util.Date;
 import javax.persistence.*;
 
@@ -18,12 +20,14 @@ public class SysEmployeeJob {
     /**
      * 开始日期
      */
+    @JSONField(format="yyyy-MM-dd")
     @Column(name = "begin_date")
     private Date beginDate;
 
     /**
      * 介绍日期
      */
+    @JSONField(format="yyyy-MM-dd")
     @Column(name = "end_date")
     private Date endDate;
 
