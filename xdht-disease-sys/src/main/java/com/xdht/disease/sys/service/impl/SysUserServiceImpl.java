@@ -60,10 +60,10 @@ public class SysUserServiceImpl extends AbstractService<SysUser> implements SysU
     @Override
     public PageResult<SysUser> querySysUserPage(SysUserRequest sysUserRequest) {
         Condition condition = new Condition(SysUser.class);
+        condition.createCriteria().andEqualTo("status", SysEnum.StatusEnum.STATUS_NORMAL.getCode());
         if (sysUserRequest.getUserName() != null){
-            condition.createCriteria().andLike("userName", "%"+sysUserRequest.getUserName()+"%");
+            condition.getOredCriteria().get(0).andLike("userName", "%"+sysUserRequest.getUserName()+"%");
         }
-        condition.getOredCriteria().get(0).andEqualTo("status", SysEnum.StatusEnum.STATUS_NORMAL.getCode());
         PageHelper.startPage(sysUserRequest.getPageNumber(), sysUserRequest.getPageSize());
         List<SysUser> dataList = this.selectByCondition(condition);
         Integer count = this.selectCountByCondition(condition);
@@ -76,8 +76,9 @@ public class SysUserServiceImpl extends AbstractService<SysUser> implements SysU
     @Override
     public List<SysUser> querySysUserList(SysUser sysUser) {
         Condition condition = new Condition(SysUser.class);
+        condition.createCriteria().andEqualTo("status", SysEnum.StatusEnum.STATUS_NORMAL.getCode());
         if (sysUser.getUserName() != null){
-            condition.createCriteria().andLike("userName", "%"+sysUser.getUserName()+"%");
+            condition.getOredCriteria().get(0).andLike("userName", "%"+sysUser.getUserName()+"%");
         }
         condition.setOrderByClause("id desc");
         List<SysUser> sysUserList = this.sysUserMapper.selectByCondition(condition);

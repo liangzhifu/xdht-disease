@@ -24,10 +24,10 @@ public class SysRoleServiceImpl extends AbstractService<SysRole> implements SysR
     @Override
     public PageResult<SysRole> querySysRolePage(SysRoleRequest sysRoleRequest) {
         Condition condition = new Condition(SysRole.class);
+        condition.createCriteria().andEqualTo("status", SysEnum.StatusEnum.STATUS_NORMAL.getCode());
         if (sysRoleRequest.getRoleName() != null){
-            condition.createCriteria().andLike("roleName", "%"+sysRoleRequest.getRoleName()+"%");
+            condition.getOredCriteria().get(0).andLike("roleName", "%"+sysRoleRequest.getRoleName()+"%");
         }
-        condition.getOredCriteria().get(0).andEqualTo("status", SysEnum.StatusEnum.STATUS_NORMAL.getCode());
         PageHelper.startPage(sysRoleRequest.getPageNumber(), sysRoleRequest.getPageSize());
         List<SysRole> dataList = this.selectByCondition(condition);
         Integer count = this.selectCountByCondition(condition);
@@ -40,8 +40,9 @@ public class SysRoleServiceImpl extends AbstractService<SysRole> implements SysR
     @Override
     public List<SysRole> querySysRoleList(SysRole sysRole) {
         Condition condition = new Condition(SysRole.class);
+        condition.createCriteria().andEqualTo("status", SysEnum.StatusEnum.STATUS_NORMAL.getCode());
         if (sysRole.getRoleName() != null){
-        condition.createCriteria().andLike("roleName", "%"+sysRole.getRoleName()+"%");
+            condition.getOredCriteria().get(0).andLike("roleName", "%"+sysRole.getRoleName()+"%");
         }
         condition.setOrderByClause("id desc");
         List<SysRole> sysRoleList = this.selectByCondition(condition);
