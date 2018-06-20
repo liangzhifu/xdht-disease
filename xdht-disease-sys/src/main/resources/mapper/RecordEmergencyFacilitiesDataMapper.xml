@@ -13,5 +13,6 @@
     <result column="operation_and_maintenance" jdbcType="VARCHAR" property="operationAndMaintenance" />
     <result column="technical_parameter" jdbcType="VARCHAR" property="technicalParameter" />
     <result column="hazard_factors" jdbcType="VARCHAR" property="hazardFactors" />
+    <result column="relation_id" jdbcType="BIGINT" property="relationId" />
   </resultMap>
 </mapper>

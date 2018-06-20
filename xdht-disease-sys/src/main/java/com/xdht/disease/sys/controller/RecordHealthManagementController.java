@@ -6,7 +6,9 @@ import com.xdht.disease.common.core.Result;
 import com.xdht.disease.common.model.User;
 import com.xdht.disease.sys.model.RecordHealthManagement;
 import com.xdht.disease.sys.service.RecordHealthManagementService;
+import com.xdht.disease.sys.vo.request.RecordHealthManagementInputRequest;
 import com.xdht.disease.sys.vo.request.RecordHealthManagementRequest;
+import com.xdht.disease.sys.vo.response.RecordHealthManagementDetailResponse;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.log4j.Log4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,33 +32,39 @@ public class RecordHealthManagementController {
 
     @RequestMapping(value = "/recordList", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     @ApiOperation(value = "查询列表")
-    public  ResponseEntity<Result<List<RecordHealthManagement>>> recordList(@CurrentUser User user, @RequestBody RecordHealthManagementRequest recordHealthManagementRequest) {
+    public  ResponseEntity<Result<List<RecordHealthManagement>>> recordList(@RequestBody RecordHealthManagementRequest recordHealthManagementRequest) {
         return new ResponseEntity<>(Result.ok(recordHealthManagementService.queryList(recordHealthManagementRequest)), HttpStatus.OK);
     }
-    @RequestMapping(value = "/recordPage", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    @RequestMapping(value = "/pageList", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     @ApiOperation(value = "分页查询")
-    public ResponseEntity<Result<PageResult<RecordHealthManagement>>> recordPage(@CurrentUser User user, @RequestBody RecordHealthManagementRequest recordHealthManagementRequest, @RequestParam Integer pageNum, @RequestParam Integer pageSize) {
-        return new ResponseEntity<>(Result.ok(recordHealthManagementService.queryListPage(recordHealthManagementRequest,pageNum,pageSize)), HttpStatus.OK);
+    public ResponseEntity<Result<PageResult<RecordHealthManagement>>> recordPage(@RequestBody RecordHealthManagementRequest recordHealthManagementRequest) {
+        return new ResponseEntity<>(Result.ok(recordHealthManagementService.queryListPage(recordHealthManagementRequest)), HttpStatus.OK);
     }
 
     @RequestMapping(value = "/add", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     @ApiOperation(value = "添加")
-    public ResponseEntity<Result<RecordHealthManagement>> add(@CurrentUser User user, @RequestBody RecordHealthManagement recordHealthManagement) {
-        return new ResponseEntity<>(Result.ok(recordHealthManagementService.add(recordHealthManagement)), HttpStatus.OK);
+    public ResponseEntity<Result<RecordHealthManagement>> add(@RequestBody RecordHealthManagementInputRequest recordHealthManagementInputRequest) {
+        return new ResponseEntity<>(Result.ok(recordHealthManagementService.add(recordHealthManagementInputRequest)), HttpStatus.OK);
     }
 
-    @RequestMapping(value = "/delete", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    @RequestMapping(value = "/delete/{id}", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     @ApiOperation(value = "删除")
-    public ResponseEntity<Result<RecordHealthManagement>> delete(@CurrentUser User user, @RequestParam Long id) {
+    public ResponseEntity<Result<RecordHealthManagement>> delete(@PathVariable Long id) {
         return new ResponseEntity<>(Result.ok(recordHealthManagementService.delete(id)), HttpStatus.OK);
     }
 
     @RequestMapping(value = "/update", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     @ApiOperation(value = "修改")
-    public ResponseEntity<Result<RecordHealthManagement>> update(@CurrentUser User user, @RequestBody RecordHealthManagement recordHealthManagement) {
-        return new ResponseEntity<>(Result.ok(recordHealthManagementService.update(recordHealthManagement)), HttpStatus.OK);
+    public ResponseEntity<Result<RecordHealthManagement>> update(@RequestBody RecordHealthManagementInputRequest recordHealthManagementInputRequest) {
+        return new ResponseEntity<>(Result.ok(recordHealthManagementService.update(recordHealthManagementInputRequest)), HttpStatus.OK);
     }
 
+    @RequestMapping(value = "/detail/{id}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    @ApiOperation(value = "获取职业卫生管理情况调查表--详细内容")
+    public ResponseEntity<Result<RecordHealthManagementDetailResponse>> getRecordHealthManagementDetail(@PathVariable Long id) {
+        RecordHealthManagementDetailResponse recordHealthManagementDetailResponse = this.recordHealthManagementService.queryRecordHealthManagementDetail(id);
+        return new ResponseEntity<>(Result.ok(recordHealthManagementDetailResponse), HttpStatus.OK);
+    }
 
 
 }

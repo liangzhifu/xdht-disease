@@ -1,8 +1,11 @@
 package com.xdht.disease.sys.service;
+
 import com.xdht.disease.common.core.PageResult;
-import com.xdht.disease.sys.model.RecordEmergencyFacilities;
 import com.xdht.disease.common.core.Service;
+import com.xdht.disease.sys.model.RecordEmergencyFacilities;
+import com.xdht.disease.sys.vo.request.RecordEmergencyFacilitiesInputRequest;
 import com.xdht.disease.sys.vo.request.RecordEmergencyFacilitiesRequest;
+import com.xdht.disease.sys.vo.response.RecordEmergencyFacilitiesDetailResponse;
 
 import java.util.List;
 
@@ -22,18 +25,16 @@ public interface RecordEmergencyFacilitiesService extends Service<RecordEmergenc
     /**
      * 分页查询
      * @param recordEmergencyFacilitiesRequest 查询条件
-     * @param pageNum 页数
-     * @param pageSize 每页大小
      * @return 返回结果
      */
-    public PageResult<RecordEmergencyFacilities> queryListPage(RecordEmergencyFacilitiesRequest recordEmergencyFacilitiesRequest, Integer pageNum, Integer pageSize);
+    public PageResult<RecordEmergencyFacilities> queryListPage(RecordEmergencyFacilitiesRequest recordEmergencyFacilitiesRequest);
 
     /**
      * 添加
-     * @param recordEmergencyFacilities 实体
+     * @param recordEmergencyFacilitiesInputRequest 实体
      * @return 返回结果
      */
-    public RecordEmergencyFacilities add(RecordEmergencyFacilities recordEmergencyFacilities);
+    public RecordEmergencyFacilities add(RecordEmergencyFacilitiesInputRequest recordEmergencyFacilitiesInputRequest);
 
     /**
      * 删除
@@ -44,8 +45,15 @@ public interface RecordEmergencyFacilitiesService extends Service<RecordEmergenc
 
     /**
      * 修改
-     * @param recordEmergencyFacilities 实体
+     * @param recordEmergencyFacilitiesInputRequest 实体
      * @return 返回结果
      */
-    public RecordEmergencyFacilities update(RecordEmergencyFacilities recordEmergencyFacilities);
+    public RecordEmergencyFacilities update(RecordEmergencyFacilitiesInputRequest recordEmergencyFacilitiesInputRequest);
+
+    /**
+     * 获取 应急设施调查表 信息
+     * @param id 主键id
+     * @return 返回结果
+     */
+    RecordEmergencyFacilitiesDetailResponse queryEmergencyFacilitiesDetail(Long id);
 }

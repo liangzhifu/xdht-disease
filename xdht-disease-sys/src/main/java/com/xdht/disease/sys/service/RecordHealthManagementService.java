@@ -2,7 +2,9 @@ package com.xdht.disease.sys.service;
 import com.xdht.disease.common.core.PageResult;
 import com.xdht.disease.sys.model.RecordHealthManagement;
 import com.xdht.disease.common.core.Service;
+import com.xdht.disease.sys.vo.request.RecordHealthManagementInputRequest;
 import com.xdht.disease.sys.vo.request.RecordHealthManagementRequest;
+import com.xdht.disease.sys.vo.response.RecordHealthManagementDetailResponse;
 
 import java.util.List;
 
@@ -22,18 +24,16 @@ public interface RecordHealthManagementService extends Service<RecordHealthManag
     /**
      * 分页查询
      * @param recordHealthManagementRequest 查询条件
-     * @param pageNum 页数
-     * @param pageSize 每页大小
      * @return 返回结果
      */
-    public PageResult<RecordHealthManagement> queryListPage(RecordHealthManagementRequest recordHealthManagementRequest, Integer pageNum, Integer pageSize);
+    public PageResult<RecordHealthManagement> queryListPage(RecordHealthManagementRequest recordHealthManagementRequest);
 
     /**
      * 添加
-     * @param recordHealthManagement 实体
+     * @param recordHealthManagementInputRequest 实体
      * @return 返回结果
      */
-    public RecordHealthManagement add(RecordHealthManagement recordHealthManagement);
+    public RecordHealthManagement add(RecordHealthManagementInputRequest recordHealthManagementInputRequest);
 
     /**
      * 删除
@@ -44,8 +44,15 @@ public interface RecordHealthManagementService extends Service<RecordHealthManag
 
     /**
      * 修改
-     * @param recordHealthManagement 实体
+     * @param recordHealthManagementInputRequest 实体
      * @return 返回结果
      */
-    public RecordHealthManagement update(RecordHealthManagement recordHealthManagement);
+    public RecordHealthManagement update(RecordHealthManagementInputRequest recordHealthManagementInputRequest);
+
+    /**
+     * 获取 职业卫生管理情况调查表 信息
+     * @param id 主键id
+     * @return 返回结果
+     */
+    RecordHealthManagementDetailResponse queryRecordHealthManagementDetail(Long id);
 }

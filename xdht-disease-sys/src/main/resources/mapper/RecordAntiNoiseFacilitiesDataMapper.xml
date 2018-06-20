@@ -12,5 +12,6 @@
     <result column="noise_source" jdbcType="VARCHAR" property="noiseSource" />
     <result column="noise_protection_facilities" jdbcType="VARCHAR" property="noiseProtectionFacilities" />
     <result column="operation_and_maintenance" jdbcType="VARCHAR" property="operationAndMaintenance" />
+    <result column="relation_id" jdbcType="BIGINT" property="relationId" />
   </resultMap>
 </mapper>

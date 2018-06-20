@@ -1,5 +1,6 @@
 package com.xdht.disease.sys.controller;
 
+import com.xdht.disease.common.authorization.annotation.Authorization;
 import com.xdht.disease.common.authorization.annotation.CurrentUser;
 import com.xdht.disease.common.core.PageResult;
 import com.xdht.disease.common.core.Result;
@@ -7,6 +8,10 @@ import com.xdht.disease.common.model.User;
 import com.xdht.disease.sys.model.RecordAntiNoiseFacilities;
 import com.xdht.disease.sys.service.RecordAntiNoiseFacilitiesService;
 import com.xdht.disease.sys.vo.request.RecordAntiNoiseFacilitiesRequest;
+import com.xdht.disease.sys.vo.request.RecordAntiNoiseInputRequest;
+import com.xdht.disease.sys.vo.response.RecordAntiNoiseDetailResponse;
+import io.swagger.annotations.ApiImplicitParam;
+import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.log4j.Log4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,33 +35,50 @@ public class RecordAntiNoiseFacilitiesController {
 
     @RequestMapping(value = "/recordList", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     @ApiOperation(value = "查询列表")
-    public  ResponseEntity<Result<List<RecordAntiNoiseFacilities>>> recordList(@CurrentUser User user, @RequestBody RecordAntiNoiseFacilitiesRequest recordAntiNoiseFacilitiesRequest) {
+    public  ResponseEntity<Result<List<RecordAntiNoiseFacilities>>> recordList( @RequestBody RecordAntiNoiseFacilitiesRequest recordAntiNoiseFacilitiesRequest) {
         return new ResponseEntity<>(Result.ok(recordAntiNoiseFacilitiesService.queryList(recordAntiNoiseFacilitiesRequest)), HttpStatus.OK);
     }
-    @RequestMapping(value = "/recordPage", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    @RequestMapping(value = "/pageList", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     @ApiOperation(value = "分页查询")
-    public ResponseEntity<Result<PageResult<RecordAntiNoiseFacilities>>> recordPage(@CurrentUser User user, @RequestBody RecordAntiNoiseFacilitiesRequest recordAntiNoiseFacilitiesRequest,@RequestParam Integer pageNum,@RequestParam Integer pageSize) {
-        return new ResponseEntity<>(Result.ok(recordAntiNoiseFacilitiesService.queryListPage(recordAntiNoiseFacilitiesRequest,pageNum,pageSize)), HttpStatus.OK);
+    public ResponseEntity<Result<PageResult<RecordAntiNoiseFacilities>>> recordPage( @RequestBody RecordAntiNoiseFacilitiesRequest recordAntiNoiseFacilitiesRequest) {
+        return new ResponseEntity<>(Result.ok(recordAntiNoiseFacilitiesService.queryListPage(recordAntiNoiseFacilitiesRequest)), HttpStatus.OK);
     }
 
     @RequestMapping(value = "/add", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     @ApiOperation(value = "添加")
-    public ResponseEntity<Result<RecordAntiNoiseFacilities>> addRecordAntiNoiseFacilities(@CurrentUser User user, @RequestBody RecordAntiNoiseFacilities recordControlEffect) {
-        return new ResponseEntity<>(Result.ok(recordAntiNoiseFacilitiesService.addRecordAntiNoiseFacilities(recordControlEffect)), HttpStatus.OK);
+    @Authorization
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "authorization", value = "authorization", required = true, dataType = "string", paramType = "header"),
+    })
+    public ResponseEntity<Result<RecordAntiNoiseFacilities>> addRecordAntiNoiseFacilities( @RequestBody RecordAntiNoiseInputRequest recordAntiNoiseInputRequest) {
+        return new ResponseEntity<>(Result.ok(recordAntiNoiseFacilitiesService.addRecordAntiNoiseFacilities(recordAntiNoiseInputRequest)), HttpStatus.OK);
     }
 
-    @RequestMapping(value = "/delete", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    @RequestMapping(value = "/delete/{id}", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     @ApiOperation(value = "删除")
-    public ResponseEntity<Result<RecordAntiNoiseFacilities>> deleteRecordAntiNoiseFacilities(@CurrentUser User user, @RequestParam Long id) {
+    @Authorization
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "authorization", value = "authorization", required = true, dataType = "string", paramType = "header"),
+    })
+    public ResponseEntity<Result<RecordAntiNoiseFacilities>> deleteRecordAntiNoiseFacilities( @PathVariable Long id) {
         return new ResponseEntity<>(Result.ok(recordAntiNoiseFacilitiesService.deleteRecordAntiNoiseFacilities(id)), HttpStatus.OK);
     }
 
     @RequestMapping(value = "/update", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     @ApiOperation(value = "修改")
-    public ResponseEntity<Result<RecordAntiNoiseFacilities>> updateRecordAntiNoiseFacilities(@CurrentUser User user, @RequestBody RecordAntiNoiseFacilities recordAntiNoiseFacilities) {
-        return new ResponseEntity<>(Result.ok(recordAntiNoiseFacilitiesService.updateRecordAntiNoiseFacilities(recordAntiNoiseFacilities)), HttpStatus.OK);
+    @Authorization
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "authorization", value = "authorization", required = true, dataType = "string", paramType = "header"),
+    })
+    public ResponseEntity<Result<RecordAntiNoiseFacilities>> updateRecordAntiNoiseFacilities( @RequestBody RecordAntiNoiseInputRequest recordAntiNoiseInputRequest) {
+        return new ResponseEntity<>(Result.ok(recordAntiNoiseFacilitiesService.updateRecordAntiNoiseFacilities(recordAntiNoiseInputRequest)), HttpStatus.OK);
     }
 
-
+    @RequestMapping(value = "/detail/{id}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    @ApiOperation(value = "获取 --详细内容")
+    public ResponseEntity<Result<RecordAntiNoiseDetailResponse>> getRecordAntiNoiseDetail(@PathVariable Long id) {
+        RecordAntiNoiseDetailResponse recordAntiNoiseDetailResponse = this.recordAntiNoiseFacilitiesService.queryAntiNoiseDetail(id);
+        return new ResponseEntity<>(Result.ok(recordAntiNoiseDetailResponse), HttpStatus.OK);
+    }
 
 }

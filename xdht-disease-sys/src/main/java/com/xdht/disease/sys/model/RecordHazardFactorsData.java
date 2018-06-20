@@ -12,6 +12,12 @@ public class RecordHazardFactorsData {
     private Long officeId;
 
     /**
+     * 工艺过程
+     */
+    @Column(name = "process_name")
+    private String processName;
+
+    /**
      * 职业病危害因素
      */
     @Column(name = "hazard_factors")
@@ -33,6 +39,12 @@ public class RecordHazardFactorsData {
      * 备注
      */
     private String remarks;
+
+    /**
+     * 关联id
+     */
+    @Column(name = "relation_id")
+    private Long relationId;
 
     /**
      * @return id
@@ -133,4 +145,35 @@ public class RecordHazardFactorsData {
     public void setRemarks(String remarks) {
         this.remarks = remarks;
     }
+
+    /**
+     * 获取工艺过程
+     *
+     * @return process_name - 工艺过程
+     */
+    public String getProcessName() {
+        return processName;
+    }
+
+    /**
+     * 设置工艺过程
+     *
+     * @param processName 工艺过程
+     */
+    public void setProcessName(String processName) {
+        this.processName = processName;
+    }
+
+    /**
+     * 获取关联id
+     * @return relationId
+     */
+    public Long getRelationId() {
+        return relationId;
+    }
+
+    /** 设置关联id
+     * @param relationId
+     */
+    public void setRelationId(Long relationId) { this.relationId = relationId; }
 }

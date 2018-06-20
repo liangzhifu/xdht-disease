@@ -113,7 +113,6 @@ public class RecordPreEvaluationServiceImpl extends AbstractService<RecordPreEva
         RecordPreEvaluationDetailResponse recordPreEvaluationDetailResponse = new RecordPreEvaluationDetailResponse();
         RecordPreEvaluation recordPreEvaluation = this.recordPreEvaluationMapper.selectByPrimaryKey(id);
         recordPreEvaluationDetailResponse.setRecordPreEvaluation(recordPreEvaluation);
-//        Long recordPreEvaluationId = recordPreEvaluation.getId();
         Condition condition = new Condition(RecordPreEvaluationData.class);
         condition.createCriteria() .andEqualTo("preEvaluationId", id);
         List<RecordPreEvaluationData> recordPreEvaluationDataList = this.recordPreEvaluationDataService.selectByCondition(condition);

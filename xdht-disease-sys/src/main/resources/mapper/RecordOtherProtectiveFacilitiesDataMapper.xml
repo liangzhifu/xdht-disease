@@ -12,5 +12,6 @@
     <result column="hazard_factors" jdbcType="VARCHAR" property="hazardFactors" />
     <result column="protective_facilities" jdbcType="VARCHAR" property="protectiveFacilities" />
     <result column="operation_and_maintenance" jdbcType="VARCHAR" property="operationAndMaintenance" />
+    <result column="relation_id" jdbcType="BIGINT" property="relationId" />
   </resultMap>
 </mapper>

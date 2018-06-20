@@ -103,8 +103,16 @@ public class RecordProductServiceImpl extends AbstractService<RecordProduct> imp
     public RecordProduct update(RecordProductInputRequest recordProductInputRequest) {
         RecordProduct recordProduct = recordProductInputRequest.getRecordProduct();
         this.recordProductMapper.updateByPrimaryKeySelective(recordProduct);
+        List<RecordProductData> recordProductDataList = new LinkedList<>();
         for ( RecordProductData recordProductData : recordProductInputRequest.getRecordProductDataList() ) {
+            if (recordProductData.getId() == null){
+                recordProductData.setRelationId(recordProduct.getId());
+                recordProductDataList.add(recordProductData);
+            }
             this.recordProductDataService.updateByPrimaryKeySelective(recordProductData);
+        }
+        if (recordProductDataList.size()>0){
+            this.recordProductDataService.insertList(recordProductDataList);
         }
         return  recordProduct;
     }

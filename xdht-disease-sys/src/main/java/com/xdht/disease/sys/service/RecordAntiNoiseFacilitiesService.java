@@ -3,6 +3,8 @@ import com.xdht.disease.common.core.PageResult;
 import com.xdht.disease.sys.model.RecordAntiNoiseFacilities;
 import com.xdht.disease.common.core.Service;
 import com.xdht.disease.sys.vo.request.RecordAntiNoiseFacilitiesRequest;
+import com.xdht.disease.sys.vo.request.RecordAntiNoiseInputRequest;
+import com.xdht.disease.sys.vo.response.RecordAntiNoiseDetailResponse;
 
 import java.util.List;
 
@@ -22,18 +24,16 @@ public interface RecordAntiNoiseFacilitiesService extends Service<RecordAntiNois
     /**
      * 分页查询
      * @param recordAntiNoiseFacilitiesRequest 查询条件
-     * @param pageNum 页数
-     * @param pageSize 每页大小
      * @return 返回结果
      */
-    public PageResult<RecordAntiNoiseFacilities> queryListPage(RecordAntiNoiseFacilitiesRequest recordAntiNoiseFacilitiesRequest, Integer pageNum, Integer pageSize);
+    public PageResult<RecordAntiNoiseFacilities> queryListPage(RecordAntiNoiseFacilitiesRequest recordAntiNoiseFacilitiesRequest);
 
     /**
      * 添加
-     * @param recordControlEffect 实体
+     * @param recordAntiNoiseInputRequest 实体
      * @return 返回结果
      */
-    public RecordAntiNoiseFacilities addRecordAntiNoiseFacilities(RecordAntiNoiseFacilities recordControlEffect);
+    public RecordAntiNoiseFacilities addRecordAntiNoiseFacilities(RecordAntiNoiseInputRequest recordAntiNoiseInputRequest);
 
     /**
      * 删除
@@ -44,8 +44,15 @@ public interface RecordAntiNoiseFacilitiesService extends Service<RecordAntiNois
 
     /**
      * 修改
-     * @param recordAntiNoiseFacilities 实体
+     * @param recordAntiNoiseInputRequest 实体
      * @return 返回结果
      */
-    public RecordAntiNoiseFacilities updateRecordAntiNoiseFacilities(RecordAntiNoiseFacilities recordAntiNoiseFacilities);
+    public RecordAntiNoiseFacilities updateRecordAntiNoiseFacilities(RecordAntiNoiseInputRequest recordAntiNoiseInputRequest);
+
+    /**
+     * 获取 防噪声设施调查表 信息
+     * @param id 主键id
+     * @return 返回结果
+     */
+    RecordAntiNoiseDetailResponse queryAntiNoiseDetail(Long id);
 }
