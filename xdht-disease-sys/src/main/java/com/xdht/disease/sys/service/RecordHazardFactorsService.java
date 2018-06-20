@@ -2,7 +2,9 @@ package com.xdht.disease.sys.service;
 import com.xdht.disease.common.core.PageResult;
 import com.xdht.disease.sys.model.RecordHazardFactors;
 import com.xdht.disease.common.core.Service;
+import com.xdht.disease.sys.vo.request.RecordHazardFactorsInputRequest;
 import com.xdht.disease.sys.vo.request.RecordHazardFactorsRequest;
+import com.xdht.disease.sys.vo.response.RecordHazardFactorsDetailResponse;
 
 import java.util.List;
 
@@ -22,18 +24,16 @@ public interface RecordHazardFactorsService extends Service<RecordHazardFactors>
     /**
      * 分页查询
      * @param recordHazardFactorsRequest 查询条件
-     * @param pageNum 页数
-     * @param pageSize 每页大小
      * @return 返回结果
      */
-    public PageResult<RecordHazardFactors> queryListPage(RecordHazardFactorsRequest recordHazardFactorsRequest, Integer pageNum, Integer pageSize);
+    public PageResult<RecordHazardFactors> queryListPage(RecordHazardFactorsRequest recordHazardFactorsRequest);
 
     /**
      * 添加
-     * @param recordHazardFactors 实体
+     * @param recordHazardFactorsInputRequest 实体
      * @return 返回结果
      */
-    public RecordHazardFactors add(RecordHazardFactors recordHazardFactors);
+    public RecordHazardFactors add(RecordHazardFactorsInputRequest recordHazardFactorsInputRequest);
 
     /**
      * 删除
@@ -44,8 +44,15 @@ public interface RecordHazardFactorsService extends Service<RecordHazardFactors>
 
     /**
      * 修改
-     * @param recordHazardFactors 实体
+     * @param recordHazardFactorsInputRequest 实体
      * @return 返回结果
      */
-    public RecordHazardFactors update(RecordHazardFactors recordHazardFactors);
+    public RecordHazardFactors update(RecordHazardFactorsInputRequest recordHazardFactorsInputRequest);
+
+    /**
+     * 获取 职业病危害因素调查表 信息
+     * @param id 主键id
+     * @return 返回结果
+     */
+    RecordHazardFactorsDetailResponse queryHazardFactorsDetail(Long id);
 }

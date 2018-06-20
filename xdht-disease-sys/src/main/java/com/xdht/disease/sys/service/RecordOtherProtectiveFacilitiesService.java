@@ -3,6 +3,8 @@ import com.xdht.disease.common.core.PageResult;
 import com.xdht.disease.sys.model.RecordOtherProtectiveFacilities;
 import com.xdht.disease.common.core.Service;
 import com.xdht.disease.sys.vo.request.RecordOtherProtectiveFacilitiesRequest;
+import com.xdht.disease.sys.vo.request.RecordOtherProtectiveInputRequest;
+import com.xdht.disease.sys.vo.response.RecordOtherProtectiveDetailResponse;
 
 import java.util.List;
 
@@ -22,18 +24,16 @@ public interface RecordOtherProtectiveFacilitiesService extends Service<RecordOt
     /**
      * 分页查询
      * @param recordRequest 查询条件
-     * @param pageNum   页数
-     * @param pageSize  每页大小
      * @return 返回结果
      */
-    public PageResult<RecordOtherProtectiveFacilities> queryListPage(RecordOtherProtectiveFacilitiesRequest recordRequest, Integer pageNum, Integer pageSize);
+    public PageResult<RecordOtherProtectiveFacilities> queryListPage(RecordOtherProtectiveFacilitiesRequest recordRequest);
 
     /**
      * 添加
-     * @param recordOtherProtectiveFacilities   实体
+     * @param recordOtherProtectiveInputRequest   实体
      * @return 返回结果
      */
-    public RecordOtherProtectiveFacilities add(RecordOtherProtectiveFacilities recordOtherProtectiveFacilities);
+    public RecordOtherProtectiveFacilities add(RecordOtherProtectiveInputRequest recordOtherProtectiveInputRequest);
 
     /**
      * 删除
@@ -44,8 +44,15 @@ public interface RecordOtherProtectiveFacilitiesService extends Service<RecordOt
 
     /**
      * 修改
-     * @param recordOtherProtectiveFacilities 实体
+     * @param recordOtherProtectiveInputRequest 实体
      * @return 返回结果
      */
-    public RecordOtherProtectiveFacilities update(RecordOtherProtectiveFacilities recordOtherProtectiveFacilities);
+    public RecordOtherProtectiveFacilities update(RecordOtherProtectiveInputRequest recordOtherProtectiveInputRequest);
+
+    /**
+     * 获取 其他防护设施调查表 信息
+     * @param id 主键id
+     * @return 返回结果
+     */
+    RecordOtherProtectiveDetailResponse queryOtherProtetiveDetail(Long id);
 }

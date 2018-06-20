@@ -1,12 +1,17 @@
 package com.xdht.disease.sys.controller;
 
+import com.xdht.disease.common.authorization.annotation.Authorization;
 import com.xdht.disease.common.authorization.annotation.CurrentUser;
 import com.xdht.disease.common.core.PageResult;
 import com.xdht.disease.common.core.Result;
 import com.xdht.disease.common.model.User;
 import com.xdht.disease.sys.model.RecordHazardFactors;
 import com.xdht.disease.sys.service.RecordHazardFactorsService;
+import com.xdht.disease.sys.vo.request.RecordHazardFactorsInputRequest;
 import com.xdht.disease.sys.vo.request.RecordHazardFactorsRequest;
+import com.xdht.disease.sys.vo.response.RecordHazardFactorsDetailResponse;
+import io.swagger.annotations.ApiImplicitParam;
+import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.log4j.Log4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,33 +35,50 @@ public class RecordHazardFactorsController {
 
     @RequestMapping(value = "/recordList", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     @ApiOperation(value = "查询列表")
-    public  ResponseEntity<Result<List<RecordHazardFactors>>> recordList(@CurrentUser User user, @RequestBody RecordHazardFactorsRequest recordHazardFactorsRequest) {
+    public  ResponseEntity<Result<List<RecordHazardFactors>>> recordList(@RequestBody RecordHazardFactorsRequest recordHazardFactorsRequest) {
         return new ResponseEntity<>(Result.ok(recordHazardFactorsService.queryList(recordHazardFactorsRequest)), HttpStatus.OK);
     }
-    @RequestMapping(value = "/recordPage", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    @RequestMapping(value = "/pageList", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     @ApiOperation(value = "分页查询")
-    public ResponseEntity<Result<PageResult<RecordHazardFactors>>> recordPage(@CurrentUser User user, @RequestBody RecordHazardFactorsRequest recordHazardFactorsRequest, @RequestParam Integer pageNum, @RequestParam Integer pageSize) {
-        return new ResponseEntity<>(Result.ok(recordHazardFactorsService.queryListPage(recordHazardFactorsRequest,pageNum,pageSize)), HttpStatus.OK);
+    public ResponseEntity<Result<PageResult<RecordHazardFactors>>> recordPage(@RequestBody RecordHazardFactorsRequest recordHazardFactorsRequest) {
+        return new ResponseEntity<>(Result.ok(recordHazardFactorsService.queryListPage(recordHazardFactorsRequest)), HttpStatus.OK);
     }
 
     @RequestMapping(value = "/add", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     @ApiOperation(value = "添加")
-    public ResponseEntity<Result<RecordHazardFactors>> add(@CurrentUser User user, @RequestBody RecordHazardFactors recordHazardFactors) {
-        return new ResponseEntity<>(Result.ok(recordHazardFactorsService.add(recordHazardFactors)), HttpStatus.OK);
+    @Authorization
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "authorization", value = "authorization", required = true, dataType = "string", paramType = "header"),
+    })
+    public ResponseEntity<Result<RecordHazardFactors>> add(@RequestBody RecordHazardFactorsInputRequest recordHazardFactorsInputRequest) {
+        return new ResponseEntity<>(Result.ok(recordHazardFactorsService.add(recordHazardFactorsInputRequest)), HttpStatus.OK);
     }
 
-    @RequestMapping(value = "/delete", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    @RequestMapping(value = "/delete/{id}", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     @ApiOperation(value = "删除")
-    public ResponseEntity<Result<RecordHazardFactors>> delete(@CurrentUser User user, @RequestParam Long id) {
+    @Authorization
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "authorization", value = "authorization", required = true, dataType = "string", paramType = "header"),
+    })
+    public ResponseEntity<Result<RecordHazardFactors>> delete(@PathVariable Long id) {
         return new ResponseEntity<>(Result.ok(recordHazardFactorsService.delete(id)), HttpStatus.OK);
     }
 
     @RequestMapping(value = "/update", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     @ApiOperation(value = "修改")
-    public ResponseEntity<Result<RecordHazardFactors>> update(@CurrentUser User user, @RequestBody RecordHazardFactors recordHazardFactors) {
-        return new ResponseEntity<>(Result.ok(recordHazardFactorsService.update(recordHazardFactors)), HttpStatus.OK);
+    @Authorization
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "authorization", value = "authorization", required = true, dataType = "string", paramType = "header"),
+    })
+    public ResponseEntity<Result<RecordHazardFactors>> update(@RequestBody RecordHazardFactorsInputRequest recordHazardFactorsInputRequest) {
+        return new ResponseEntity<>(Result.ok(recordHazardFactorsService.update(recordHazardFactorsInputRequest)), HttpStatus.OK);
     }
 
-
+    @RequestMapping(value = "/detail/{id}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    @ApiOperation(value = "获取 --详细内容")
+    public ResponseEntity<Result<RecordHazardFactorsDetailResponse>> getRecordProductDetail(@PathVariable Long id) {
+        RecordHazardFactorsDetailResponse recordProductDetailResponse = this.recordHazardFactorsService.queryHazardFactorsDetail(id);
+        return new ResponseEntity<>(Result.ok(recordProductDetailResponse), HttpStatus.OK);
+    }
 
 }

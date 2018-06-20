@@ -9,6 +9,12 @@ public class RecordEquipmentLayoutData {
     private Long id;
 
     /**
+     * 部门id
+     */
+    @Column(name = "officd_id")
+    private Long officdId;
+
+    /**
      * 工艺过程及设备
      */
     @Column(name = "process_and_equipment")
@@ -32,6 +38,12 @@ public class RecordEquipmentLayoutData {
     private String remarkds;
 
     /**
+     * 关联id
+     */
+    @Column(name = "relation_id")
+    private Long relationId;
+
+    /**
      * @return id
      */
     public Long getId() {
@@ -43,6 +55,24 @@ public class RecordEquipmentLayoutData {
      */
     public void setId(Long id) {
         this.id = id;
+    }
+
+    /**
+     * 获取部门id
+     *
+     * @return officd_id - 部门id
+     */
+    public Long getOfficdId() {
+        return officdId;
+    }
+
+    /**
+     * 设置部门id
+     *
+     * @param officdId 部门id
+     */
+    public void setOfficdId(Long officdId) {
+        this.officdId = officdId;
     }
 
     /**
@@ -115,5 +145,20 @@ public class RecordEquipmentLayoutData {
      */
     public void setRemarkds(String remarkds) {
         this.remarkds = remarkds;
+    }
+
+    /**
+     * 获取关联id
+     * @return relationId
+     */
+    public Long getRelationId() {
+        return relationId;
+    }
+
+    /** 设置关联id
+     * @param relationId
+     */
+    public void setRelationId(Long relationId) {
+        this.relationId = relationId;
     }
 }

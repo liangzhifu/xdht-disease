@@ -33,6 +33,11 @@ public class RecordEmergencyFacilitiesDataRequest {
     @ApiModelProperty(value = "可致急性损伤的职业病危害因素")
     private String hazardFactors;
 
+    @ApiModelProperty(value = "分页数")
+    private Integer  pageNumber;
+
+    @ApiModelProperty(value = "每页数量")
+    private Integer pageSize;
 
 
 }

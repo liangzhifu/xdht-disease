@@ -4,7 +4,6 @@ import com.xdht.disease.common.core.PageResult;
 import com.xdht.disease.common.core.Service;
 import com.xdht.disease.sys.model.SysCompany;
 import com.xdht.disease.sys.vo.request.SysCompanyRequest;
-import com.xdht.disease.sys.vo.response.SysCompanyResponse;
 
 import java.util.List;
 
@@ -19,41 +18,40 @@ public interface SysCompanyService extends Service<SysCompany> {
      * @param sysCompanyRequest 查询条件
      * @return 返回结果
      */
-    public PageResult<SysCompany> querySysCompanyListPage(SysCompanyRequest sysCompanyRequest);
+    PageResult<SysCompany> querySysCompanyListPage(SysCompanyRequest sysCompanyRequest);
 
     /**
      * 添加单位
      * @param sysCompany 单位实体
      * @return 返回结果
      */
-    public SysCompanyResponse addCompany(SysCompany sysCompany);
+    void addCompany(SysCompany sysCompany);
 
     /**
      * 删除单位
      * @param id 单位id
      * @return 返回结果
      */
-    public SysCompanyResponse deleteCompany(Long id);
+    void deleteCompany(Long id);
 
     /**
      * 修改单位
      * @param sysCompany 单位实体
      * @return 返回结果
      */
-    public SysCompanyResponse updateCompany(SysCompany sysCompany);
+    void updateCompany(SysCompany sysCompany);
 
     /**
      * 公司列表查询
      * @param sysCompany 查询条件
      * @return 返回结果
      */
-    public List<SysCompany> querySysCompanyList(SysCompany sysCompany);
+    List<SysCompany> querySysCompanyList(SysCompany sysCompany);
 
     /**
      * 查询所有列表
      * @return 返回结果
      */
-    public List<SysCompany> querylistAll();
+    List<SysCompany> querylistAll();
 
-    SysCompany getCompanyDetail(Long id);
 }

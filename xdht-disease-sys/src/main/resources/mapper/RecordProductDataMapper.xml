@@ -15,5 +15,6 @@
     <result column="storage_mode" jdbcType="VARCHAR" property="storageMode" />
     <result column="transport_mode" jdbcType="VARCHAR" property="transportMode" />
     <result column="annual_amount" jdbcType="VARCHAR" property="annualAmount" />
+    <result column="relation_id" jdbcType="BIGINT" property="relationId" />
   </resultMap>
 </mapper>

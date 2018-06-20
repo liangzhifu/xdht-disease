@@ -4,6 +4,8 @@ import com.xdht.disease.sys.model.SysMenu;
 import com.xdht.disease.common.core.Service;
 import com.xdht.disease.sys.vo.request.SysMenuRequest;
 import com.xdht.disease.sys.vo.response.SysMenuResponse;
+import com.xdht.disease.sys.vo.response.SysMenuTreeResponse;
+import com.xdht.disease.sys.vo.response.SysMenuZTreeNodeResponse;
 
 import java.util.List;
 
@@ -18,36 +20,49 @@ public interface SysMenuService extends Service<SysMenu> {
      * @param sysMenuRequest 查询条件
      * @return 返回结果
      */
-    public PageResult<SysMenu> querySysMenuPage(SysMenuRequest sysMenuRequest);
+    PageResult<SysMenu> querySysMenuPage(SysMenuRequest sysMenuRequest);
 
     /**
      * 查询菜单列表
      * @param sysMenu 查询条件
      * @return 返回结果
      */
-    public List<SysMenu> querySysMenuList(SysMenu sysMenu);
+    List<SysMenu> querySysMenuList(SysMenu sysMenu);
 
     /**
      * 添加菜单
      * @param sysMenu 菜单实体
      * @return 返回结果
      */
-    public SysMenuResponse addMenu(SysMenu sysMenu);
+    SysMenuResponse addMenu(SysMenu sysMenu);
 
     /**
      * 删除菜单
      * @param id 菜单主键id
      * @return 返回结果
      */
-    public SysMenuResponse  deleteMenu(Long id);
+    SysMenuResponse  deleteMenu(Long id);
 
     /**
      * 修改菜单
      * @param sysMenu 菜单实体
      * @return 返回结果
      */
-    public SysMenuResponse  updateMenu(SysMenu sysMenu);
+    SysMenuResponse  updateMenu(SysMenu sysMenu);
 
 
-    public SysMenu getMenuDetail(Long id);
+    SysMenu getMenuDetail(Long id);
+
+    /**
+     * 获取用户菜单
+     * @return 返回结果
+     */
+    List<SysMenuTreeResponse> getUserMenu();
+
+    /**
+     * 获取ZTree菜单
+     * @return 返回结果
+     */
+    List<SysMenuZTreeNodeResponse> getZTreeMenu();
+
 }

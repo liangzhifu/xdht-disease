@@ -3,7 +3,9 @@ package com.xdht.disease.sys.service;
 import com.xdht.disease.common.core.PageResult;
 import com.xdht.disease.common.core.Service;
 import com.xdht.disease.sys.model.RecordTemperatureProtectionFacilities;
+import com.xdht.disease.sys.vo.request.RecordTemperatureInputRequest;
 import com.xdht.disease.sys.vo.request.RecordTemperatureProtectionFacilitiesRequest;
+import com.xdht.disease.sys.vo.response.RecordTemperatureDetailResponse;
 
 import java.util.List;
 
@@ -23,18 +25,16 @@ public interface RecordTemperatureProtectionFacilitiesService extends Service<Re
     /**
      * 分页查询
      * @param recordRequest 查询条件
-     * @param pageNum  页数
-     * @param pageSize 每页大小
      * @return 返回结果
      */
-    public PageResult<RecordTemperatureProtectionFacilities> queryListPage(RecordTemperatureProtectionFacilitiesRequest recordRequest, Integer pageNum, Integer pageSize);
+    public PageResult<RecordTemperatureProtectionFacilities> queryListPage(RecordTemperatureProtectionFacilitiesRequest recordRequest);
 
     /**
      * 添加
-     * @param record 实体
+     * @param recordTemperatureInputRequest 实体
      * @return 返回结果
      */
-    public RecordTemperatureProtectionFacilities add(RecordTemperatureProtectionFacilities record);
+    public RecordTemperatureProtectionFacilities add(RecordTemperatureInputRequest recordTemperatureInputRequest);
 
     /**
      * 删除
@@ -45,8 +45,15 @@ public interface RecordTemperatureProtectionFacilitiesService extends Service<Re
 
     /**
      * 修改
-     * @param record 实体
+     * @param recordTemperatureInputRequest 实体
      * @return 返回结果
      */
-    public RecordTemperatureProtectionFacilities update(RecordTemperatureProtectionFacilities record);
+    public RecordTemperatureProtectionFacilities update(RecordTemperatureInputRequest recordTemperatureInputRequest);
+
+    /**
+     * 获取 防高温设施调查表 信息
+     * @param id 主键id
+     * @return 返回结果
+     */
+    RecordTemperatureDetailResponse queryTemperatureDetail(Long id);
 }

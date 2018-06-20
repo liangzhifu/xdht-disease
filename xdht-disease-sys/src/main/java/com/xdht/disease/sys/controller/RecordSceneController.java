@@ -4,7 +4,9 @@ package com.xdht.disease.sys.controller;
 import com.xdht.disease.common.authorization.annotation.Authorization;
 import com.xdht.disease.common.core.PageResult;
 import com.xdht.disease.common.core.Result;
+import com.xdht.disease.sys.constant.SysEnum;
 import com.xdht.disease.sys.model.RecordScene;
+import com.xdht.disease.sys.model.SysMenu;
 import com.xdht.disease.sys.service.RecordSceneService;
 import com.xdht.disease.sys.vo.request.RecordSceneInputRequest;
 import com.xdht.disease.sys.vo.request.RecordSceneRequest;
@@ -12,6 +14,7 @@ import com.xdht.disease.sys.vo.response.RecordSceneDetailResponse;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
+import io.swagger.models.auth.In;
 import lombok.extern.log4j.Log4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -44,8 +47,9 @@ public class RecordSceneController {
     @ApiImplicitParams({
             @ApiImplicitParam(name = "authorization", value = "authorization", required = true, dataType = "string", paramType = "header"),
     })
-    public ResponseEntity<Result<RecordScene>> addAll(@RequestBody RecordSceneInputRequest recordSceneInputRequest) {
-        return new ResponseEntity<>(Result.ok(recordSceneService.add(recordSceneInputRequest)), HttpStatus.OK);
+    public ResponseEntity<Result<String>> addAll(@RequestBody RecordSceneInputRequest recordSceneInputRequest) {
+        this.recordSceneService.add(recordSceneInputRequest);
+        return new ResponseEntity<>(Result.ok(SysEnum.ResultEnum.RESULT_SUCCESS.getCode()), HttpStatus.OK);
     }
 
     @RequestMapping(value = "/delete", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)

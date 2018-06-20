@@ -30,30 +30,30 @@ public class RecordTemperatureProtectionFacilitiesDataController {
 
     @RequestMapping(value = "/recordList", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     @ApiOperation(value = "查询列表")
-    public  ResponseEntity<Result<List<RecordTemperatureProtectionFacilitiesData>>> recordList(@CurrentUser User user, @RequestBody RecordTemperatureProtectionFacilitiesDataRequest recordDataRequest) {
+    public  ResponseEntity<Result<List<RecordTemperatureProtectionFacilitiesData>>> recordList(@RequestBody RecordTemperatureProtectionFacilitiesDataRequest recordDataRequest) {
         return new ResponseEntity<>(Result.ok(recordDataService.queryList(recordDataRequest)), HttpStatus.OK);
     }
     @RequestMapping(value = "/recordPage", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     @ApiOperation(value = "分页查询")
-    public ResponseEntity<Result<PageResult<RecordTemperatureProtectionFacilitiesData>>> recordPage(@CurrentUser User user, @RequestBody RecordTemperatureProtectionFacilitiesDataRequest recordDataRequest, @RequestParam Integer pageNum, @RequestParam Integer pageSize) {
+    public ResponseEntity<Result<PageResult<RecordTemperatureProtectionFacilitiesData>>> recordPage(@RequestBody RecordTemperatureProtectionFacilitiesDataRequest recordDataRequest, @RequestParam Integer pageNum, @RequestParam Integer pageSize) {
         return new ResponseEntity<>(Result.ok(recordDataService.queryListPage(recordDataRequest,pageNum,pageSize)), HttpStatus.OK);
     }
 
     @RequestMapping(value = "/add", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     @ApiOperation(value = "添加")
-    public ResponseEntity<Result<RecordTemperatureProtectionFacilitiesData>> add(@CurrentUser User user, @RequestBody RecordTemperatureProtectionFacilitiesData recordData) {
+    public ResponseEntity<Result<RecordTemperatureProtectionFacilitiesData>> add(@RequestBody RecordTemperatureProtectionFacilitiesData recordData) {
         return new ResponseEntity<>(Result.ok(recordDataService.add(recordData)), HttpStatus.OK);
     }
 
     @RequestMapping(value = "/delete", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     @ApiOperation(value = "删除")
-    public ResponseEntity<Result<RecordTemperatureProtectionFacilitiesData>> delete(@CurrentUser User user, @RequestParam Long id) {
+    public ResponseEntity<Result<RecordTemperatureProtectionFacilitiesData>> delete(@RequestParam Long id) {
         return new ResponseEntity<>(Result.ok(recordDataService.delete(id)), HttpStatus.OK);
     }
 
     @RequestMapping(value = "/update", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     @ApiOperation(value = "修改")
-    public ResponseEntity<Result<RecordTemperatureProtectionFacilitiesData>> update(@CurrentUser User user, @RequestBody RecordTemperatureProtectionFacilitiesData recordData) {
+    public ResponseEntity<Result<RecordTemperatureProtectionFacilitiesData>> update(@RequestBody RecordTemperatureProtectionFacilitiesData recordData) {
         return new ResponseEntity<>(Result.ok(recordDataService.update(recordData)), HttpStatus.OK);
     }
 

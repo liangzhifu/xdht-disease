@@ -28,7 +28,7 @@ public class RecordEquipmentDataController {
     @Autowired
     private RecordEquipmentDataService recordEquipmentDataService;
 
-    @RequestMapping(value = "/recordList", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    @RequestMapping(value = "/list", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     @ApiOperation(value = "查询列表")
     public  ResponseEntity<Result<List<RecordEquipmentData>>> recordList(@CurrentUser User user, @RequestBody RecordEquipmentDataRequest recordEquipmentDataRequest) {
         return new ResponseEntity<>(Result.ok(recordEquipmentDataService.queryList(recordEquipmentDataRequest)), HttpStatus.OK);

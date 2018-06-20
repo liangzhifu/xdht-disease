@@ -22,11 +22,9 @@ public interface RecordEmergencyFacilitiesDataService extends Service<RecordEmer
     /**
      * 分页查询
      * @param recordEmergencyFacilitiesDataRequest 查询条件
-     * @param pageNum 页数
-     * @param pageSize 每页大小
      * @return 返回结果
      */
-    public PageResult<RecordEmergencyFacilitiesData> queryListPage(RecordEmergencyFacilitiesDataRequest recordEmergencyFacilitiesDataRequest, Integer pageNum, Integer pageSize);
+    public PageResult<RecordEmergencyFacilitiesData> queryListPage(RecordEmergencyFacilitiesDataRequest recordEmergencyFacilitiesDataRequest);
 
     /**
      * 添加

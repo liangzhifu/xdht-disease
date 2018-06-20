@@ -22,4 +22,20 @@
     <result column="update_date" jdbcType="TIMESTAMP" property="updateDate" />
     <result column="remarks" jdbcType="VARCHAR" property="remarks" />
   </resultMap>
+
+  <select id="selectUserMenu" resultMap="BaseResultMap" parameterType="java.lang.Long">
+    SELECT id,parent_id,menu_name,menu_href,menu_icon
+    FROM sys_menu
+    WHERE id IN (
+    SELECT DISTINCT(srm.`menu_id`)
+    FROM sys_user_role sur, sys_role_menu srm
+    WHERE sur.`role_id` = srm.`role_id`
+    AND sur.`status` = '0'
+    AND srm.`status` = '0'
+    AND sur.`user_id` = #{userId, jdbcType=BIGINT})
+    AND `status` = '0'
+    AND menu_type = '1'
+    AND is_show = '1'
+  </select>
+
 </mapper>
