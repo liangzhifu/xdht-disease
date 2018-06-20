@@ -1,5 +1,7 @@
 package com.xdht.disease.sys.model;
 
+import com.alibaba.fastjson.annotation.JSONField;
+
 import java.util.Date;
 import javax.persistence.*;
 
@@ -57,6 +59,7 @@ public class SysEmployee {
     /**
      * 参加工作时间
      */
+    @JSONField(format="yyyy-MM-dd")
     @Column(name = "emp_work_date")
     private Date empWorkDate;
 

@@ -1,9 +1,14 @@
 package com.xdht.disease.sys.vo.response;
 
+import com.xdht.disease.sys.model.SysEmployee;
+import com.xdht.disease.sys.model.SysEmployeeCase;
+import com.xdht.disease.sys.model.SysEmployeeDisease;
+import com.xdht.disease.sys.model.SysEmployeeJob;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
 import java.util.Date;
+import java.util.List;
 
 /**
  * Created by L on 2018/5/30.
@@ -11,54 +16,16 @@ import java.util.Date;
 @Data
 public class SysEmployeeResponse {
 
-    @ApiModelProperty(value = "员工id")
-    private Long id;
+    @ApiModelProperty(value = "员工信息")
+    private SysEmployee sysEmployee;
 
-    @ApiModelProperty(value = "部门id")
-    private Long officeId;
+    @ApiModelProperty(value = "职业病危害接触史")
+    private List<SysEmployeeJob> sysEmployeeJobList;
 
-    @ApiModelProperty(value = "员工姓名")
-    private String empName;
+    @ApiModelProperty(value = "既往病史")
+    private List<SysEmployeeCase> sysEmployeeCaseList;
 
-    @ApiModelProperty(value = "性别")
-    private String empSex;
+    @ApiModelProperty(value = "职业病诊断")
+    private List<SysEmployeeDisease> sysEmployeeDiseaseList;
 
-    @ApiModelProperty(value = "籍贯")
-    private String empNative;
-
-    @ApiModelProperty(value = "婚姻")
-    private String empMarriage;
-
-    @ApiModelProperty(value = "文化程度")
-    private String empEducation;
-
-    @ApiModelProperty(value = "嗜好")
-    private String empHobby;
-
-    @ApiModelProperty(value = "参加工作时间")
-    private Date empWorkDate;
-
-    @ApiModelProperty(value = "身份证号")
-    private String empIdentityNumber;
-
-    @ApiModelProperty(value = "状态（0在职 1离职）")
-    private String status;
-
-    @ApiModelProperty(value = "创建者")
-    private Long createBy;
-
-    @ApiModelProperty(value = "创建时间")
-    private Date createDate;
-
-    @ApiModelProperty(value = "更新者")
-    private Long updateBy;
-
-    @ApiModelProperty(value = "更新时间")
-    private Date updateDate;
-
-    @ApiModelProperty(value = "备注信息")
-    private String remarks;
-
-    @ApiModelProperty(value = "总数")
-    private Integer count;
 }

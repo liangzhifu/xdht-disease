@@ -3,10 +3,10 @@ package com.xdht.disease.sys.controller;
 import com.xdht.disease.common.authorization.annotation.Authorization;
 import com.xdht.disease.common.core.PageResult;
 import com.xdht.disease.common.core.Result;
+import com.xdht.disease.sys.constant.SysEnum;
 import com.xdht.disease.sys.model.SysCompany;
 import com.xdht.disease.sys.service.SysCompanyService;
 import com.xdht.disease.sys.vo.request.SysCompanyRequest;
-import com.xdht.disease.sys.vo.response.SysCompanyResponse;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
@@ -54,8 +54,9 @@ public class SysCompanyController {
     @ApiImplicitParams({
             @ApiImplicitParam(name = "authorization", value = "authorization", required = true, dataType = "string", paramType = "header"),
     })
-    public ResponseEntity<Result<SysCompanyResponse>> addCompany(@RequestBody SysCompany sysCompany) {
-        return new ResponseEntity<>(Result.ok(sysCompanyService.addCompany(sysCompany)), HttpStatus.OK);
+    public ResponseEntity<Result<String>> addCompany(@RequestBody SysCompany sysCompany) {
+        this.sysCompanyService.addCompany(sysCompany);
+        return new ResponseEntity<>(Result.ok(SysEnum.ResultEnum.RESULT_SUCCESS.getCode()), HttpStatus.OK);
     }
 
     @RequestMapping(value = "/delete", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
@@ -64,8 +65,9 @@ public class SysCompanyController {
     @ApiImplicitParams({
             @ApiImplicitParam(name = "authorization", value = "authorization", required = true, dataType = "string", paramType = "header"),
     })
-    public ResponseEntity<Result<SysCompanyResponse>> deleteCompany(@RequestParam Long id) {
-        return new ResponseEntity<>(Result.ok(sysCompanyService.deleteCompany(id)), HttpStatus.OK);
+    public ResponseEntity<Result<String>> deleteCompany(@RequestParam Long id) {
+        this.sysCompanyService.deleteCompany(id);
+        return new ResponseEntity<>(Result.ok(SysEnum.ResultEnum.RESULT_SUCCESS.getCode()), HttpStatus.OK);
     }
 
     @RequestMapping(value = "/update", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
@@ -74,10 +76,15 @@ public class SysCompanyController {
     @ApiImplicitParams({
             @ApiImplicitParam(name = "authorization", value = "authorization", required = true, dataType = "string", paramType = "header"),
     })
-    public ResponseEntity<Result<SysCompanyResponse>> updateCompany(@RequestBody SysCompany sysCompany) {
-        return new ResponseEntity<>(Result.ok(sysCompanyService.updateCompany(sysCompany)), HttpStatus.OK);
+    public ResponseEntity<Result<String>> updateCompany(@RequestBody SysCompany sysCompany) {
+        this.sysCompanyService.updateCompany(sysCompany);
+        return new ResponseEntity<>(Result.ok(SysEnum.ResultEnum.RESULT_SUCCESS.getCode()), HttpStatus.OK);
     }
 
-
+    @RequestMapping(value = "/detail/{id}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    @ApiOperation(value = "查询单位详情")
+    public  ResponseEntity<Result<SysCompany>> getCompanyDetail(@PathVariable Long id) {
+        return new ResponseEntity<>(Result.ok(sysCompanyService.selectByPrimaryKey(id)), HttpStatus.OK);
+    }
 
 }

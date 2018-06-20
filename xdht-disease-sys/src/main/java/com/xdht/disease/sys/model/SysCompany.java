@@ -1,5 +1,7 @@
 package com.xdht.disease.sys.model;
 
+import com.alibaba.fastjson.annotation.JSONField;
+
 import java.util.Date;
 import javax.persistence.*;
 

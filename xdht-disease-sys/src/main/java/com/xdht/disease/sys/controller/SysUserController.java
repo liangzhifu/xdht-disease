@@ -30,7 +30,7 @@ public class SysUserController {
     @Autowired
     private SysUserService sysUserService;
 
-    @RequestMapping(value = "/userPage", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    @RequestMapping(value = "/pageList", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     @ApiOperation(value = "分页查询用户列表")
     public ResponseEntity<Result<PageResult<SysUser>>> userPage(@RequestBody SysUserRequest sysUserRequest) {
         return new ResponseEntity<>(Result.ok(sysUserService.querySysUserPage(sysUserRequest)), HttpStatus.OK);

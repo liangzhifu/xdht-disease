@@ -1,9 +1,8 @@
 package com.xdht.disease.sys.service;
-import com.xdht.disease.common.core.PageResult;
 import com.xdht.disease.sys.model.SysUserRole;
 import com.xdht.disease.common.core.Service;
-import com.xdht.disease.sys.vo.request.SysUserRoleRequest;
-import com.xdht.disease.sys.vo.response.SysUserRoleResponse;
+import com.xdht.disease.sys.vo.request.SysUserRoleEditRequest;
+import com.xdht.disease.sys.vo.request.SysUserRoleQueryRequest;
 
 import java.util.List;
 
@@ -14,39 +13,17 @@ import java.util.List;
 public interface SysUserRoleService extends Service<SysUserRole> {
 
     /**
-     * 分页查询用户角色
-     * @param sysUserRoleRequest 查询条件
-     * @return 返回结果
-     */
-    public PageResult<SysUserRole> querySysUserRolePage(SysUserRoleRequest sysUserRoleRequest);
-
-    /**
      * 查询用户角色列表
-     * @param sysUserRole 查询条件
+     * @param sysUserRoleQueryRequest 查询条件
      * @return 返回结果
      */
-    public List<SysUserRole> querySysUserRoleList(SysUserRole sysUserRole);
-
-    /**
-     * 添加用户角色
-     * @param sysUserRole 用户角色实体
-     * @return 返回结果
-     */
-    public SysUserRoleResponse addUserRole(SysUserRole sysUserRole);
-
-    /**
-     * 删除用户角色
-     * @param id 用户角色主键id
-     * @return 返回结果
-     */
-    public SysUserRoleResponse  deleteUserRole(Long id);
+    List<SysUserRole> querySysUserRoleList(SysUserRoleQueryRequest sysUserRoleQueryRequest);
 
     /**
      * 修改用户角色
-     * @param sysUserRole 用户角色实体
+     * @param sysUserRoleEditRequest 用户角色实体
      * @return 返回结果
      */
-    public SysUserRoleResponse  updateUserRole(SysUserRole sysUserRole);
-
+    void updateUserRole(SysUserRoleEditRequest sysUserRoleEditRequest);
 
 }

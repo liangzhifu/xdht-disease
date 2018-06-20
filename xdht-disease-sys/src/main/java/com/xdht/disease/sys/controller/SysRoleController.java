@@ -3,10 +3,12 @@ package com.xdht.disease.sys.controller;
 import com.xdht.disease.common.authorization.annotation.Authorization;
 import com.xdht.disease.common.core.PageResult;
 import com.xdht.disease.common.core.Result;
+import com.xdht.disease.sys.constant.SysEnum;
 import com.xdht.disease.sys.model.SysRole;
 import com.xdht.disease.sys.service.SysRoleService;
 import com.xdht.disease.sys.vo.request.SysRoleRequest;
-import com.xdht.disease.sys.vo.response.SysRoleResponse;
+import io.swagger.annotations.ApiImplicitParam;
+import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.log4j.Log4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,12 +30,13 @@ public class SysRoleController {
     @Autowired
     private SysRoleService sysRoleService;
 
-    @RequestMapping(value = "/rolePage", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    @RequestMapping(value = "/pageList", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     @ApiOperation(value = "分页查询角色列表")
     public ResponseEntity<Result<PageResult<SysRole>>> rolePage(@RequestBody SysRoleRequest sysRoleRequest) {
         return new ResponseEntity<>(Result.ok(sysRoleService.querySysRolePage(sysRoleRequest)), HttpStatus.OK);
     }
-    @RequestMapping(value = "/roleList", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+
+    @RequestMapping(value = "/list", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     @ApiOperation(value = "查询角色列表")
     public ResponseEntity<Result<List<SysRole>>> roleList(@RequestBody SysRole sysRole) {
         return new ResponseEntity<>(Result.ok(sysRoleService.querySysRoleList(sysRole)), HttpStatus.OK);
@@ -42,22 +45,34 @@ public class SysRoleController {
     @RequestMapping(value = "/add", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     @ApiOperation(value = "添加角色")
     @Authorization
-    public ResponseEntity<Result<SysRoleResponse>> addRole(@RequestBody SysRole sysRole) {
-        return new ResponseEntity<>(Result.ok(sysRoleService.addRole(sysRole)), HttpStatus.OK);
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "authorization", value = "authorization", required = true, dataType = "string", paramType = "header"),
+    })
+    public ResponseEntity<Result<String>> addRole(@RequestBody SysRole sysRole) {
+        this.sysRoleService.addRole(sysRole);
+        return new ResponseEntity<>(Result.ok(SysEnum.ResultEnum.RESULT_SUCCESS.getCode()), HttpStatus.OK);
     }
 
     @RequestMapping(value = "/delete", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     @ApiOperation(value = "删除角色")
     @Authorization
-    public ResponseEntity<Result<SysRoleResponse>> deleteRole(@RequestParam Long id) {
-        return new ResponseEntity<>(Result.ok(sysRoleService.deleteRole(id)), HttpStatus.OK);
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "authorization", value = "authorization", required = true, dataType = "string", paramType = "header"),
+    })
+    public ResponseEntity<Result<String>> deleteRole(@RequestParam Long id) {
+        this.sysRoleService.deleteRole(id);
+        return new ResponseEntity<>(Result.ok(SysEnum.ResultEnum.RESULT_SUCCESS.getCode()), HttpStatus.OK);
     }
 
     @RequestMapping(value = "/update", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     @ApiOperation(value = "修改角色")
     @Authorization
-    public ResponseEntity<Result<SysRoleResponse>> updateRole(@RequestBody SysRole sysRole) {
-        return new ResponseEntity<>(Result.ok(sysRoleService.updateRole(sysRole)), HttpStatus.OK);
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "authorization", value = "authorization", required = true, dataType = "string", paramType = "header"),
+    })
+    public ResponseEntity<Result<String>> updateRole(@RequestBody SysRole sysRole) {
+        this.sysRoleService.updateRole(sysRole);
+        return new ResponseEntity<>(Result.ok(SysEnum.ResultEnum.RESULT_SUCCESS.getCode()), HttpStatus.OK);
     }
 
     @RequestMapping(value = "/detail/{id}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
