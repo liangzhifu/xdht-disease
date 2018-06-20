@@ -7,7 +7,6 @@ import com.xdht.disease.sys.constant.SysEnum;
 import com.xdht.disease.sys.model.SysCompany;
 import com.xdht.disease.sys.service.SysCompanyService;
 import com.xdht.disease.sys.vo.request.SysCompanyRequest;
-import com.xdht.disease.sys.vo.response.SysCompanyResponse;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
@@ -77,7 +76,7 @@ public class SysCompanyController {
     @ApiImplicitParams({
             @ApiImplicitParam(name = "authorization", value = "authorization", required = true, dataType = "string", paramType = "header"),
     })
-    public ResponseEntity<Result<SysCompanyResponse>> updateCompany(@RequestBody SysCompany sysCompany) {
+    public ResponseEntity<Result<String>> updateCompany(@RequestBody SysCompany sysCompany) {
         this.sysCompanyService.updateCompany(sysCompany);
         return new ResponseEntity<>(Result.ok(SysEnum.ResultEnum.RESULT_SUCCESS.getCode()), HttpStatus.OK);
     }
