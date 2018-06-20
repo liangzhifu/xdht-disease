@@ -40,7 +40,7 @@ public interface SysEmployeeService extends Service<SysEmployee> {
      * @param sysEmployee 员工实体
      * @return 返回结果
      */
-    public SysEmployeeResponse addEmployee(SysEmployee sysEmployee);
+    public SysEmployeeResponse addEmployee(SysEmployeeResponse sysEmployeeResponse);
 
     /**
      * 删除员工
@@ -54,7 +54,8 @@ public interface SysEmployeeService extends Service<SysEmployee> {
      * @param sysEmployee 员工实体
      * @return 返回结果
      */
-    public SysEmployeeResponse updateEmployee(SysEmployee sysEmployee);
+    public SysEmployeeResponse updateEmployee(SysEmployeeResponse sysEmployeeResponse);
 
 
+    SysEmployeeResponse getEmployeeDetail(Long id);
 }

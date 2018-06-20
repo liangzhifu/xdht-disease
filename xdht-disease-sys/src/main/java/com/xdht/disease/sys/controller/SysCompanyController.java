@@ -7,6 +7,7 @@ import com.xdht.disease.sys.model.SysCompany;
 import com.xdht.disease.sys.service.SysCompanyService;
 import com.xdht.disease.sys.vo.request.SysCompanyRequest;
 import com.xdht.disease.sys.vo.response.SysCompanyResponse;
+import com.xdht.disease.sys.vo.response.SysEmployeeResponse;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
@@ -58,14 +59,13 @@ public class SysCompanyController {
         return new ResponseEntity<>(Result.ok(sysCompanyService.addCompany(sysCompany)), HttpStatus.OK);
     }
 
-    @RequestMapping(value = "/delete/{id}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    @RequestMapping(value = "/delete", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     @ApiOperation(value = "删除单位")
     @Authorization
     @ApiImplicitParams({
             @ApiImplicitParam(name = "authorization", value = "authorization", required = true, dataType = "string", paramType = "header"),
     })
-    public ResponseEntity<Result<SysCompanyResponse>> deleteCompany(@PathVariable Long id) {
-        System.out.println("a");
+    public ResponseEntity<Result<SysCompanyResponse>> deleteCompany(@RequestParam Long id) {
         return new ResponseEntity<>(Result.ok(sysCompanyService.deleteCompany(id)), HttpStatus.OK);
     }
 
