@@ -7,7 +7,6 @@ import com.xdht.disease.sys.constant.SysEnum;
 import com.xdht.disease.sys.model.SysRole;
 import com.xdht.disease.sys.service.SysRoleService;
 import com.xdht.disease.sys.vo.request.SysRoleRequest;
-import com.xdht.disease.sys.vo.response.SysRoleResponse;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;

@@ -14,6 +14,7 @@ import com.xdht.disease.sys.service.SysMenuService;
 import com.xdht.disease.sys.vo.request.SysMenuRequest;
 import com.xdht.disease.sys.vo.response.SysMenuResponse;
 import com.xdht.disease.sys.vo.response.SysMenuTreeResponse;
+import com.xdht.disease.sys.vo.response.SysMenuZTreeNodeResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -112,6 +113,24 @@ public class SysMenuServiceImpl extends AbstractService<SysMenu> implements SysM
             sysMenuTreeResponses = this.convertSysMenuToSysMenuTree(sysMenuList);
         }
         return sysMenuTreeResponses;
+    }
+
+    @Override
+    public List<SysMenuZTreeNodeResponse> getZTreeMenu() {
+        Condition condition = new Condition(SysMenu.class);
+        condition.createCriteria().andEqualTo("isShow", SysEnum.IsShowEnum.IS_SHOW_YES.getCode())
+                .andEqualTo("status", SysEnum.StatusEnum.STATUS_NORMAL.getCode())
+                .andEqualTo("menuType", SysEnum.MenuTypeEnum.MENU_TYPE_MENU.getCode());
+        List<SysMenu> sysMenuList = this.selectByCondition(condition);
+        List<SysMenuZTreeNodeResponse> sysMenuZTreeNodeResponseList = new LinkedList<>();
+        for (SysMenu sysMenu : sysMenuList) {
+            SysMenuZTreeNodeResponse zTreeNodeResponse = new SysMenuZTreeNodeResponse();
+            zTreeNodeResponse.setId(sysMenu.getId());
+            zTreeNodeResponse.setPId(sysMenu.getParentId());
+            zTreeNodeResponse.setName(sysMenu.getMenuName());
+            sysMenuZTreeNodeResponseList.add(zTreeNodeResponse);
+        }
+        return sysMenuZTreeNodeResponseList;
     }
 
     /**

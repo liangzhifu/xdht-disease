@@ -5,6 +5,7 @@ import com.xdht.disease.common.core.Service;
 import com.xdht.disease.sys.vo.request.SysMenuRequest;
 import com.xdht.disease.sys.vo.response.SysMenuResponse;
 import com.xdht.disease.sys.vo.response.SysMenuTreeResponse;
+import com.xdht.disease.sys.vo.response.SysMenuZTreeNodeResponse;
 
 import java.util.List;
 
@@ -57,4 +58,11 @@ public interface SysMenuService extends Service<SysMenu> {
      * @return 返回结果
      */
     List<SysMenuTreeResponse> getUserMenu();
+
+    /**
+     * 获取ZTree菜单
+     * @return 返回结果
+     */
+    List<SysMenuZTreeNodeResponse> getZTreeMenu();
+
 }

@@ -10,6 +10,7 @@ import com.xdht.disease.sys.service.SysMenuService;
 import com.xdht.disease.sys.vo.request.SysMenuRequest;
 import com.xdht.disease.sys.vo.response.SysMenuResponse;
 import com.xdht.disease.sys.vo.response.SysMenuTreeResponse;
+import com.xdht.disease.sys.vo.response.SysMenuZTreeNodeResponse;
 import com.xdht.disease.sys.vo.response.SysUserResponse;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
@@ -40,8 +41,14 @@ public class SysMenuController {
     @ApiImplicitParams({
             @ApiImplicitParam(name = "authorization", value = "authorization", required = true, dataType = "string", paramType = "header"),
     })
-    public ResponseEntity<Result<SysMenuTreeResponse>> getUserMenu() {
+    public ResponseEntity<Result<List<SysMenuTreeResponse>>> getUserMenu() {
         return new ResponseEntity<>(Result.ok(this.sysMenuService.getUserMenu()), HttpStatus.OK);
+    }
+
+    @RequestMapping(value = "/zTreeList", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    @ApiOperation(value = "ZTree菜单")
+    public ResponseEntity<Result<List<SysMenuZTreeNodeResponse>>> getZTreeMenu() {
+        return new ResponseEntity<>(Result.ok(this.sysMenuService.getZTreeMenu()), HttpStatus.OK);
     }
 
     @RequestMapping(value = "/menuPage", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)

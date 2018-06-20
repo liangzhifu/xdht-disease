@@ -1,13 +1,14 @@
 package com.xdht.disease.sys.controller;
 
-import com.xdht.disease.common.authorization.annotation.CurrentUser;
-import com.xdht.disease.common.core.PageResult;
+import com.xdht.disease.common.authorization.annotation.Authorization;
 import com.xdht.disease.common.core.Result;
-import com.xdht.disease.common.model.User;
+import com.xdht.disease.sys.constant.SysEnum;
 import com.xdht.disease.sys.model.SysRoleMenu;
 import com.xdht.disease.sys.service.SysRoleMenuService;
-import com.xdht.disease.sys.vo.request.SysRoleMenuRequest;
-import com.xdht.disease.sys.vo.response.SysRoleMenuResponse;
+import com.xdht.disease.sys.vo.request.SysRoleMenuEditRequest;
+import com.xdht.disease.sys.vo.request.SysRoleMenuQueryRequest;
+import io.swagger.annotations.ApiImplicitParam;
+import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.log4j.Log4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,35 +30,21 @@ public class SysRoleMenuController {
     @Autowired
     private SysRoleMenuService sysRoleMenuService;
 
-    @RequestMapping(value = "/roleMenuPage", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
-    @ApiOperation(value = "分页查询角色菜单列表")
-    public ResponseEntity<Result<PageResult<SysRoleMenu>>> roleMenuPage(@CurrentUser User user, @RequestBody SysRoleMenuRequest sysRoleMenuRequest) {
-        return new ResponseEntity<>(Result.ok(sysRoleMenuService.querySysRoleMenuPage(sysRoleMenuRequest)), HttpStatus.OK);
-    }
-    @RequestMapping(value = "/roleMenuList", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    @RequestMapping(value = "/list", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     @ApiOperation(value = "查询角色菜单列表")
-    public ResponseEntity<Result<List<SysRoleMenu>>> roleMenuList(@CurrentUser User user, @RequestBody SysRoleMenu sysRoleMenu) {
-        return new ResponseEntity<>(Result.ok(sysRoleMenuService.querySysRoleMenuList(sysRoleMenu)), HttpStatus.OK);
-    }
-
-    @RequestMapping(value = "/add", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
-    @ApiOperation(value = "添加角色菜单")
-    public ResponseEntity<Result<SysRoleMenuResponse>> addRoleMenu(@CurrentUser User user, @RequestBody SysRoleMenu sysRoleMenu) {
-        return new ResponseEntity<>(Result.ok(sysRoleMenuService.addRoleMenu(sysRoleMenu)), HttpStatus.OK);
-    }
-
-    @RequestMapping(value = "/delete", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
-    @ApiOperation(value = "删除角色菜单")
-    public ResponseEntity<Result<SysRoleMenuResponse>> deleteRoleMenu(@CurrentUser User user, @RequestParam Long id) {
-        return new ResponseEntity<>(Result.ok(sysRoleMenuService.deleteRoleMenu(id)), HttpStatus.OK);
+    public ResponseEntity<Result<List<SysRoleMenu>>> roleMenuList(@RequestBody SysRoleMenuQueryRequest sysRoleMenuQueryRequest) {
+        return new ResponseEntity<>(Result.ok(sysRoleMenuService.querySysRoleMenuList(sysRoleMenuQueryRequest)), HttpStatus.OK);
     }
 
     @RequestMapping(value = "/update", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     @ApiOperation(value = "修改角色菜单")
-    public ResponseEntity<Result<SysRoleMenuResponse>> updateRoleMenu(@CurrentUser User user, @RequestBody SysRoleMenu sysRoleMenu) {
-        return new ResponseEntity<>(Result.ok(sysRoleMenuService.updateRoleMenu(sysRoleMenu)), HttpStatus.OK);
+    @Authorization
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "authorization", value = "authorization", required = true, dataType = "string", paramType = "header"),
+    })
+    public ResponseEntity<Result<String>> updateRoleMenu(@RequestBody SysRoleMenuEditRequest sysRoleMenuEditRequest) {
+        sysRoleMenuService.updateRoleMenu(sysRoleMenuEditRequest);
+        return new ResponseEntity<>(Result.ok(SysEnum.ResultEnum.RESULT_SUCCESS.getCode()), HttpStatus.OK);
     }
-
-
 
 }
