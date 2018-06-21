@@ -4,7 +4,6 @@ import com.github.pagehelper.PageHelper;
 import com.xdht.disease.common.core.PageResult;
 import com.xdht.disease.sys.constant.SysEnum;
 import com.xdht.disease.sys.model.SysDictionary;
-import com.xdht.disease.sys.model.SysRole;
 import com.xdht.disease.sys.service.SysDictionaryService;
 import com.xdht.disease.common.core.AbstractService;
 import com.xdht.disease.sys.vo.request.SysDictionaryRequest;
@@ -21,10 +20,10 @@ public class SysDictionaryServiceImpl extends AbstractService<SysDictionary> imp
 
     @Override
     public PageResult<SysDictionary> querySysDictionaryPage(SysDictionaryRequest sysDictionaryRequest) {
-        Condition condition = new Condition(SysRole.class);
+        Condition condition = new Condition(SysDictionary.class);
         condition.createCriteria().andEqualTo("status", SysEnum.StatusEnum.STATUS_NORMAL.getCode())
             .andEqualTo("dictionaryTypeId", sysDictionaryRequest.getDictionaryTypeId());
-        if (sysDictionaryRequest.getDictionaryName() != null){
+        if (sysDictionaryRequest.getDictionaryName() != null && ! "".equals(sysDictionaryRequest.getDictionaryName())){
             condition.getOredCriteria().get(0).andLike("dictionaryName", "%" + sysDictionaryRequest.getDictionaryName() + "%");
         }
         PageHelper.startPage(sysDictionaryRequest.getPageNumber(), sysDictionaryRequest.getPageSize());

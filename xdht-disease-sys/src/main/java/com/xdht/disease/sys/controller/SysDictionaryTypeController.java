@@ -19,7 +19,7 @@ import org.springframework.web.bind.annotation.RestController;
  */
 @Log4j
 @RestController
-@RequestMapping(value = "/api/v1/SysDictionaryType")
+@RequestMapping(value = "/api/v1/sysDictionaryType")
 public class SysDictionaryTypeController {
 
     @Autowired

@@ -22,7 +22,7 @@ import org.springframework.web.bind.annotation.*;
  */
 @Log4j
 @RestController
-@RequestMapping(value = "/api/v1/SysDictionary")
+@RequestMapping(value = "/api/v1/sysDictionary")
 public class SysDictionaryController {
     
     @Autowired
