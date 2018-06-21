@@ -20,14 +20,14 @@ public class CodeGenerator {
     /**
      * JDBC配置，请修改为你项目的实际配置
      */
-    private static final String JDBC_URL = "jdbc:mysql://127.0.0.1:3306/disease2";
-    private static final String JDBC_USERNAME = "root";
-    private static final String JDBC_PASSWORD = "123456";
+    private static final String JDBC_URL = "jdbc:mysql://120.77.251.154:3306/jessite";
+    private static final String JDBC_USERNAME = "jessite";
+    private static final String JDBC_PASSWORD = "jessite";
     private static final String JDBC_DIVER_CLASS_NAME = "com.mysql.jdbc.Driver";
     /**
      * 模块名称
      */
-    static final String MODULE_NAME = "test";
+    static final String MODULE_NAME = "sys";
     /**
      * 模块路径
      */
@@ -82,7 +82,7 @@ public class CodeGenerator {
     private static final String DATE = new SimpleDateFormat("yyyy/MM/dd").format(new Date());
 
     public static void main(String[] args) {
-        genCode("sys_test");
+        genCode("sys_dictionary_type");
         //genCode("输入表名","输入自定义Model名称");
     }
 

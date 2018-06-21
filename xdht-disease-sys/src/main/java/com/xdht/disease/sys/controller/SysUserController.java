@@ -3,10 +3,11 @@ package com.xdht.disease.sys.controller;
 import com.xdht.disease.common.authorization.annotation.Authorization;
 import com.xdht.disease.common.core.PageResult;
 import com.xdht.disease.common.core.Result;
+import com.xdht.disease.common.exception.ServiceException;
+import com.xdht.disease.sys.constant.SysEnum;
 import com.xdht.disease.sys.model.SysUser;
 import com.xdht.disease.sys.service.SysUserService;
 import com.xdht.disease.sys.vo.request.SysUserRequest;
-import com.xdht.disease.sys.vo.response.SysUserResponse;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
@@ -48,8 +49,9 @@ public class SysUserController {
     @ApiImplicitParams({
             @ApiImplicitParam(name = "authorization", value = "authorization", required = true, dataType = "string", paramType = "header"),
     })
-    public ResponseEntity<Result<SysUserResponse>> addUser(@RequestBody SysUser sysUser) {
-        return new ResponseEntity<>(Result.ok(sysUserService.addUser(sysUser)), HttpStatus.OK);
+    public ResponseEntity<Result<String>> addUser(@RequestBody SysUser sysUser) throws ServiceException {
+        this.sysUserService.addUser(sysUser);
+        return new ResponseEntity<>(Result.ok(SysEnum.ResultEnum.RESULT_SUCCESS.getCode()), HttpStatus.OK);
     }
 
     @RequestMapping(value = "/delete", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
@@ -58,8 +60,9 @@ public class SysUserController {
     @ApiImplicitParams({
             @ApiImplicitParam(name = "authorization", value = "authorization", required = true, dataType = "string", paramType = "header"),
     })
-    public ResponseEntity<Result<SysUserResponse>> deleteUser(@RequestParam Long id) {
-        return new ResponseEntity<>(Result.ok(sysUserService.deleteUser(id)), HttpStatus.OK);
+    public ResponseEntity<Result<String>> deleteUser(@RequestParam Long id) {
+        this.sysUserService.deleteUser(id);
+        return new ResponseEntity<>(Result.ok(SysEnum.ResultEnum.RESULT_SUCCESS.getCode()), HttpStatus.OK);
     }
 
     @RequestMapping(value = "/update", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
@@ -68,8 +71,9 @@ public class SysUserController {
     @ApiImplicitParams({
             @ApiImplicitParam(name = "authorization", value = "authorization", required = true, dataType = "string", paramType = "header"),
     })
-    public ResponseEntity<Result<SysUserResponse>> updateUser(@RequestBody SysUser sysUser) {
-        return new ResponseEntity<>(Result.ok(sysUserService.updateUser(sysUser)), HttpStatus.OK);
+    public ResponseEntity<Result<String>> updateUser(@RequestBody SysUser sysUser) {
+        this.sysUserService.updateUser(sysUser);
+        return new ResponseEntity<>(Result.ok(SysEnum.ResultEnum.RESULT_SUCCESS.getCode()), HttpStatus.OK);
     }
 
     @RequestMapping(value = "/detail/{id}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
@@ -79,7 +83,7 @@ public class SysUserController {
             @ApiImplicitParam(name = "authorization", value = "authorization", required = true, dataType = "string", paramType = "header"),
     })
     public ResponseEntity<Result<SysUser>> getUserDetail(@PathVariable Long id) {
-        return new ResponseEntity<>(Result.ok(sysUserService.getUserDetail(id)), HttpStatus.OK);
+        return new ResponseEntity<>(Result.ok(sysUserService.selectByPrimaryKey(id)), HttpStatus.OK);
     }
 
 }

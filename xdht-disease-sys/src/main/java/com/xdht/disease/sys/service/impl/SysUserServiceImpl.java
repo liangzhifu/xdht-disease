@@ -3,10 +3,10 @@ package com.xdht.disease.sys.service.impl;
 import com.github.pagehelper.PageHelper;
 import com.xdht.disease.common.authorization.manager.TokenManager;
 import com.xdht.disease.common.core.PageResult;
+import com.xdht.disease.common.exception.ServiceException;
 import com.xdht.disease.common.model.TokenModel;
 import com.xdht.disease.common.model.User;
 import com.xdht.disease.sys.constant.SysEnum;
-import com.xdht.disease.sys.dao.SysUserMapper;
 import com.xdht.disease.sys.model.SysUser;
 import com.xdht.disease.sys.service.SysUserService;
 import com.xdht.disease.sys.vo.request.LoginRequest;
@@ -15,8 +15,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import com.xdht.disease.common.core.AbstractService;
 import com.xdht.disease.sys.vo.request.SysUserRequest;
-import com.xdht.disease.sys.vo.response.SysUserResponse;
-import org.springframework.beans.factory.annotation.Autowired;
 import tk.mybatis.mapper.entity.Condition;
 
 import javax.annotation.Resource;
@@ -28,13 +26,10 @@ import java.util.List;
  */
 @Service
 @Transactional
-public class SysUserServiceImpl extends AbstractService<SysUser> implements SysUserService{
+public class SysUserServiceImpl extends AbstractService<SysUser> implements SysUserService {
 
-        @Autowired
-        private SysUserMapper sysUserMapper;
-
-        @Resource(name = "ehcacheTokenManager")
-        private TokenManager tokenManager;
+    @Resource(name = "ehcacheTokenManager")
+    private TokenManager tokenManager;
 
     @Override
     public LoginResponse createToken(LoginRequest loginRequest) {
@@ -43,7 +38,7 @@ public class SysUserServiceImpl extends AbstractService<SysUser> implements SysU
         sysUser.setLoginCode(loginRequest.getLoginCode());
         sysUser.setPassword(loginRequest.getPassword());
         sysUser.setStatus(SysEnum.StatusEnum.STATUS_NORMAL.getCode());
-        sysUser = this.sysUserMapper.selectOne(sysUser);
+        sysUser = this.selectOne(sysUser);
         if (sysUser == null) {
             loginResponse.setStatus("0");
         } else {
@@ -63,7 +58,7 @@ public class SysUserServiceImpl extends AbstractService<SysUser> implements SysU
     public PageResult<SysUser> querySysUserPage(SysUserRequest sysUserRequest) {
         Condition condition = new Condition(SysUser.class);
         condition.createCriteria().andEqualTo("status", SysEnum.StatusEnum.STATUS_NORMAL.getCode());
-        if (sysUserRequest.getUserName() != null){
+        if (sysUserRequest.getUserName() != null && !"".equals(sysUserRequest.getUserName())){
             condition.getOredCriteria().get(0).andLike("userName", "%"+sysUserRequest.getUserName()+"%");
         }
         PageHelper.startPage(sysUserRequest.getPageNumber(), sysUserRequest.getPageSize());
@@ -83,44 +78,34 @@ public class SysUserServiceImpl extends AbstractService<SysUser> implements SysU
             condition.getOredCriteria().get(0).andLike("userName", "%"+sysUser.getUserName()+"%");
         }
         condition.setOrderByClause("id desc");
-        List<SysUser> sysUserList = this.sysUserMapper.selectByCondition(condition);
-        return sysUserList;
+        return this.selectByCondition(condition);
     }
 
 
     @Override
-    public SysUserResponse addUser(SysUser sysUser) {
+    public void addUser(SysUser sysUser) throws ServiceException {
+        Condition condition = new Condition(SysUser.class);
+        condition.createCriteria().andEqualTo("status", SysEnum.StatusEnum.STATUS_NORMAL.getCode())
+            .andEqualTo("loginCode", sysUser.getLoginCode());
+        int num = this.selectCountByCondition(condition);
+        if (num > 0) {
+            throw new ServiceException("已存在相同登录名的用户，不能添加！");
+        }
         sysUser.setStatus(SysEnum.StatusEnum.STATUS_NORMAL.getCode());
         this.insertUseGeneratedKeys(sysUser);
-        SysUserResponse sysUserResponse = new SysUserResponse();
-        sysUserResponse.setId(sysUser.getId());
-        sysUserResponse.setUserName(sysUser.getUserName());
-        return sysUserResponse;
     }
 
     @Override
-    public SysUserResponse deleteUser(Long id) {
-        SysUser sysUser = this.sysUserMapper.selectByPrimaryKey(id);
+    public void deleteUser(Long id) {
+        SysUser sysUser = new SysUser();
+        sysUser.setId(id);
         sysUser.setStatus(SysEnum.StatusEnum.STATUS_DELETE.getCode());
         this.updateByPrimaryKeySelective(sysUser);
-//        this.sysUserMapper.deleteByPrimaryKey(id);
-        SysUserResponse sysUserResponse = new SysUserResponse();
-        sysUserResponse.setId(id);
-        return sysUserResponse;
     }
 
     @Override
-    public SysUserResponse updateUser(SysUser sysUser) {
+    public void updateUser(SysUser sysUser) {
         this.updateByPrimaryKeySelective(sysUser);
-        SysUserResponse sysUserResponse = new SysUserResponse();
-        sysUserResponse.setId(sysUser.getId());
-        sysUserResponse.setUserName(sysUser.getUserName());
-        return sysUserResponse;
-    }
-
-    @Override
-    public SysUser getUserDetail(Long id) {
-        return this.sysUserMapper.selectByPrimaryKey(id);
     }
 
 }

@@ -9,15 +9,10 @@ import lombok.Data;
 @Data
 public class SysMenuRequest {
 
-    @ApiModelProperty(value = "菜单名称")
-    private String menuName;
+    @ApiModelProperty(value = "菜单类型")
+    private String menuType;
 
-    @ApiModelProperty(value = "分页数")
-    private Integer  pageNumber;
-
-    @ApiModelProperty(value = "每页数量")
-    private Integer pageSize;
-
-
+    @ApiModelProperty(value = "是否展示")
+    private String isShow;
 
 }

@@ -46,21 +46,10 @@ public class SysMenu {
     private String menuIcon;
 
     /**
-     * 颜色
-     */
-    @Column(name = "menu_color")
-    private String menuColor;
-
-    /**
      * 权限标识
      */
     private String permission;
 
-    /**
-     * 是否显示（1显示 0隐藏）
-     */
-    @Column(name = "is_show")
-    private String isShow;
 
     /**
      * 状态（0正常 1删除 2停用）
@@ -219,24 +208,6 @@ public class SysMenu {
     }
 
     /**
-     * 获取颜色
-     *
-     * @return menu_color - 颜色
-     */
-    public String getMenuColor() {
-        return menuColor;
-    }
-
-    /**
-     * 设置颜色
-     *
-     * @param menuColor 颜色
-     */
-    public void setMenuColor(String menuColor) {
-        this.menuColor = menuColor;
-    }
-
-    /**
      * 获取权限标识
      *
      * @return permission - 权限标识
@@ -252,24 +223,6 @@ public class SysMenu {
      */
     public void setPermission(String permission) {
         this.permission = permission;
-    }
-
-    /**
-     * 获取是否显示（1显示 0隐藏）
-     *
-     * @return is_show - 是否显示（1显示 0隐藏）
-     */
-    public String getIsShow() {
-        return isShow;
-    }
-
-    /**
-     * 设置是否显示（1显示 0隐藏）
-     *
-     * @param isShow 是否显示（1显示 0隐藏）
-     */
-    public void setIsShow(String isShow) {
-        this.isShow = isShow;
     }
 
     /**
