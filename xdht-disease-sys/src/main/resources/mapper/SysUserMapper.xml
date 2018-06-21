@@ -19,8 +19,6 @@
     <result column="mgr_type" jdbcType="CHAR" property="mgrType" />
     <result column="last_login_ip" jdbcType="VARCHAR" property="lastLoginIp" />
     <result column="last_login_date" jdbcType="TIMESTAMP" property="lastLoginDate" />
-    <result column="freeze_date" jdbcType="TIMESTAMP" property="freezeDate" />
-    <result column="freeze_cause" jdbcType="VARCHAR" property="freezeCause" />
     <result column="status" jdbcType="CHAR" property="status" />
     <result column="create_by" jdbcType="BIGINT" property="createBy" />
     <result column="create_date" jdbcType="TIMESTAMP" property="createDate" />

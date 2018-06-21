@@ -10,6 +10,18 @@ public class SysCompanyOffice {
     private Long id;
 
     /**
+     * 父级id
+     */
+    @Column(name = "parent_id")
+    private Long parentId;
+
+    /**
+     * 父级ids
+     */
+    @Column(name = "parent_ids")
+    private String parentIds;
+
+    /**
      * 公司id
      */
     @Column(name = "company_id")
@@ -188,5 +200,21 @@ public class SysCompanyOffice {
      */
     public void setStatus(String status) {
         this.status = status;
+    }
+
+    public Long getParentId() {
+        return parentId;
+    }
+
+    public void setParentId(Long parentId) {
+        this.parentId = parentId;
+    }
+
+    public String getParentIds() {
+        return parentIds;
+    }
+
+    public void setParentIds(String parentIds) {
+        this.parentIds = parentIds;
     }
 }

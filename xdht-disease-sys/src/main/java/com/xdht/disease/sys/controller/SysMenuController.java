@@ -1,17 +1,12 @@
 package com.xdht.disease.sys.controller;
 
 import com.xdht.disease.common.authorization.annotation.Authorization;
-import com.xdht.disease.common.authorization.annotation.CurrentUser;
 import com.xdht.disease.common.core.Result;
-import com.xdht.disease.common.model.User;
+import com.xdht.disease.sys.constant.SysEnum;
 import com.xdht.disease.sys.model.SysMenu;
-import com.xdht.disease.sys.model.SysUser;
 import com.xdht.disease.sys.service.SysMenuService;
 import com.xdht.disease.sys.vo.request.SysMenuRequest;
-import com.xdht.disease.sys.vo.response.SysMenuResponse;
 import com.xdht.disease.sys.vo.response.SysMenuTreeResponse;
-import com.xdht.disease.sys.vo.response.SysMenuZTreeNodeResponse;
-import com.xdht.disease.sys.vo.response.SysUserResponse;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
@@ -45,49 +40,50 @@ public class SysMenuController {
         return new ResponseEntity<>(Result.ok(this.sysMenuService.getUserMenu()), HttpStatus.OK);
     }
 
-    @RequestMapping(value = "/zTreeList", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    @RequestMapping(value = "/zTreeList", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     @ApiOperation(value = "ZTree菜单")
-    public ResponseEntity<Result<List<SysMenuZTreeNodeResponse>>> getZTreeMenu() {
-        return new ResponseEntity<>(Result.ok(this.sysMenuService.getZTreeMenu()), HttpStatus.OK);
-    }
-
-    @RequestMapping(value = "/menuPage", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
-    @ApiOperation(value = "分页查询菜单列表")
-    public ResponseEntity<Result<List<SysMenu>>> menuPage(@RequestBody SysMenuRequest sysMenuRequest) {
-        return new ResponseEntity<>(Result.ok(sysMenuService.querySysMenuPage(sysMenuRequest)), HttpStatus.OK);
-    }
-    @RequestMapping(value = "/menusList", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
-    @ApiOperation(value = "查询菜单列表")
-    public ResponseEntity<Result<List<SysMenu>>> menusList(@RequestBody SysMenu sysMenu) {
-        return new ResponseEntity<>(Result.ok(sysMenuService.querySysMenuList(sysMenu)), HttpStatus.OK);
+    public ResponseEntity<Result<List<SysMenu>>> getZTreeMenu(@RequestBody SysMenuRequest sysMenuRequest) {
+        return new ResponseEntity<>(Result.ok(this.sysMenuService.getZTreeMenu(sysMenuRequest)), HttpStatus.OK);
     }
 
     @RequestMapping(value = "/add", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     @ApiOperation(value = "添加菜单")
     @Authorization
-    public ResponseEntity<Result<SysMenuResponse>> addMenu(@RequestBody SysMenu sysMenu) {
-        return new ResponseEntity<>(Result.ok(sysMenuService.addMenu(sysMenu)), HttpStatus.OK);
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "authorization", value = "authorization", required = true, dataType = "string", paramType = "header"),
+    })
+    public ResponseEntity<Result<String>> addMenu(@RequestBody SysMenu sysMenu) {
+        sysMenuService.addMenu(sysMenu);
+        return new ResponseEntity<>(Result.ok(SysEnum.ResultEnum.RESULT_SUCCESS.getCode()), HttpStatus.OK);
     }
 
     @RequestMapping(value = "/delete", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     @ApiOperation(value = "删除菜单")
     @Authorization
-    public ResponseEntity<Result<SysMenuResponse>> deleteMenu(@RequestParam Long id) {
-        return new ResponseEntity<>(Result.ok(sysMenuService.deleteMenu(id)), HttpStatus.OK);
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "authorization", value = "authorization", required = true, dataType = "string", paramType = "header"),
+    })
+    public ResponseEntity<Result<String>> deleteMenu(@RequestParam Long id) {
+        sysMenuService.deleteMenu(id);
+        return new ResponseEntity<>(Result.ok(SysEnum.ResultEnum.RESULT_SUCCESS.getCode()), HttpStatus.OK);
     }
 
     @RequestMapping(value = "/update", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     @ApiOperation(value = "修改菜单")
     @Authorization
-    public ResponseEntity<Result<SysMenuResponse>> updateMenu(@RequestBody SysMenu sysMenu) {
-        return new ResponseEntity<>(Result.ok(sysMenuService.updateMenu(sysMenu)), HttpStatus.OK);
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "authorization", value = "authorization", required = true, dataType = "string", paramType = "header"),
+    })
+    public ResponseEntity<Result<String>> updateMenu(@RequestBody SysMenu sysMenu) {
+        sysMenuService.updateMenu(sysMenu);
+        return new ResponseEntity<>(Result.ok(SysEnum.ResultEnum.RESULT_SUCCESS.getCode()), HttpStatus.OK);
     }
 
     @RequestMapping(value = "/detail/{id}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     @ApiOperation(value = "获取菜单信息")
     @Authorization
     public ResponseEntity<Result<SysMenu>> getRoleDetail(@PathVariable Long id) {
-        return new ResponseEntity<>(Result.ok(sysMenuService.getMenuDetail(id)), HttpStatus.OK);
+        return new ResponseEntity<>(Result.ok(sysMenuService.selectByPrimaryKey(id)), HttpStatus.OK);
     }
 
 }

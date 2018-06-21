@@ -19,13 +19,7 @@ public class SysRole {
     private String roleName;
 
     /**
-     * 系统内置（1是 0否）
-     */
-    @Column(name = "is_sys")
-    private String isSys;
-
-    /**
-     * 状态（0正常 1删除 2停用）
+     * 状态（0正常 1删除）
      */
     private String status;
 
@@ -92,24 +86,6 @@ public class SysRole {
      */
     public void setRoleName(String roleName) {
         this.roleName = roleName;
-    }
-
-    /**
-     * 获取系统内置（1是 0否）
-     *
-     * @return is_sys - 系统内置（1是 0否）
-     */
-    public String getIsSys() {
-        return isSys;
-    }
-
-    /**
-     * 设置系统内置（1是 0否）
-     *
-     * @param isSys 系统内置（1是 0否）
-     */
-    public void setIsSys(String isSys) {
-        this.isSys = isSys;
     }
 
     /**

@@ -84,19 +84,7 @@ public class SysUser {
     private Date lastLoginDate;
 
     /**
-     * 冻结时间
-     */
-    @Column(name = "freeze_date")
-    private Date freezeDate;
-
-    /**
-     * 冻结原因
-     */
-    @Column(name = "freeze_cause")
-    private String freezeCause;
-
-    /**
-     * 状态（0正常 1删除 2停用 3冻结）
+     * 状态（0正常 1删除）
      */
     private String status;
 
@@ -379,42 +367,6 @@ public class SysUser {
      */
     public void setLastLoginDate(Date lastLoginDate) {
         this.lastLoginDate = lastLoginDate;
-    }
-
-    /**
-     * 获取冻结时间
-     *
-     * @return freeze_date - 冻结时间
-     */
-    public Date getFreezeDate() {
-        return freezeDate;
-    }
-
-    /**
-     * 设置冻结时间
-     *
-     * @param freezeDate 冻结时间
-     */
-    public void setFreezeDate(Date freezeDate) {
-        this.freezeDate = freezeDate;
-    }
-
-    /**
-     * 获取冻结原因
-     *
-     * @return freeze_cause - 冻结原因
-     */
-    public String getFreezeCause() {
-        return freezeCause;
-    }
-
-    /**
-     * 设置冻结原因
-     *
-     * @param freezeCause 冻结原因
-     */
-    public void setFreezeCause(String freezeCause) {
-        this.freezeCause = freezeCause;
     }
 
     /**
