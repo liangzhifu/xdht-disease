@@ -7,7 +7,9 @@ import com.xdht.disease.sys.constant.SysEnum;
 import com.xdht.disease.sys.dao.RecordHealthManagementMapper;
 import com.xdht.disease.sys.model.RecordHealthManagement;
 import com.xdht.disease.sys.model.RecordHealthManagementData;
+import com.xdht.disease.sys.model.RecordHealthManagementProject;
 import com.xdht.disease.sys.service.RecordHealthManagementDataService;
+import com.xdht.disease.sys.service.RecordHealthManagementProjectService;
 import com.xdht.disease.sys.service.RecordHealthManagementService;
 import com.xdht.disease.sys.vo.request.RecordHealthManagementInputRequest;
 import com.xdht.disease.sys.vo.request.RecordHealthManagementRequest;
@@ -34,6 +36,8 @@ public class RecordHealthManagementServiceImpl extends AbstractService<RecordHea
     @Autowired
     private RecordHealthManagementDataService recordHealthManagementDataService;
 
+    @Autowired
+    private RecordHealthManagementProjectService recordHealthManagementProjectService;
     @Override
     public List<RecordHealthManagement> queryList(RecordHealthManagementRequest recordHealthManagementRequest) {
 
@@ -107,7 +111,9 @@ public class RecordHealthManagementServiceImpl extends AbstractService<RecordHea
             }
             this.recordHealthManagementDataService.updateByPrimaryKeySelective(recordHealthManagementData);
         }
-        this.recordHealthManagementDataService.insertList(recordHealthManagementDataList);
+        if (recordHealthManagementDataList.size()>0){
+            this.recordHealthManagementDataService.insertList(recordHealthManagementDataList);
+        }
         return recordHealthManagement;
     }
 
@@ -120,13 +126,13 @@ public class RecordHealthManagementServiceImpl extends AbstractService<RecordHea
         condition.createCriteria() .andEqualTo("healthManagementId", id);
         List<RecordHealthManagementData> recordHealthManagementDataList = this.recordHealthManagementDataService.selectByCondition(condition);
         recordHealthManagementDetailResponse.setRecordHealthManagementDataList(recordHealthManagementDataList);
-//        String projectIds = "";
-//        for (RecordPreEvaluationData recordData : recordPreEvaluationDataList) {
-//            projectIds += recordData.getPreEvaluationProjectId()+",";
-//        }
-//        projectIds = projectIds.substring(0,projectIds.lastIndexOf(","));
-//        List<RecordPreEvaluationProject> projectList = this.recordPreEvaluationProjectService.selectByIds(projectIds);
-//        recordPreEvaluationDetailResponse.setRecordPreEvaluationProjectList(projectList);
+        String projectIds = "";
+        for (RecordHealthManagementData recordData : recordHealthManagementDataList) {
+            projectIds += recordData.getHealthManagementProjectId()+",";
+        }
+        projectIds = projectIds.substring(0,projectIds.lastIndexOf(","));
+        List<RecordHealthManagementProject> projectList = this.recordHealthManagementProjectService.selectByIds(projectIds);
+        recordHealthManagementDetailResponse.setRecordHealthManagementProjectList(projectList);
         return recordHealthManagementDetailResponse;
     }
 

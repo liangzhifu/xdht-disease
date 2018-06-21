@@ -72,10 +72,10 @@ public class RecordAntiNoiseFacilitiesServiceImpl extends AbstractService<Record
 
     @Override
     public RecordAntiNoiseFacilities addRecordAntiNoiseFacilities(RecordAntiNoiseInputRequest recordAntiNoiseInputRequest) {
-            RecordAntiNoiseFacilities recordAntiNoiseFacilities = recordAntiNoiseInputRequest.getRecordAntiNoiseFacilities();
-            recordAntiNoiseFacilities.setStatus(SysEnum.StatusEnum.STATUS_NORMAL.getCode());
-            this.insertUseGeneratedKeys(recordAntiNoiseFacilities);
-            List<RecordAntiNoiseFacilitiesData> recordAntiNoiseFacilitiesDataList = new LinkedList<>();
+        RecordAntiNoiseFacilities recordAntiNoiseFacilities = recordAntiNoiseInputRequest.getRecordAntiNoiseFacilities();
+        recordAntiNoiseFacilities.setStatus(SysEnum.StatusEnum.STATUS_NORMAL.getCode());
+        this.insertUseGeneratedKeys(recordAntiNoiseFacilities);
+        List<RecordAntiNoiseFacilitiesData> recordAntiNoiseFacilitiesDataList = new LinkedList<>();
         for ( RecordAntiNoiseFacilitiesData recordAntiNoiseFacilitiesData : recordAntiNoiseInputRequest.getRecordAntiNoiseFacilitiesDataList()) {
             recordAntiNoiseFacilitiesData.setRelationId(recordAntiNoiseFacilities.getId());
             recordAntiNoiseFacilitiesDataList.add(recordAntiNoiseFacilitiesData);
@@ -86,10 +86,10 @@ public class RecordAntiNoiseFacilitiesServiceImpl extends AbstractService<Record
 
     @Override
     public RecordAntiNoiseFacilities deleteRecordAntiNoiseFacilities(Long id) {
-            RecordAntiNoiseFacilities recordAntiNoiseFacilities = this.recordAntiNoiseFacilitiesMapper.selectByPrimaryKey(id);
-            recordAntiNoiseFacilities.setStatus(SysEnum.StatusEnum.STATUS_DELETE.getCode());
-            this.recordAntiNoiseFacilitiesMapper.updateByPrimaryKeySelective(recordAntiNoiseFacilities);
-            return recordAntiNoiseFacilities;
+        RecordAntiNoiseFacilities recordAntiNoiseFacilities = this.recordAntiNoiseFacilitiesMapper.selectByPrimaryKey(id);
+        recordAntiNoiseFacilities.setStatus(SysEnum.StatusEnum.STATUS_DELETE.getCode());
+        this.recordAntiNoiseFacilitiesMapper.updateByPrimaryKeySelective(recordAntiNoiseFacilities);
+        return recordAntiNoiseFacilities;
     }
 
     @Override

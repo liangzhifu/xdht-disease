@@ -72,28 +72,20 @@ public class SysEmployeeServiceImpl extends AbstractService<SysEmployee> impleme
         }
 
         @Override
-        public List<SysEmployee> querySysEmpList(SysEmployee sysEmployee) {
+        public List<SysEmployee> queryCompanyEmployeeList(SysEmployeeCompanyRequest sysEmployeeCompanyRequest) {
             Condition condition = new Condition(SysEmployee.class);
             condition.createCriteria()
-                    .andEqualTo("officeId", sysEmployee.getOfficeId())
-                    .andEqualTo("empSex",sysEmployee.getEmpSex())
-                    .andEqualTo("empMarriage",sysEmployee.getEmpMarriage())
-                    .andEqualTo("empEducation",sysEmployee.getEmpEducation());
-            if (sysEmployee.getEmpName() != null) {
-                condition.getOredCriteria().get(0).andLike("empName","%"+sysEmployee.getEmpName()+"%");
+                    .andEqualTo("officeId", sysEmployeeCompanyRequest.getCompanyOfficeId());
+            if (sysEmployeeCompanyRequest.getEmpName() != null) {
+                condition.getOredCriteria().get(0).andLike("empName","%"+sysEmployeeCompanyRequest.getEmpName()+"%");
             }
-            if(sysEmployee.getEmpNative() != null){
-                condition.getOredCriteria().get(0).andLike("empNative",sysEmployee.getEmpNative());
+            if(sysEmployeeCompanyRequest.getEmpNative() != null){
+                condition.getOredCriteria().get(0).andLike("empNative",sysEmployeeCompanyRequest.getEmpNative());
             }
             condition.setOrderByClause("id desc");
             List<SysEmployee> sysEmployeeList = this.sysEmployeeMapper.selectByCondition(condition);
             return sysEmployeeList;
         }
-
-    @Override
-    public List<SysEmployee> queryCompanyEmployeeList(SysEmployeeCompanyRequest sysEmployeeCompanyRequest) {
-        return this.sysEmployeeMapper.selectCompanyEmployeeList(sysEmployeeCompanyRequest);
-    }
 
     @Override
     public SysEmployeeResponse addEmployee(SysEmployeeResponse sysEmployeeResponse) {
