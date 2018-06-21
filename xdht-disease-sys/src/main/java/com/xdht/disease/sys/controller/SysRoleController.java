@@ -79,7 +79,7 @@ public class SysRoleController {
     @ApiOperation(value = "获取角色信息")
     @Authorization
     public ResponseEntity<Result<SysRole>> getRoleDetail(@PathVariable Long id) {
-        return new ResponseEntity<>(Result.ok(sysRoleService.getRoleDetail(id)), HttpStatus.OK);
+        return new ResponseEntity<>(Result.ok(sysRoleService.selectByPrimaryKey(id)), HttpStatus.OK);
     }
 
 }

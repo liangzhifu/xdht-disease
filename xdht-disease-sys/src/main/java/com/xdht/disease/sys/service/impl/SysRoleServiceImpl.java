@@ -45,12 +45,12 @@ public class SysRoleServiceImpl extends AbstractService<SysRole> implements SysR
             condition.getOredCriteria().get(0).andLike("roleName", "%"+sysRole.getRoleName()+"%");
         }
         condition.setOrderByClause("id desc");
-        List<SysRole> sysRoleList = this.selectByCondition(condition);
-        return sysRoleList;
+        return this.selectByCondition(condition);
     }
 
     @Override
     public void addRole(SysRole sysRole) {
+        sysRole.setStatus(SysEnum.StatusEnum.STATUS_NORMAL.getCode());
         this.insertUseGeneratedKeys(sysRole);
     }
 
@@ -66,8 +66,4 @@ public class SysRoleServiceImpl extends AbstractService<SysRole> implements SysR
         this.updateByPrimaryKeySelective(sysRole);
     }
 
-    @Override
-    public SysRole getRoleDetail(Long id) {
-        return this.selectByPrimaryKey(id);
-    }
 }
