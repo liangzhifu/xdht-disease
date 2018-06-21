@@ -50,6 +50,12 @@ public class RecordVddEquipmentData {
     private String operationAndMaintenance;
 
     /**
+     * 关联id
+     */
+    @Column(name = "relation_id")
+    private Long relationId;
+
+    /**
      * @return id
      */
     public Long getId() {
@@ -188,4 +194,17 @@ public class RecordVddEquipmentData {
     public void setOperationAndMaintenance(String operationAndMaintenance) {
         this.operationAndMaintenance = operationAndMaintenance;
     }
+
+    /**
+     * 获取关联id
+     * @return relationId
+     */
+    public Long getRelationId() {
+        return relationId;
+    }
+
+    /** 设置关联id
+     * @param relationId
+     */
+    public void setRelationId(Long relationId) { this.relationId = relationId; }
 }

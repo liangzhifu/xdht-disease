@@ -21,12 +21,6 @@ public interface SysEmployeeService extends Service<SysEmployee> {
      */
     public PageResult<SysEmployee> querySysEmpPage(SysEmployeeRequest sysEmployeeRequest);
 
-    /**
-     * 查询员工列表
-     * @param sysEmployee 查询
-     * @return 返回结果
-     */
-    public List<SysEmployee> querySysEmpList(SysEmployee sysEmployee);
 
     /**
      * 查询员工列表
@@ -37,7 +31,7 @@ public interface SysEmployeeService extends Service<SysEmployee> {
 
     /**
      * 添加员工
-     * @param sysEmployee 员工实体
+     * @param sysEmployeeResponse 员工实体
      * @return 返回结果
      */
     public SysEmployeeResponse addEmployee(SysEmployeeResponse sysEmployeeResponse);
