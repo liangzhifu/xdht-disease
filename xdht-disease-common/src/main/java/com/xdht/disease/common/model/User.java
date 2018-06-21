@@ -18,4 +18,7 @@ public class User implements java.io.Serializable{
     @ApiModelProperty("姓名")
     private String name;
 
+    @ApiModelProperty("管理员")
+    private String mgrType;
+
 }

@@ -101,7 +101,7 @@ public class SysMenuServiceImpl extends AbstractService<SysMenu> implements SysM
         User user = threadLocalUserService.getUser();
         if (user != null) {
             List<SysMenu> sysMenuList = null;
-            if (user.getId() == SysConstant.adminId) {
+            if (user.getMgrType().equals(SysConstant.adminMgrType)) {
                 Condition condition = new Condition(SysMenu.class);
                 condition.createCriteria().andEqualTo("isShow", SysEnum.IsShowEnum.IS_SHOW_YES.getCode())
                         .andEqualTo("status", SysEnum.StatusEnum.STATUS_NORMAL.getCode())

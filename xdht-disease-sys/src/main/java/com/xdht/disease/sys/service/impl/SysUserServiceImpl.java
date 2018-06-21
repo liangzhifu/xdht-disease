@@ -42,18 +42,20 @@ public class SysUserServiceImpl extends AbstractService<SysUser> implements SysU
         SysUser sysUser = new SysUser();
         sysUser.setLoginCode(loginRequest.getLoginCode());
         sysUser.setPassword(loginRequest.getPassword());
+        sysUser.setStatus(SysEnum.StatusEnum.STATUS_NORMAL.getCode());
         sysUser = this.sysUserMapper.selectOne(sysUser);
-//        if (sysUser == null) {
-//            loginResponse.setStatus("0");
-//        } else {
+        if (sysUser == null) {
+            loginResponse.setStatus("0");
+        } else {
             User user = new User();
             user.setName(sysUser.getUserName());
             user.setId(sysUser.getId());
+            user.setMgrType(sysUser.getMgrType());
             TokenModel tokenModel = this.tokenManager.createToken(user);
             loginResponse.setToken(tokenModel.getToken());
             loginResponse.setUserName(sysUser.getUserName());
             loginResponse.setStatus("1");
-//        }
+        }
         return loginResponse;
     }
 
