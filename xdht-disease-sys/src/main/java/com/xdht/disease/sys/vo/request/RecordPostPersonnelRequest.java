@@ -13,10 +13,22 @@ import java.util.List;
 @Data
 public class RecordPostPersonnelRequest {
 
-    @ApiModelProperty(value = "工作制度表信息")
-    private RecordPostPersonnel recordPostPersonnel;
+    @ApiModelProperty(value = "主键id")
+    private Long id;
 
-    @ApiModelProperty(value = "工作制度--部门表信息")
-    private List<RecordPostPersonnelData> recordPostPersonnelDataList;
+    @ApiModelProperty(value = "编号")
+    private String postPersonnelNo;
+
+    @ApiModelProperty(value = "核实情况")
+    private String verificationResult;
+
+    @ApiModelProperty(value = "状态（0正常 1删除）")
+    private String status;
+
+    @ApiModelProperty(value = "分页数")
+    private Integer  pageNumber;
+
+    @ApiModelProperty(value = "每页数量")
+    private Integer pageSize;
 
 }

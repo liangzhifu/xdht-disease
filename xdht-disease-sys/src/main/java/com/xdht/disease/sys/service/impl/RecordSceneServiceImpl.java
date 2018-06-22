@@ -92,7 +92,8 @@ public class RecordSceneServiceImpl extends AbstractService<RecordScene> impleme
     @Override
     public RecordSceneDetailResponse queryRecordSceneDetail(Long id) {
         RecordSceneDetailResponse recordSceneDetailResponse = new RecordSceneDetailResponse();
-        recordSceneDetailResponse.setRecordScene(this.recordSceneMapper.selectRecordSceneMapByPrimaryKey(id));
+//        recordSceneDetailResponse.setRecordScene(this.recordSceneMapper.selectRecordSceneMapByPrimaryKey(id));
+        recordSceneDetailResponse.setRecordScene(this.recordSceneMapper.selectByPrimaryKey(id));
         recordSceneDetailResponse.setRecordScenQuestionnaireList(this.recordScenQuestionnaireService.queryRecordScenQuestionnaireMapListByRecordScen(id));
         return recordSceneDetailResponse;
     }
