@@ -4,13 +4,11 @@ import com.github.pagehelper.PageHelper;
 import com.xdht.disease.common.core.AbstractService;
 import com.xdht.disease.common.core.PageResult;
 import com.xdht.disease.sys.constant.SysEnum;
-import com.xdht.disease.sys.dao.RecordScenQuestionnaireMapper;
 import com.xdht.disease.sys.dao.RecordSceneMapper;
 import com.xdht.disease.sys.model.RecordScenQuestionnaire;
 import com.xdht.disease.sys.model.RecordScene;
 import com.xdht.disease.sys.service.RecordScenQuestionnaireService;
 import com.xdht.disease.sys.service.RecordSceneService;
-import com.xdht.disease.sys.vo.request.RecordScenQuestionnaireRequest;
 import com.xdht.disease.sys.vo.request.RecordSceneInputRequest;
 import com.xdht.disease.sys.vo.request.RecordSceneRequest;
 import com.xdht.disease.sys.vo.response.RecordSceneDetailResponse;
@@ -39,13 +37,13 @@ public class RecordSceneServiceImpl extends AbstractService<RecordScene> impleme
     @Override
     public PageResult<RecordScene> queryListPage(RecordSceneRequest recordSceneRequest) {
         Condition condition = new Condition(RecordScene.class);
-        if (recordSceneRequest.getProjectName() != null) {
+        if (recordSceneRequest.getProjectName() != null && !"".equals(recordSceneRequest.getProjectName())) {
             condition.createCriteria().andLike("projectName","%"+recordSceneRequest.getProjectName()+"%");
         }
         condition.setOrderByClause("id desc");
         PageHelper.startPage(recordSceneRequest.getPageNumber(), recordSceneRequest.getPageSize());
-        List<RecordScene> dataList = this.recordSceneMapper.selectByCondition(condition);
-        Integer count = this.recordSceneMapper.selectCountByCondition(condition);
+        List<RecordScene> dataList = this.selectByCondition(condition);
+        Integer count = this.selectCountByCondition(condition);
         PageResult<RecordScene> pageList = new  PageResult<RecordScene>();
         pageList.setTotal(count);
         pageList.setDataList(dataList);
@@ -53,21 +51,20 @@ public class RecordSceneServiceImpl extends AbstractService<RecordScene> impleme
     }
 
     @Override
-    public RecordScene deleteRecordScene(Long id) {
-        this.recordSceneMapper.deleteByPrimaryKey(id);
+    public void deleteRecordScene(Long id) {
         RecordScene recordScene = new RecordScene();
         recordScene.setId(id);
-        return recordScene;
+        recordScene.setStatus(SysEnum.StatusEnum.STATUS_NORMAL.getCode());
+        this.updateByPrimaryKeySelective(recordScene);
     }
 
     @Override
-    public RecordScene updateRecordScene(RecordScene recordScene) {
-        this.recordSceneMapper.updateByPrimaryKeySelective(recordScene);
-        return recordScene;
+    public void updateRecordScene(RecordScene recordScene) {
+        this.updateByPrimaryKeySelective(recordScene);
     }
 
     @Override
-    public RecordScene add(RecordSceneInputRequest recordSceneInputRequest) {
+    public void add(RecordSceneInputRequest recordSceneInputRequest) {
         RecordScene recordScene = new RecordScene();
         recordScene.setStatus(SysEnum.StatusEnum.STATUS_NORMAL.getCode());
         recordScene.setInquiryDate(recordSceneInputRequest.getRecordScene().getInquiryDate());
@@ -85,8 +82,6 @@ public class RecordSceneServiceImpl extends AbstractService<RecordScene> impleme
             recordScenQuestionnaire.setStatus(SysEnum.StatusEnum.STATUS_NORMAL.getCode());
             recordScenQuestionnaireList.add(recordScenQuestionnaire);
         }
-        this.recordScenQuestionnaireService.insertList(recordScenQuestionnaireList);
-        return recordScene;
     }
 
     @Override
