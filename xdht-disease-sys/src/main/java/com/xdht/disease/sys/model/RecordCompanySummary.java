@@ -1,5 +1,7 @@
 package com.xdht.disease.sys.model;
 
+import com.alibaba.fastjson.annotation.JSONField;
+
 import java.util.Date;
 import javax.persistence.*;
 
@@ -18,6 +20,7 @@ public class RecordCompanySummary {
     /**
      * 检查日期
      */
+    @JSONField(format="yyyy-MM-dd")
     @Column(name = "inspection_date")
     private Date inspectionDate;
 
@@ -74,6 +77,12 @@ public class RecordCompanySummary {
      */
     @Column(name = "other_diseases_number")
     private Long otherDiseasesNumber;
+
+    /**
+     * 状态（0正常 1删除）
+     */
+    @Column(name = "status")
+    private String status;
 
     /**
      * 备注
@@ -308,5 +317,13 @@ public class RecordCompanySummary {
      */
     public void setRemarks(String remarks) {
         this.remarks = remarks;
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
     }
 }

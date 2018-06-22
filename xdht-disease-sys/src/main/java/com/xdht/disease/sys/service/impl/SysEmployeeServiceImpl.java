@@ -65,9 +65,10 @@ public class SysEmployeeServiceImpl extends AbstractService<SysEmployee> impleme
             }
             PageHelper.startPage(sysEmployeeRequest.getPageNumber(), sysEmployeeRequest.getPageSize());
             List<SysEmployee> dataList = this.sysEmployeeMapper.selectByCondition(condition);
+            Integer conunt = this.selectCountByCondition(condition);
             PageResult<SysEmployee> pageList = new PageResult<SysEmployee>();
             pageList.setDataList(dataList);
-            pageList.setTotal(dataList.size());
+            pageList.setTotal(conunt);
             return pageList;
         }
 
