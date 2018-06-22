@@ -1,5 +1,7 @@
 package com.xdht.disease.sys.model;
 
+import com.alibaba.fastjson.annotation.JSONField;
+
 import java.util.Date;
 import javax.persistence.*;
 
@@ -18,6 +20,7 @@ public class RecordCompanySummary {
     /**
      * 检查日期
      */
+    @JSONField(format="yyyy-MM-dd")
     @Column(name = "inspection_date")
     private Date inspectionDate;
 
@@ -75,6 +78,34 @@ public class RecordCompanySummary {
     @Column(name = "other_diseases_number")
     private Long otherDiseasesNumber;
 
+    /**
+     * 状态（0正常 1删除）
+     */
+    @Column(name = "status")
+    private String status;
+    /**
+     * 创建人
+     */
+    @Column(name = "create_by")
+    private Long createBy;
+
+    /**
+     * 创建时间
+     */
+    @Column(name = "create_date")
+    private Date createDate;
+
+    /**
+     * 更新人
+     */
+    @Column(name = "update_by")
+    private Long updateBy;
+
+    /**
+     * 更新时间
+     */
+    @Column(name = "update_date")
+    private Date updateDate;
     /**
      * 备注
      */
@@ -308,5 +339,45 @@ public class RecordCompanySummary {
      */
     public void setRemarks(String remarks) {
         this.remarks = remarks;
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
+    }
+
+    public Long getCreateBy() {
+        return createBy;
+    }
+
+    public void setCreateBy(Long createBy) {
+        this.createBy = createBy;
+    }
+
+    public Date getCreateDate() {
+        return createDate;
+    }
+
+    public void setCreateDate(Date createDate) {
+        this.createDate = createDate;
+    }
+
+    public Long getUpdateBy() {
+        return updateBy;
+    }
+
+    public void setUpdateBy(Long updateBy) {
+        this.updateBy = updateBy;
+    }
+
+    public Date getUpdateDate() {
+        return updateDate;
+    }
+
+    public void setUpdateDate(Date updateDate) {
+        this.updateDate = updateDate;
     }
 }
