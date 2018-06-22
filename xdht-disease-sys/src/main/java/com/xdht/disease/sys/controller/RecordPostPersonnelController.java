@@ -56,10 +56,10 @@ public class RecordPostPersonnelController {
     public ResponseEntity<Result<RecordPostPersonnel>> update(@RequestBody RecordPostPersonnelInputRequest recordPostPersonnelInputRequest) {
         return new ResponseEntity<>(Result.ok(recordService.update(recordPostPersonnelInputRequest)), HttpStatus.OK);
     }
-    @RequestMapping(value = "/detail/{sceneId}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    @RequestMapping(value = "/detail/{id}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     @ApiOperation(value = "获取 --详细内容")
-    public ResponseEntity<Result<RecordPostPersonnelDetailResponse>> getRecordPostPersonnelDetail(@PathVariable Long sceneId) {
-        RecordPostPersonnelDetailResponse recordPostPersonnelDetailResponse = this.recordService.queryPostPersonnelDetail(sceneId);
+    public ResponseEntity<Result<RecordPostPersonnelDetailResponse>> getRecordPostPersonnelDetail(@PathVariable Long id) {
+        RecordPostPersonnelDetailResponse recordPostPersonnelDetailResponse = this.recordService.queryPostPersonnelDetail(id);
         return new ResponseEntity<>(Result.ok(recordPostPersonnelDetailResponse), HttpStatus.OK);
     }
 

@@ -49,6 +49,29 @@ public class RecordEquipmentLayout {
      */
     @Column(name = "update_date")
     private Date updateDate;
+    /**
+     * 现场调查id
+     */
+    @Column(name = "scene_id")
+    private Long sceneId;
+
+    /**
+     * 获取现场调查id
+     *
+     * @return scene_id - 现场调查id
+     */
+    public Long getSceneId() {
+        return sceneId;
+    }
+
+    /**
+     * 设置现场调查id
+     *
+     * @param sceneId 现场调查id
+     */
+    public void setSceneId(Long sceneId) {
+        this.sceneId = sceneId;
+    }
 
     /**
      * @return id

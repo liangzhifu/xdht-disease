@@ -117,19 +117,24 @@ public class RecordEquipmentServiceImpl extends AbstractService<RecordEquipment>
     @Override
     public RecordEquipmentDetailResponse queryEquipmentDetail(Long id) {
         RecordEquipmentDetailResponse response = new RecordEquipmentDetailResponse();
-        RecordEquipment recordEquipment = this.recordEquipmentMapper.selectByPrimaryKey(id);
-        response.setRecordEquipment(recordEquipment);
-        Condition condition = new Condition(RecordEquipmentData.class);
-        condition.createCriteria() .andEqualTo("relationId", id);
-        List<RecordEquipmentData> recordEquipmentDataList = this.recordEquipmentDataService.selectByCondition(condition);
-        response.setRecordEquipmentDataList(recordEquipmentDataList);
-        String officeIds = "";
-        for (RecordEquipmentData recordData : recordEquipmentDataList) {
-            officeIds += recordData.getOfficdId()+",";
+        RecordEquipment recordEquipment = new RecordEquipment();
+        recordEquipment.setSceneId(id);
+        recordEquipment =  this.recordEquipmentMapper.selectOne(recordEquipment);
+        if (recordEquipment != null) {
+            Long recordId = recordEquipment.getId();
+            response.setRecordEquipment(recordEquipment);
+            Condition condition = new Condition(RecordEquipmentData.class);
+            condition.createCriteria() .andEqualTo("relationId", recordId);
+            List<RecordEquipmentData> recordEquipmentDataList = this.recordEquipmentDataService.selectByCondition(condition);
+            response.setRecordEquipmentDataList(recordEquipmentDataList);
+            String officeIds = "";
+            for (RecordEquipmentData recordData : recordEquipmentDataList) {
+                officeIds += recordData.getOfficdId()+",";
+            }
+            officeIds = officeIds.substring(0,officeIds.lastIndexOf(","));
+            List<SysCompanyOffice> officeList = this.sysCompanyOfficeService.selectByIds(officeIds);
+            response.setSysCompanyOfficeList(officeList);
         }
-        officeIds = officeIds.substring(0,officeIds.lastIndexOf(","));
-        List<SysCompanyOffice> officeList = this.sysCompanyOfficeService.selectByIds(officeIds);
-        response.setSysCompanyOfficeList(officeList);
         return response;
     }
 }

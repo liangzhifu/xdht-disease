@@ -108,20 +108,22 @@ public class RecordPostPersonnelServiceImpl extends AbstractService<RecordPostPe
     }
 
     @Override
-    public RecordPostPersonnelDetailResponse queryPostPersonnelDetail(Long sceneId) {
+    public RecordPostPersonnelDetailResponse queryPostPersonnelDetail(Long id) {
         RecordPostPersonnelDetailResponse response = new RecordPostPersonnelDetailResponse();
         //根据sceneId 获取表的数据
-        Condition condition = new Condition(RecordPostPersonnel.class);
-        condition.createCriteria().andEqualTo("sceneId",sceneId);
         RecordPostPersonnel recordPostPersonnel = new RecordPostPersonnel();
-        recordPostPersonnel.setSceneId(sceneId);
+        recordPostPersonnel.setSceneId(id);
         recordPostPersonnel = this.selectOne(recordPostPersonnel);
-        Long recordId = recordPostPersonnel.getId();
-        response.setRecordPostPersonnel(recordPostPersonnel);
-        Condition condition1 = new Condition(RecordPostPersonnelData.class);
-        condition1.createCriteria() .andEqualTo("relationId", recordId);
-        List<RecordPostPersonnelData> recordPostPersonnelDataList = this.recordPostPersonnelDataService.selectByCondition(condition1);
-        response.setRecordPostPersonnelDataList(recordPostPersonnelDataList);
+        if (recordPostPersonnel != null) {
+            Long recordId = recordPostPersonnel.getId();
+            response.setRecordPostPersonnel(recordPostPersonnel);
+            Condition condition = new Condition(RecordPostPersonnelData.class);
+            condition.createCriteria() .andEqualTo("relationId", recordId);
+            List<RecordPostPersonnelData> recordPostPersonnelDataList = this.recordPostPersonnelDataService.selectByCondition(condition);
+            if (recordPostPersonnelDataList.size()>0){
+                response.setRecordPostPersonnelDataList(recordPostPersonnelDataList);
+            }
+        }
         return response;
     }
 }

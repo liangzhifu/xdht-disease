@@ -51,8 +51,8 @@ public interface RecordPostPersonnelService extends Service<RecordPostPersonnel>
 
     /**
      * 获取 岗位定员及工作制度调查表 信息
-     * @param sceneId 关联id
+     * @param id 关联id
      * @return 返回结果
      */
-    RecordPostPersonnelDetailResponse queryPostPersonnelDetail(Long sceneId);
+    RecordPostPersonnelDetailResponse queryPostPersonnelDetail(Long id);
 }

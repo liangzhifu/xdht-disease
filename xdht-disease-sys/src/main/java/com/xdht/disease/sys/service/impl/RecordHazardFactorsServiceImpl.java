@@ -116,12 +116,17 @@ public class RecordHazardFactorsServiceImpl extends AbstractService<RecordHazard
     @Override
     public RecordHazardFactorsDetailResponse queryHazardFactorsDetail(Long id) {
         RecordHazardFactorsDetailResponse response = new RecordHazardFactorsDetailResponse();
-        RecordHazardFactors recordHazardFactors = this.selectByPrimaryKey(id);
-        response.setRecordHazardFactors(recordHazardFactors);
-        Condition condition = new Condition(RecordHazardFactorsData.class);
-        condition.createCriteria() .andEqualTo("relationId", id);
-        List<RecordHazardFactorsData> recordHazardFactorsDataList = this.recordHazardFactorsDataService.selectByCondition(condition);
-        response.setRecordHazardFactorsDataList(recordHazardFactorsDataList);
+        RecordHazardFactors recordHazardFactors = new RecordHazardFactors();
+        recordHazardFactors.setSceneId(id);
+        recordHazardFactors = this.selectOne(recordHazardFactors);
+        if (recordHazardFactors != null) {
+            Long recordId = recordHazardFactors.getId();
+            response.setRecordHazardFactors(recordHazardFactors);
+            Condition condition = new Condition(RecordHazardFactorsData.class);
+            condition.createCriteria() .andEqualTo("relationId", recordId);
+            List<RecordHazardFactorsData> recordHazardFactorsDataList = this.recordHazardFactorsDataService.selectByCondition(condition);
+            response.setRecordHazardFactorsDataList(recordHazardFactorsDataList);
+        }
         return response;
     }
 }

@@ -117,12 +117,17 @@ public class RecordOtherProtectiveFacilitiesServiceImpl extends AbstractService<
     @Override
     public RecordOtherProtectiveDetailResponse queryOtherProtetiveDetail(Long id) {
         RecordOtherProtectiveDetailResponse response = new RecordOtherProtectiveDetailResponse();
-        RecordOtherProtectiveFacilities recordOtherProtective = this.recordMapper.selectByPrimaryKey(id);
-        response.setRecordOtherProtective(recordOtherProtective);
-        Condition condition = new Condition(RecordOtherProtectiveFacilitiesData.class);
-        condition.createCriteria() .andEqualTo("relationId", id);
-        List<RecordOtherProtectiveFacilitiesData> recordOtherProtectiveDataList = this.recordOtherProtectiveFacilitiesDataService.selectByCondition(condition);
-        response.setRecordOtherProtectiveDataList(recordOtherProtectiveDataList);
+        RecordOtherProtectiveFacilities recordOtherProtective = new RecordOtherProtectiveFacilities();
+        recordOtherProtective.setSceneId(id);
+        recordOtherProtective =  this.recordMapper.selectOne(recordOtherProtective);
+        if (recordOtherProtective != null) {
+            Long recordId = recordOtherProtective.getId();
+            response.setRecordOtherProtective(recordOtherProtective);
+            Condition condition = new Condition(RecordOtherProtectiveFacilitiesData.class);
+            condition.createCriteria() .andEqualTo("relationId", recordId);
+            List<RecordOtherProtectiveFacilitiesData> recordOtherProtectiveDataList = this.recordOtherProtectiveFacilitiesDataService.selectByCondition(condition);
+            response.setRecordOtherProtectiveDataList(recordOtherProtectiveDataList);
+        }
         return response;
     }
 }

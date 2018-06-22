@@ -112,14 +112,24 @@ public class RecordAntiNoiseFacilitiesServiceImpl extends AbstractService<Record
     }
 
     @Override
-    public RecordAntiNoiseDetailResponse queryAntiNoiseDetail(Long id) {
+    public RecordAntiNoiseDetailResponse queryAntiNoiseDetail(Long sceneId) {
         RecordAntiNoiseDetailResponse response = new RecordAntiNoiseDetailResponse();
-        RecordAntiNoiseFacilities recordAntiNoiseFacilities = this.selectByPrimaryKey(id);
-        response.setRecordAntiNoiseFacilities(recordAntiNoiseFacilities);
-        Condition condition = new Condition(RecordAntiNoiseFacilitiesData.class);
-        condition.createCriteria() .andEqualTo("relationId", id);
-        List<RecordAntiNoiseFacilitiesData> recordAntiNoiseFacilitiesDataList = this.recordAntiNoiseFacilitiesDataService.selectByCondition(condition);
-        response.setRecordAntiNoiseFacilitiesDataList(recordAntiNoiseFacilitiesDataList);
+        RecordAntiNoiseFacilities recordAntiNoiseFacilities = new RecordAntiNoiseFacilities();
+        recordAntiNoiseFacilities.setSceneId(sceneId);
+        recordAntiNoiseFacilities = this.selectOne(recordAntiNoiseFacilities);
+        List<RecordAntiNoiseFacilitiesData> recordAntiNoiseFacilitiesDataList = new LinkedList<>();
+        if (recordAntiNoiseFacilities != null){
+            response.setRecordAntiNoiseFacilities(recordAntiNoiseFacilities);
+            Long recordId = recordAntiNoiseFacilities.getSceneId();
+            Condition condition = new Condition(RecordAntiNoiseFacilitiesData.class);
+            condition.createCriteria() .andEqualTo("relationId", recordId);
+            recordAntiNoiseFacilitiesDataList = this.recordAntiNoiseFacilitiesDataService.selectByCondition(condition);
+            if (recordAntiNoiseFacilitiesDataList.size()>0){
+                response.setRecordAntiNoiseFacilitiesDataList(recordAntiNoiseFacilitiesDataList);
+            }
+        }
+
+//        response.setRecordAntiNoiseFacilitiesDataList(recordAntiNoiseFacilitiesDataList);
         return response;
     }
 }

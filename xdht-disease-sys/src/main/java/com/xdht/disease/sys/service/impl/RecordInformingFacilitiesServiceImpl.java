@@ -118,12 +118,17 @@ public class RecordInformingFacilitiesServiceImpl extends AbstractService<Record
     @Override
     public RecordInformingFacilitiesDetailResponse queryInformingFacilitiesDetail(Long id) {
         RecordInformingFacilitiesDetailResponse response = new RecordInformingFacilitiesDetailResponse();
-        RecordInformingFacilities recordInformingFacilities = this.recordMapper.selectByPrimaryKey(id);
-        response.setRecordInformingFacilities(recordInformingFacilities);
-        Condition condition = new Condition(RecordIndividualProtectiveEquipmentData.class);
-        condition.createCriteria() .andEqualTo("relationId", id);
-        List<RecordInformingFacilitiesData> recordInformingFacilitiesDataList = this.recordInformingFacilitiesDataService.selectByCondition(condition);
-        response.setRecordInformingFacilitiesDataList(recordInformingFacilitiesDataList);
+        RecordInformingFacilities recordInformingFacilities = new RecordInformingFacilities();
+        recordInformingFacilities.setSceneId(id);
+        recordInformingFacilities = this.recordMapper.selectOne(recordInformingFacilities);
+        if (recordInformingFacilities != null) {
+            Long recordId = recordInformingFacilities.getId();
+            response.setRecordInformingFacilities(recordInformingFacilities);
+            Condition condition = new Condition(RecordIndividualProtectiveEquipmentData.class);
+            condition.createCriteria() .andEqualTo("relationId", recordId);
+            List<RecordInformingFacilitiesData> recordInformingFacilitiesDataList = this.recordInformingFacilitiesDataService.selectByCondition(condition);
+            response.setRecordInformingFacilitiesDataList(recordInformingFacilitiesDataList);
+        }
         return response;
     }
 }
