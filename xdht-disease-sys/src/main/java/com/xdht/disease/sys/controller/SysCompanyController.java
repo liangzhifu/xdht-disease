@@ -38,14 +38,8 @@ public class SysCompanyController {
 
     @RequestMapping(value = "/list", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     @ApiOperation(value = "查询单位列表")
-    public  ResponseEntity<Result<List<SysCompany>>> companyList(@RequestBody SysCompany sysCompany) {
-        return new ResponseEntity<>(Result.ok(sysCompanyService.querySysCompanyList(sysCompany)), HttpStatus.OK);
-    }
-
-    @RequestMapping(value = "/listAll", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
-    @ApiOperation(value = "查询单位列表")
-    public  ResponseEntity<Result<List<SysCompany>>> listAll() {
-        return new ResponseEntity<>(Result.ok(sysCompanyService.querylistAll()), HttpStatus.OK);
+    public  ResponseEntity<Result<List<SysCompany>>> companyList(@RequestBody SysCompanyRequest sysCompanyRequest) {
+        return new ResponseEntity<>(Result.ok(sysCompanyService.querySysCompanyList(sysCompanyRequest)), HttpStatus.OK);
     }
 
     @RequestMapping(value = "/add", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)

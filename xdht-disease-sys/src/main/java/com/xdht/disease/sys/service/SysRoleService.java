@@ -47,10 +47,4 @@ public interface SysRoleService extends Service<SysRole> {
      */
     void updateRole(SysRole sysRole);
 
-    /**
-     * 获取角色信息
-     * @param id 主键id
-     * @return 返回结果
-     */
-    SysRole getRoleDetail(Long id);
 }
