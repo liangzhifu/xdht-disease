@@ -37,19 +37,14 @@ public class SysCompanyServiceImpl extends AbstractService<SysCompany> implement
     }
 
     @Override
-    public List<SysCompany> querySysCompanyList(SysCompany sysCompany) {
+    public List<SysCompany> querySysCompanyList(SysCompanyRequest sysCompanyRequest) {
         Condition condition = new Condition(SysCompany.class);
         condition.createCriteria().andEqualTo("status", SysEnum.StatusEnum.STATUS_NORMAL.getCode());
-        if (sysCompany.getCompanyName() != null){
-            condition.getOredCriteria().get(0).andLike("companyName","%"+sysCompany.getCompanyName()+"%");
+        if (sysCompanyRequest.getCompanyName() != null){
+            condition.getOredCriteria().get(0).andLike("companyName","%"+sysCompanyRequest.getCompanyName()+"%");
         }
         return this.selectByCondition(condition);
     }
-
-    @Override
-    public List<SysCompany> querylistAll() {
-            return this.selectAll();
-        }
 
     @Override
     public void addCompany(SysCompany sysCompany) {
