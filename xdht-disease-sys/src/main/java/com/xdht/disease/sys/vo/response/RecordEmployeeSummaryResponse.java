@@ -6,7 +6,6 @@ import lombok.Data;
 
 @Data
 public class RecordEmployeeSummaryResponse {
-
     @ApiModelProperty(value = "职工体检信息")
     private RecordEmployeeSummary employeeSummary;
 
