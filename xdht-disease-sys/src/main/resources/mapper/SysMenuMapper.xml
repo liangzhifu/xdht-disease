@@ -12,9 +12,7 @@
     <result column="menu_type" jdbcType="CHAR" property="menuType" />
     <result column="menu_href" jdbcType="VARCHAR" property="menuHref" />
     <result column="menu_icon" jdbcType="VARCHAR" property="menuIcon" />
-    <result column="menu_color" jdbcType="VARCHAR" property="menuColor" />
     <result column="permission" jdbcType="VARCHAR" property="permission" />
-    <result column="is_show" jdbcType="CHAR" property="isShow" />
     <result column="status" jdbcType="CHAR" property="status" />
     <result column="create_by" jdbcType="BIGINT" property="createBy" />
     <result column="create_date" jdbcType="TIMESTAMP" property="createDate" />
@@ -35,7 +33,15 @@
     AND sur.`user_id` = #{userId, jdbcType=BIGINT})
     AND `status` = '0'
     AND menu_type = '1'
-    AND is_show = '1'
   </select>
+
+  <update id="deleteChild" parameterType="java.util.HashMap">
+    UPDATE sys_menu
+    SET `status` = '1',
+    update_by = #{userId, jdbcType=BIGINT},
+    update_date = SYSDATE()
+    WHERE `status` = '0'
+    AND parent_ids LIKE CONCAT('%,', #{id, jdbcType=BIGINT},',%')
+  </update>
 
 </mapper>

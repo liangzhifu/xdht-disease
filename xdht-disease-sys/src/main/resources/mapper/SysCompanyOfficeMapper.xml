@@ -6,6 +6,8 @@
       WARNING - @mbg.generated
     -->
     <id column="id" jdbcType="BIGINT" property="id" />
+    <result column="parent_id" jdbcType="BIGINT" property="parentId" />
+    <result column="parent_ids" jdbcType="VARCHAR" property="parentIds" />
     <result column="company_id" jdbcType="BIGINT" property="companyId" />
     <result column="office_name" jdbcType="VARCHAR" property="officeName" />
     <result column="create_by" jdbcType="BIGINT" property="createBy" />
@@ -14,4 +16,13 @@
     <result column="update_date" jdbcType="TIMESTAMP" property="updateDate" />
     <result column="status" jdbcType="CHAR" property="status" />
   </resultMap>
+
+  <update id="deleteChild" parameterType="java.util.HashMap">
+    UPDATE sys_company_office
+    SET `status` = '1',
+    update_by = #{userId, jdbcType=BIGINT},
+    update_date = SYSDATE()
+    WHERE `status` = '0'
+    AND parent_ids LIKE CONCAT('%,', #{id, jdbcType=BIGINT},',%')
+  </update>
 </mapper>

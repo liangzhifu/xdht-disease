@@ -71,8 +71,7 @@ public class SysEnum {
     public enum StatusEnum {
 
         STATUS_NORMAL("0", "正常"),
-        STATUS_DELETE("1", "删除"),
-        STATUS_DISCONTINNATION("2", "停用");
+        STATUS_DELETE("1", "删除");
 
         private String code;
         private String msg;

@@ -1,32 +1,26 @@
 package com.xdht.disease.sys.service.impl;
 
-import com.github.pagehelper.PageHelper;
 import com.xdht.disease.common.core.AbstractService;
-import com.xdht.disease.common.core.PageResult;
 import com.xdht.disease.common.core.ThreadLocalUserService;
 import com.xdht.disease.common.model.User;
 import com.xdht.disease.sys.constant.SysConstant;
 import com.xdht.disease.sys.constant.SysEnum;
 import com.xdht.disease.sys.dao.SysMenuMapper;
 import com.xdht.disease.sys.model.SysMenu;
-import com.xdht.disease.sys.model.SysUser;
 import com.xdht.disease.sys.service.SysMenuService;
 import com.xdht.disease.sys.vo.request.SysMenuRequest;
-import com.xdht.disease.sys.vo.response.SysMenuResponse;
 import com.xdht.disease.sys.vo.response.SysMenuTreeResponse;
-import com.xdht.disease.sys.vo.response.SysMenuZTreeNodeResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import tk.mybatis.mapper.entity.Condition;
 
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 
 
-/**
- * Created by lzf on 2018/05/31.
- */
 @Service
 @Transactional
 public class SysMenuServiceImpl extends AbstractService<SysMenu> implements SysMenuService{
@@ -37,62 +31,33 @@ public class SysMenuServiceImpl extends AbstractService<SysMenu> implements SysM
     @Autowired
     private ThreadLocalUserService threadLocalUserService;
 
-        @Override
-        public PageResult<SysMenu> querySysMenuPage(SysMenuRequest sysMenuRequest) {
-            Condition condition = new Condition(SysMenu.class);
-            if (sysMenuRequest.getMenuName() != null) {
-                condition.createCriteria().andLike("menuName","%"+sysMenuRequest.getMenuName()+"%");
-            }
-            PageHelper.startPage(sysMenuRequest.getPageNumber(), sysMenuRequest.getPageSize());
-            List<SysMenu> dataList = this.selectByCondition(condition);
-            Integer count = this.selectCountByCondition(condition);
-            PageResult<SysMenu> pageList = new PageResult<SysMenu>();
-            pageList.setDataList(dataList);
-            pageList.setTotal(count);
-            return pageList;
+    @Override
+    public void addMenu(SysMenu sysMenu) {
+        Long parentId = sysMenu.getParentId();
+        if (parentId == 0) {
+            sysMenu.setParentIds(",0,");
+        } else {
+            SysMenu sysMenuTemp = this.selectByPrimaryKey(parentId);
+            sysMenu.setParentIds(sysMenuTemp.getParentIds() + parentId + ",");
         }
-        @Override
-        public List<SysMenu> querySysMenuList(SysMenu sysMenu) {
-            Condition condition = new Condition(SysMenu.class);
-
-            if (sysMenu.getMenuName() != null) {
-                condition.createCriteria().andLike("menuName","%"+sysMenu.getMenuName()+"%");
-            }
-            List<SysMenu> sysMenuList = this.sysMenuMapper.selectByCondition(condition);
-            return sysMenuList;
-        }
-
-        @Override
-        public SysMenuResponse addMenu(SysMenu sysMenu) {
-            this.insertUseGeneratedKeys(sysMenu);
-            SysMenuResponse sysMenuResponse = new SysMenuResponse();
-            sysMenuResponse.setId(sysMenu.getId());
-            sysMenuResponse.setMenuName(sysMenu.getMenuName());
-            return sysMenuResponse;
-        }
-
-        @Override
-        public SysMenuResponse deleteMenu(Long id) {
-            SysMenu sysMenu = this.sysMenuMapper.selectByPrimaryKey(id);
-            sysMenu.setStatus(SysEnum.StatusEnum.STATUS_DELETE.getCode());
-            this.sysMenuMapper.updateByPrimaryKeySelective(sysMenu);
-            SysMenuResponse sysMenuResponse = new SysMenuResponse();
-            sysMenuResponse.setId(id);
-            return sysMenuResponse;
-        }
-
-        @Override
-        public SysMenuResponse updateMenu(SysMenu sysMenu) {
-            this.sysMenuMapper.updateByPrimaryKeySelective(sysMenu);
-            SysMenuResponse sysMenuResponse = new SysMenuResponse();
-            sysMenuResponse.setId(sysMenu.getId());
-            sysMenuResponse.setMenuName(sysMenu.getMenuName());
-            return sysMenuResponse;
-        }
+        sysMenu.setStatus(SysEnum.StatusEnum.STATUS_NORMAL.getCode());
+        this.insertUseGeneratedKeys(sysMenu);
+    }
 
     @Override
-    public SysMenu getMenuDetail(Long id) {
-       return  this.sysMenuMapper.selectByPrimaryKey(id);
+    public void deleteMenu(Long id) {
+        SysMenu sysMenu = this.sysMenuMapper.selectByPrimaryKey(id);
+        sysMenu.setStatus(SysEnum.StatusEnum.STATUS_DELETE.getCode());
+        this.updateByPrimaryKeySelective(sysMenu);
+        Map<String, Object> map = new HashMap<>();
+        map.put("id", id);
+        map.put("userId", threadLocalUserService.getUser().getId());
+        this.sysMenuMapper.deleteChild(map);
+    }
+
+    @Override
+    public void updateMenu(SysMenu sysMenu) {
+        this.updateByPrimaryKeySelective(sysMenu);
     }
 
     @Override
@@ -100,11 +65,10 @@ public class SysMenuServiceImpl extends AbstractService<SysMenu> implements SysM
         List<SysMenuTreeResponse> sysMenuTreeResponses = new LinkedList<>();
         User user = threadLocalUserService.getUser();
         if (user != null) {
-            List<SysMenu> sysMenuList = null;
-            if (user.getId() == SysConstant.adminId) {
+            List<SysMenu> sysMenuList = new LinkedList<>();
+            if (user.getMgrType().equals(SysConstant.adminMgrType)) {
                 Condition condition = new Condition(SysMenu.class);
-                condition.createCriteria().andEqualTo("isShow", SysEnum.IsShowEnum.IS_SHOW_YES.getCode())
-                        .andEqualTo("status", SysEnum.StatusEnum.STATUS_NORMAL.getCode())
+                condition.createCriteria().andEqualTo("status", SysEnum.StatusEnum.STATUS_NORMAL.getCode())
                         .andEqualTo("menuType", SysEnum.MenuTypeEnum.MENU_TYPE_MENU.getCode());
                 sysMenuList = this.selectByCondition(condition);
             } else {
@@ -116,21 +80,11 @@ public class SysMenuServiceImpl extends AbstractService<SysMenu> implements SysM
     }
 
     @Override
-    public List<SysMenuZTreeNodeResponse> getZTreeMenu() {
+    public List<SysMenu> getZTreeMenu(SysMenuRequest sysMenuRequest) {
         Condition condition = new Condition(SysMenu.class);
-        condition.createCriteria().andEqualTo("isShow", SysEnum.IsShowEnum.IS_SHOW_YES.getCode())
-                .andEqualTo("status", SysEnum.StatusEnum.STATUS_NORMAL.getCode())
-                .andEqualTo("menuType", SysEnum.MenuTypeEnum.MENU_TYPE_MENU.getCode());
-        List<SysMenu> sysMenuList = this.selectByCondition(condition);
-        List<SysMenuZTreeNodeResponse> sysMenuZTreeNodeResponseList = new LinkedList<>();
-        for (SysMenu sysMenu : sysMenuList) {
-            SysMenuZTreeNodeResponse zTreeNodeResponse = new SysMenuZTreeNodeResponse();
-            zTreeNodeResponse.setId(sysMenu.getId());
-            zTreeNodeResponse.setPId(sysMenu.getParentId());
-            zTreeNodeResponse.setName(sysMenu.getMenuName());
-            sysMenuZTreeNodeResponseList.add(zTreeNodeResponse);
-        }
-        return sysMenuZTreeNodeResponseList;
+        condition.createCriteria().andEqualTo("status", SysEnum.StatusEnum.STATUS_NORMAL.getCode())
+                .andEqualTo("menuType", sysMenuRequest.getMenuType());
+        return this.selectByCondition(condition);
     }
 
     /**
@@ -173,7 +127,7 @@ public class SysMenuServiceImpl extends AbstractService<SysMenu> implements SysM
         Long id = sysMenuTreeResponse.getId();
         List<SysMenuTreeResponse> childMenuList = new LinkedList<>();
         for (SysMenuTreeResponse SysMenuTreeResponseTemp : sysMenuTreeResponseList) {
-            if (SysMenuTreeResponseTemp.getParentId() == id) {
+            if (SysMenuTreeResponseTemp.getParentId().intValue() == id) {
                 List<SysMenuTreeResponse> childList = this.getChildMenu(SysMenuTreeResponseTemp, sysMenuTreeResponseList);
                 SysMenuTreeResponseTemp.setChildren(childList);
                 childMenuList.add(SysMenuTreeResponseTemp);

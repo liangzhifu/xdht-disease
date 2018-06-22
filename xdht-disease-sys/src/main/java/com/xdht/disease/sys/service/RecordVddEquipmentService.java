@@ -2,7 +2,9 @@ package com.xdht.disease.sys.service;
 import com.xdht.disease.common.core.PageResult;
 import com.xdht.disease.sys.model.RecordVddEquipment;
 import com.xdht.disease.common.core.Service;
+import com.xdht.disease.sys.vo.request.RecordVddEquipmentInputRequest;
 import com.xdht.disease.sys.vo.request.RecordVddEquipmentRequest;
+import com.xdht.disease.sys.vo.response.RecordVddEquipmentDetailResponse;
 
 import java.util.List;
 
@@ -22,18 +24,16 @@ public interface RecordVddEquipmentService extends Service<RecordVddEquipment> {
     /**
      * 分页查询
      * @param recordVddEquipmentRequest 查询条件
-     * @param pageNum 页数
-     * @param pageSize 每页大小
      * @return 返回结果
      */
-    public PageResult<RecordVddEquipment> queryListPage(RecordVddEquipmentRequest recordVddEquipmentRequest, Integer pageNum, Integer pageSize);
+    public PageResult<RecordVddEquipment> queryListPage(RecordVddEquipmentRequest recordVddEquipmentRequest);
 
     /**
      * 添加
-     * @param recordVddEquipment 实体
+     * @param recordVddEquipmentInputRequest 实体
      * @return 返回结果
      */
-    public RecordVddEquipment add(RecordVddEquipment recordVddEquipment);
+    public RecordVddEquipment add(RecordVddEquipmentInputRequest recordVddEquipmentInputRequest);
 
     /**
      * 删除
@@ -44,8 +44,15 @@ public interface RecordVddEquipmentService extends Service<RecordVddEquipment> {
 
     /**
      * 修改
-     * @param recordVddEquipment 实体
+     * @param recordVddEquipmentInputRequest 实体
      * @return 返回结果
      */
-    public RecordVddEquipment update(RecordVddEquipment recordVddEquipment);
+    public RecordVddEquipment update(RecordVddEquipmentInputRequest recordVddEquipmentInputRequest);
+
+    /**
+     * 获取 通风排毒除尘设施调查表 信息
+     * @param id 主键id
+     * @return 返回结果
+     */
+    RecordVddEquipmentDetailResponse queryVddEquipmentDetail(Long id);
 }
