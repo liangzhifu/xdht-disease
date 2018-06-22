@@ -23,35 +23,26 @@ public interface SysCompanyService extends Service<SysCompany> {
     /**
      * 添加单位
      * @param sysCompany 单位实体
-     * @return 返回结果
      */
     void addCompany(SysCompany sysCompany);
 
     /**
      * 删除单位
      * @param id 单位id
-     * @return 返回结果
      */
     void deleteCompany(Long id);
 
     /**
      * 修改单位
      * @param sysCompany 单位实体
-     * @return 返回结果
      */
     void updateCompany(SysCompany sysCompany);
 
     /**
      * 公司列表查询
-     * @param sysCompany 查询条件
+     * @param sysCompanyRequest 查询条件
      * @return 返回结果
      */
-    List<SysCompany> querySysCompanyList(SysCompany sysCompany);
-
-    /**
-     * 查询所有列表
-     * @return 返回结果
-     */
-    List<SysCompany> querylistAll();
+    List<SysCompany> querySysCompanyList(SysCompanyRequest sysCompanyRequest);
 
 }

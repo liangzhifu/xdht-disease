@@ -1,9 +1,6 @@
 package com.xdht.disease.sys.vo.response;
 
-import com.xdht.disease.sys.model.SysEmployee;
-import com.xdht.disease.sys.model.SysEmployeeCase;
-import com.xdht.disease.sys.model.SysEmployeeDisease;
-import com.xdht.disease.sys.model.SysEmployeeJob;
+import com.xdht.disease.sys.model.*;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
@@ -18,6 +15,9 @@ public class SysEmployeeResponse {
 
     @ApiModelProperty(value = "员工信息")
     private SysEmployee sysEmployee;
+
+    @ApiModelProperty(value = "部门信息")
+    private SysCompanyOffice sysCompanyOffice;
 
     @ApiModelProperty(value = "职业病危害接触史")
     private List<SysEmployeeJob> sysEmployeeJobList;
