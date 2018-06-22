@@ -26,7 +26,7 @@ public interface RecordCompanySummaryService extends Service<RecordCompanySummar
      * @param pageSize 每页大小
      * @return 返回结果
      */
-    public PageResult<RecordCompanySummary> queryListPage(RecordCompanySummaryRequest recordCompanySummaryRequest, Integer pageNum, Integer pageSize);
+    public PageResult<RecordCompanySummary> queryListPage(RecordCompanySummaryRequest recordCompanySummaryRequest);
 
     /**
      * 添加

@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.xdht.disease.sys.dao.RecordEmployeeSummaryMapper">
+  <resultMap id="BaseResultMap" type="com.xdht.disease.sys.model.RecordEmployeeSummary">
+    <!--
+      WARNING - @mbg.generated
+    -->
+    <id column="id" jdbcType="BIGINT" property="id" />
+    <result column="emp_id" jdbcType="BIGINT" property="empId" />
+    <result column="office_id" jdbcType="BIGINT" property="officeId" />
+    <result column="work_type" jdbcType="BIGINT" property="workType" />
+    <result column="name" jdbcType="VARCHAR" property="name" />
+    <result column="sex" jdbcType="CHAR" property="sex" />
+    <result column="age" jdbcType="INTEGER" property="age" />
+    <result column="contact_time" jdbcType="INTEGER" property="contactTime" />
+    <result column="hazard_factor" jdbcType="VARCHAR" property="hazardFactor" />
+    <result column="blood_pressure_shrink" jdbcType="VARCHAR" property="bloodPressureShrink" />
+    <result column="blood_pressure_diastole" jdbcType="VARCHAR" property="bloodPressureDiastole" />
+    <result column="heart" jdbcType="VARCHAR" property="heart" />
+    <result column="lungs" jdbcType="VARCHAR" property="lungs" />
+    <result column="skin_mucous_membrane" jdbcType="VARCHAR" property="skinMucousMembrane" />
+    <result column="lymph_node" jdbcType="VARCHAR" property="lymphNode" />
+    <result column="thyroid_gland" jdbcType="VARCHAR" property="thyroidGland" />
+    <result column="ear" jdbcType="VARCHAR" property="ear" />
+    <result column="white_blood_cell" jdbcType="VARCHAR" property="whiteBloodCell" />
+    <result column="neutrophile_granulocyte" jdbcType="VARCHAR" property="neutrophileGranulocyte" />
+    <result column="red_blood_cell" jdbcType="VARCHAR" property="redBloodCell" />
+    <result column="hemoglobin" jdbcType="VARCHAR" property="hemoglobin" />
+    <result column="platelet" jdbcType="VARCHAR" property="platelet" />
+    <result column="white_blood_cell_urine" jdbcType="VARCHAR" property="whiteBloodCellUrine" />
+    <result column="urine_protein" jdbcType="VARCHAR" property="urineProtein" />
+    <result column="urine_occult_blood" jdbcType="VARCHAR" property="urineOccultBlood" />
+    <result column="urine_sugar" jdbcType="VARCHAR" property="urineSugar" />
+    <result column="ALTU_L" jdbcType="VARCHAR" property="altuL" />
+    <result column="electrocardiogram" jdbcType="VARCHAR" property="electrocardiogram" />
+    <result column="dbhl_500_l" jdbcType="VARCHAR" property="dbhl500L" />
+    <result column="dbhl_1k_l" jdbcType="VARCHAR" property="dbhl1kL" />
+    <result column="dbhl_2k_l" jdbcType="VARCHAR" property="dbhl2kL" />
+    <result column="dbhl_3k_l" jdbcType="VARCHAR" property="dbhl3kL" />
+    <result column="dbhl_4k_l" jdbcType="VARCHAR" property="dbhl4kL" />
+    <result column="dbhl_6k_l" jdbcType="VARCHAR" property="dbhl6kL" />
+    <result column="dbhl_500_r" jdbcType="VARCHAR" property="dbhl500R" />
+    <result column="dbhl_1k_r" jdbcType="VARCHAR" property="dbhl1kR" />
+    <result column="dbhl_2k_r" jdbcType="VARCHAR" property="dbhl2kR" />
+    <result column="dbhl_3k_r" jdbcType="VARCHAR" property="dbhl3kR" />
+    <result column="dbhl_4k_r" jdbcType="VARCHAR" property="dbhl4kR" />
+    <result column="dbhl_6k_r" jdbcType="VARCHAR" property="dbhl6kR" />
+  </resultMap>
+</mapper>
