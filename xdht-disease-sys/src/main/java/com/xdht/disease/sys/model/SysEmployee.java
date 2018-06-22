@@ -26,7 +26,7 @@ public class SysEmployee {
     @Column(name = "emp_name")
     private String empName;
 
-    /**
+       /**
      * 性别
      */
     @Column(name = "emp_sex")

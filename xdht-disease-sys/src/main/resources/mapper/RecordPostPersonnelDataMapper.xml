@@ -13,5 +13,6 @@
     <result column="day_of_week" jdbcType="BIGINT" property="dayOfWeek" />
     <result column="class_of_date" jdbcType="BIGINT" property="classOfDate" />
     <result column="hour_of_class" jdbcType="BIGINT" property="hourOfClass" />
+    <result column="relation_id" jdbcType="BIGINT" property="relationId" />
   </resultMap>
 </mapper>

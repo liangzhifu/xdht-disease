@@ -52,7 +52,7 @@ public interface RecordPreEvaluationService extends Service<RecordPreEvaluation>
 
     /**
      * 获取建设项目概况调查表（预评价）详细内容
-     * @param id 主键
+     * @param id 关联主键
      * @return 返回结果
      */
     RecordPreEvaluationDetailResponse queryRecordPreEvaluationDetail(Long id);

@@ -7,9 +7,12 @@ spring:
 #MySQL
   write:
     datasource:
-        url: jdbc:mysql://120.77.251.154:3306/jessite?useUnicode=true&characterEncoding=utf-8&allowMultiQueries=true&zeroDateTimeBehavior=convertToNull
-        username: jessite
-        password: jessite
+        url: jdbc:mysql://127.0.0.1:3306/disease2?useUnicode=true&characterEncoding=utf-8&allowMultiQueries=true&zeroDateTimeBehavior=convertToNull
+#        url: jdbc:mysql://120.77.251.154:3306/jessite?useUnicode=true&characterEncoding=utf-8&allowMultiQueries=true&zeroDateTimeBehavior=convertToNull
+        username: root
+        password: 123456
+#        username: jessite
+#        password: jessite
         driver-class-name: com.mysql.jdbc.Driver
         initializeSize: 5
         minIdle: 5
@@ -27,9 +30,12 @@ spring:
 #MySQL
   read:
     datasource:
-      url: jdbc:mysql://120.77.251.154:3306/jessite?useUnicode=true&characterEncoding=utf-8&allowMultiQueries=true&zeroDateTimeBehavior=convertToNull
-      username: jessite
-      password: jessite
+      url: jdbc:mysql://127.0.0.1:3306/disease2?useUnicode=true&characterEncoding=utf-8&allowMultiQueries=true&zeroDateTimeBehavior=convertToNull
+#      url: jdbc:mysql://120.77.251.154:3306/jessite?useUnicode=true&characterEncoding=utf-8&allowMultiQueries=true&zeroDateTimeBehavior=convertToNull
+#      username: jessite
+#      password: jessite
+      username: root
+      password: 123456
       driver-class-name: com.mysql.jdbc.Driver
       initializeSize: 5
       minIdle: 5
