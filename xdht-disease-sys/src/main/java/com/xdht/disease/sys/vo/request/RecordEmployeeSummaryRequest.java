@@ -46,6 +46,18 @@ public class RecordEmployeeSummaryRequest {
     private Integer age;
 
     /**
+     * 检查日期
+     */
+    @ApiModelProperty(value = "检查日期")
+    private Integer inspectDate;
+
+    /**
+     * 0：初检  1：复检
+     */
+    @ApiModelProperty(value = "初检/复检")
+    private Integer inspect;
+
+    /**
      * 接噪工龄
      */
     @ApiModelProperty(value = "接噪工龄")

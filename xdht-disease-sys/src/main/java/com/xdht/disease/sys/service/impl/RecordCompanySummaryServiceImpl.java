@@ -76,7 +76,7 @@ public class RecordCompanySummaryServiceImpl extends AbstractService<RecordCompa
     @Override
     public RecordCompanySummary add(RecordCompanySummary recordCompanySummary) {
         recordCompanySummary.setStatus(SysEnum.StatusEnum.STATUS_NORMAL.getCode());
-        this.recordCompanySummaryMapper.insertUseGeneratedKeys(recordCompanySummary);
+        this.insertUseGeneratedKeys(recordCompanySummary);
             return recordCompanySummary;
     }
 

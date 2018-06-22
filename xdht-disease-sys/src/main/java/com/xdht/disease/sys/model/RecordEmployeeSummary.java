@@ -1,5 +1,7 @@
 package com.xdht.disease.sys.model;
 
+import com.alibaba.fastjson.annotation.JSONField;
+
 import javax.persistence.*;
 import java.util.Date;
 
@@ -41,6 +43,18 @@ public class RecordEmployeeSummary {
      * 年龄
      */
     private Integer age;
+
+    /**
+     * 检查日期
+     */
+    @JSONField(format="yyyy-MM-dd")
+    @Column(name = "inspect_date")
+    private Date inspectDate;
+
+    /**
+     * 0：初检  1：复检
+     */
+    private Integer inspect;
 
     /**
      * 接噪工龄
@@ -218,8 +232,8 @@ public class RecordEmployeeSummary {
     /**
      * 更新人
      */
-    @Column(name = "upadte_by")
-    private Long upadteBy;
+    @Column(name = "update_by")
+    private Long updateBy;
 
     /**
      * 更新时间
@@ -954,17 +968,17 @@ public class RecordEmployeeSummary {
      *
      * @return upadte_by - 更新人
      */
-    public Long getUpadteBy() {
-        return upadteBy;
+    public Long getUpdateBy() {
+        return updateBy;
     }
 
     /**
      * 设置更新人
      *
-     * @param upadteBy 更新人
+     * @param updateBy 更新人
      */
-    public void setUpadteBy(Long upadteBy) {
-        this.upadteBy = upadteBy;
+    public void setUpdateBy(Long updateBy) {
+        this.updateBy = updateBy;
     }
 
     /**
@@ -983,5 +997,21 @@ public class RecordEmployeeSummary {
      */
     public void setUpdateDate(Date updateDate) {
         this.updateDate = updateDate;
+    }
+
+    public Date getInspectDate() {
+        return inspectDate;
+    }
+
+    public void setInspectDate(Date inspectDate) {
+        this.inspectDate = inspectDate;
+    }
+
+    public Integer getInspect() {
+        return inspect;
+    }
+
+    public void setInspect(Integer inspect) {
+        this.inspect = inspect;
     }
 }

@@ -6,6 +6,7 @@ import com.xdht.disease.common.core.Result;
 import com.xdht.disease.sys.model.RecordEmployeeSummary;
 import com.xdht.disease.sys.service.RecordEmployeeSummaryService;
 import com.xdht.disease.sys.vo.request.RecordEmployeeSummaryRequest;
+import com.xdht.disease.sys.vo.response.RecordEmployeeSummaryResponse;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
@@ -37,8 +38,8 @@ public class RecordEmployeeSummaryController {
 
     @RequestMapping(value = "/add", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     @ApiOperation(value = "添加")
-    public ResponseEntity<Result<RecordEmployeeSummary>> add(@RequestBody RecordEmployeeSummary recordEmployeeSummary) {
-        return new ResponseEntity<>(Result.ok(recordEmployeeSummaryService.add(recordEmployeeSummary)), HttpStatus.OK);
+    public ResponseEntity<Result<RecordEmployeeSummary>> add(@RequestBody RecordEmployeeSummaryResponse recordEmployeeSummaryResponse) {
+        return new ResponseEntity<>(Result.ok(recordEmployeeSummaryService.add(recordEmployeeSummaryResponse)), HttpStatus.OK);
     }
 
     @RequestMapping(value = "/delete", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
@@ -53,13 +54,13 @@ public class RecordEmployeeSummaryController {
 
     @RequestMapping(value = "/update", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     @ApiOperation(value = "修改")
-    public ResponseEntity<Result<RecordEmployeeSummary>> update(@RequestBody RecordEmployeeSummary recordEmployeeSummary) {
-        return new ResponseEntity<>(Result.ok(recordEmployeeSummaryService.update(recordEmployeeSummary)), HttpStatus.OK);
+    public ResponseEntity<Result<RecordEmployeeSummary>> update(@RequestBody RecordEmployeeSummaryResponse recordEmployeeSummaryResponse) {
+        return new ResponseEntity<>(Result.ok(recordEmployeeSummaryService.update(recordEmployeeSummaryResponse)), HttpStatus.OK);
     }
 
     @RequestMapping(value = "/detail/{id}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     @ApiOperation(value = "查询企业体检详情")
-    public  ResponseEntity<Result<RecordEmployeeSummary>> getRecordEmployeeSummaryDetail(@PathVariable Long id) {
-        return new ResponseEntity<>(Result.ok(recordEmployeeSummaryService.selectByPrimaryKey(id)), HttpStatus.OK);
+    public  ResponseEntity<Result<RecordEmployeeSummaryResponse>> getRecordEmployeeSummaryDetail(@PathVariable Long id) {
+        return new ResponseEntity<>(Result.ok(recordEmployeeSummaryService.getRecordEmployeeSummaryDetail(id)), HttpStatus.OK);
     }
 }
