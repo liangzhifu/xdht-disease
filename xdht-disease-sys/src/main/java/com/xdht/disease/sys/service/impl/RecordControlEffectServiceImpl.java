@@ -109,20 +109,26 @@ public class RecordControlEffectServiceImpl extends AbstractService<RecordContro
     @Override
     public RecordControlEffectDetailResponse queryRecordControlEffectDetail(Long id) {
         RecordControlEffectDetailResponse recordControlEffectDetailResponse = new RecordControlEffectDetailResponse();
-        RecordControlEffect recordControlEffect = this.recordControlEffectMapper.selectByPrimaryKey(id);
-        recordControlEffectDetailResponse.setRecordControlEffect(recordControlEffect);
-        Condition condition = new Condition(RecordControlEffectData.class);
-        condition.createCriteria() .andEqualTo("preEvaluationId", id);
-        List<RecordControlEffectData> recordControlEffectDataList = this.recordControlEffectDataService.selectByCondition(condition);
-        recordControlEffectDetailResponse.setRecordControlEffectDataList(recordControlEffectDataList);
-        String projectIds = "";
-        for (RecordControlEffectData recordData : recordControlEffectDataList) {
-            projectIds += recordData.getPreEvaluationProjectId()+",";
+        RecordControlEffect recordControlEffect = new RecordControlEffect();
+        recordControlEffect.setSceneId(id);
+        recordControlEffect = this.recordControlEffectMapper.selectOne(recordControlEffect);
+        if (recordControlEffect != null){
+            recordControlEffectDetailResponse.setRecordControlEffect(recordControlEffect);
+            Long recordId = recordControlEffect.getId();
+            Condition condition = new Condition(RecordControlEffectData.class);
+            condition.createCriteria() .andEqualTo("preEvaluationId", recordId);
+            List<RecordControlEffectData> recordControlEffectDataList = this.recordControlEffectDataService.selectByCondition(condition);
+            if (recordControlEffectDataList.size() > 0){
+                recordControlEffectDetailResponse.setRecordControlEffectDataList(recordControlEffectDataList);
+                String projectIds = "";
+                for (RecordControlEffectData recordData : recordControlEffectDataList) {
+                    projectIds += recordData.getPreEvaluationProjectId()+",";
+                }
+                projectIds = projectIds.substring(0,projectIds.lastIndexOf(","));
+                List<RecordControlEffectProject> projectList = this.recordControlEffectProjectService.selectByIds(projectIds);
+                recordControlEffectDetailResponse.setRecordControlEffectProjectList(projectList);
+            }
         }
-        projectIds = projectIds.substring(0,projectIds.lastIndexOf(","));
-        List<RecordControlEffectProject> projectList = this.recordControlEffectProjectService.selectByIds(projectIds);
-        System.out.println("projectList:"+projectList.size());
-        recordControlEffectDetailResponse.setRecordControlEffectProjectList(projectList);
         return recordControlEffectDetailResponse;
     }
 

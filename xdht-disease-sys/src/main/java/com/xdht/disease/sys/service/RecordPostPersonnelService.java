@@ -2,7 +2,9 @@ package com.xdht.disease.sys.service;
 import com.xdht.disease.common.core.PageResult;
 import com.xdht.disease.sys.model.RecordPostPersonnel;
 import com.xdht.disease.common.core.Service;
+import com.xdht.disease.sys.vo.request.RecordPostPersonnelInputRequest;
 import com.xdht.disease.sys.vo.request.RecordPostPersonnelRequest;
+import com.xdht.disease.sys.vo.response.RecordPostPersonnelDetailResponse;
 
 import java.util.List;
 
@@ -12,28 +14,26 @@ import java.util.List;
  */
 public interface RecordPostPersonnelService extends Service<RecordPostPersonnel> {
 
-//    /**
-//     * 查询
-//     * @param recordRequest 查询条件
-//     * @return 返回结果
-//     */
-//    public List<RecordPostPersonnel> queryList(RecordPostPersonnelRequest recordRequest);
-//
-//    /**
-//     * 分页查询
-//     * @param recordRequest 查询条件
-//     * @param pageNum 页数
-//     * @param pageSize 每页大小
-//     * @return 返回结果
-//     */
-//    public PageResult<RecordPostPersonnel> queryListPage(RecordPostPersonnelRequest recordRequest, Integer pageNum, Integer pageSize);
+    /**
+     * 查询
+     * @param recordRequest 查询条件
+     * @return 返回结果
+     */
+    public List<RecordPostPersonnel> queryList(RecordPostPersonnelRequest recordRequest);
+
+    /**
+     * 分页查询
+     * @param recordRequest 查询条件
+     * @return 返回结果
+     */
+    public PageResult<RecordPostPersonnel> queryListPage(RecordPostPersonnelRequest recordRequest);
 
     /**
      * 添加
-     * @param recordPostPersonnel 实体
+     * @param recordPostPersonnelInputRequest 实体
      * @return 返回结果
      */
-    public RecordPostPersonnel add(RecordPostPersonnel recordPostPersonnel);
+    public RecordPostPersonnel add(RecordPostPersonnelInputRequest recordPostPersonnelInputRequest);
 
     /**
      * 删除
@@ -44,8 +44,15 @@ public interface RecordPostPersonnelService extends Service<RecordPostPersonnel>
 
     /**
      * 修改
-     * @param recordPostPersonnel 实体
+     * @param recordPostPersonnelInputRequest 实体
      * @return 返回结果
      */
-    public RecordPostPersonnel update(RecordPostPersonnel recordPostPersonnel);
+    public RecordPostPersonnel update(RecordPostPersonnelInputRequest recordPostPersonnelInputRequest);
+
+    /**
+     * 获取 岗位定员及工作制度调查表 信息
+     * @param id 关联id
+     * @return 返回结果
+     */
+    RecordPostPersonnelDetailResponse queryPostPersonnelDetail(Long id);
 }

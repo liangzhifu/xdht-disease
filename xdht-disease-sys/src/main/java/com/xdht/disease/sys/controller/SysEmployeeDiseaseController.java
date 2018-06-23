@@ -1,13 +1,9 @@
 package com.xdht.disease.sys.controller;
 
-import com.xdht.disease.common.authorization.annotation.CurrentUser;
-import com.xdht.disease.common.core.PageResult;
 import com.xdht.disease.common.core.Result;
-import com.xdht.disease.common.model.User;
 import com.xdht.disease.sys.model.SysEmployeeDisease;
 import com.xdht.disease.sys.service.SysEmployeeDiseaseService;
 import com.xdht.disease.sys.vo.request.SysEmployeeDiseaseRequest;
-import com.xdht.disease.sys.vo.response.SysEmployeeDiseaseResponse;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.log4j.Log4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,40 +25,11 @@ public class SysEmployeeDiseaseController {
     @Autowired
     private SysEmployeeDiseaseService sysEmployeeDiseaseService;
 
-    @RequestMapping(value = "/employeeDiseasePage", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
-    @ApiOperation(value = "分页查询员工职业病列表")
-//    @Authorization
-//    @ApiImplicitParams({
-//            @ApiImplicitParam(name = "authorization", value = "authorization", required = true, dataType = "string", paramType = "header"),
-//    })
-    public ResponseEntity<Result<PageResult<SysEmployeeDisease>>> employeeDiseasePage(@CurrentUser User user, @RequestBody SysEmployeeDiseaseRequest sysEmployeeDiseaseRequest) {
-        return new ResponseEntity<>(Result.ok(sysEmployeeDiseaseService.querySysEmpDiseasePage(sysEmployeeDiseaseRequest)), HttpStatus.OK);
-
-    }
-
-    @RequestMapping(value = "/employeeDiseaseList", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    @RequestMapping(value = "/list", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     @ApiOperation(value = "查询员工职业病列表")
-    public ResponseEntity<Result<List<SysEmployeeDisease>>> employeeDiseaseList(@CurrentUser User user, @RequestBody SysEmployeeDisease sysEmployeeDisease) {
-        return new ResponseEntity<>(Result.ok(sysEmployeeDiseaseService.querySysEmpDiseaseList(sysEmployeeDisease)), HttpStatus.OK);
+    public ResponseEntity<Result<List<SysEmployeeDisease>>> employeeDiseaseList(@RequestBody SysEmployeeDiseaseRequest sysEmployeeDiseaseRequest) {
+        return new ResponseEntity<>(Result.ok(sysEmployeeDiseaseService.querySysEmpDiseaseList(sysEmployeeDiseaseRequest)), HttpStatus.OK);
 
-    }
-
-    @RequestMapping(value = "/add", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
-    @ApiOperation(value = "添加员工职业病")
-    public ResponseEntity<Result<SysEmployeeDiseaseResponse>> addEmployeeDisease(@CurrentUser User user, @RequestBody SysEmployeeDisease sysEmployeeDisease) {
-        return new ResponseEntity<>(Result.ok(sysEmployeeDiseaseService.addEmployeeDisease(sysEmployeeDisease)), HttpStatus.OK);
-    }
-
-    @RequestMapping(value = "/delete", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
-    @ApiOperation(value = "删除员工职业病")
-    public ResponseEntity<Result<SysEmployeeDiseaseResponse>> deleteEmployeeDisease(@CurrentUser User user, @RequestParam Long id) {
-        return new ResponseEntity<>(Result.ok(sysEmployeeDiseaseService.deleteEmployeeDisease(id)), HttpStatus.OK);
-    }
-
-    @RequestMapping(value = "/update", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
-    @ApiOperation(value = "修改员工职业病")
-    public ResponseEntity<Result<SysEmployeeDiseaseResponse>> updateEmployeeDisease(@CurrentUser User user, @RequestBody SysEmployeeDisease sysEmployeeDisease) {
-        return new ResponseEntity<>(Result.ok(sysEmployeeDiseaseService.updateEmployeeDisease(sysEmployeeDisease)), HttpStatus.OK);
     }
 
 }

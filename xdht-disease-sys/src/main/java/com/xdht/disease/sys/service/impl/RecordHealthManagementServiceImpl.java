@@ -120,19 +120,24 @@ public class RecordHealthManagementServiceImpl extends AbstractService<RecordHea
     @Override
     public RecordHealthManagementDetailResponse queryRecordHealthManagementDetail(Long id) {
         RecordHealthManagementDetailResponse recordHealthManagementDetailResponse = new RecordHealthManagementDetailResponse();
-        RecordHealthManagement recordHealthManagement = this.recordHealthManagementMapper.selectByPrimaryKey(id);
-        recordHealthManagementDetailResponse.setRecordHealthManagement(recordHealthManagement);
-        Condition condition = new Condition(RecordHealthManagementData.class);
-        condition.createCriteria() .andEqualTo("healthManagementId", id);
-        List<RecordHealthManagementData> recordHealthManagementDataList = this.recordHealthManagementDataService.selectByCondition(condition);
-        recordHealthManagementDetailResponse.setRecordHealthManagementDataList(recordHealthManagementDataList);
-        String projectIds = "";
-        for (RecordHealthManagementData recordData : recordHealthManagementDataList) {
-            projectIds += recordData.getHealthManagementProjectId()+",";
+        RecordHealthManagement recordHealthManagement = new RecordHealthManagement();
+        recordHealthManagement.setSceneId(id);
+        recordHealthManagement =  this.recordHealthManagementMapper.selectOne(recordHealthManagement);
+        if (recordHealthManagement != null) {
+            Long recordId = recordHealthManagement.getId();
+            recordHealthManagementDetailResponse.setRecordHealthManagement(recordHealthManagement);
+            Condition condition = new Condition(RecordHealthManagementData.class);
+            condition.createCriteria() .andEqualTo("healthManagementId", recordId);
+            List<RecordHealthManagementData> recordHealthManagementDataList = this.recordHealthManagementDataService.selectByCondition(condition);
+            recordHealthManagementDetailResponse.setRecordHealthManagementDataList(recordHealthManagementDataList);
+            String projectIds = "";
+            for (RecordHealthManagementData recordData : recordHealthManagementDataList) {
+                projectIds += recordData.getHealthManagementProjectId()+",";
+            }
+            projectIds = projectIds.substring(0,projectIds.lastIndexOf(","));
+            List<RecordHealthManagementProject> projectList = this.recordHealthManagementProjectService.selectByIds(projectIds);
+            recordHealthManagementDetailResponse.setRecordHealthManagementProjectList(projectList);
         }
-        projectIds = projectIds.substring(0,projectIds.lastIndexOf(","));
-        List<RecordHealthManagementProject> projectList = this.recordHealthManagementProjectService.selectByIds(projectIds);
-        recordHealthManagementDetailResponse.setRecordHealthManagementProjectList(projectList);
         return recordHealthManagementDetailResponse;
     }
 

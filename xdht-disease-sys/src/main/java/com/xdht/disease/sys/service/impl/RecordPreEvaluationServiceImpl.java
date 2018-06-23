@@ -111,19 +111,25 @@ public class RecordPreEvaluationServiceImpl extends AbstractService<RecordPreEva
     @Override
     public RecordPreEvaluationDetailResponse queryRecordPreEvaluationDetail(Long id) {
         RecordPreEvaluationDetailResponse recordPreEvaluationDetailResponse = new RecordPreEvaluationDetailResponse();
-        RecordPreEvaluation recordPreEvaluation = this.recordPreEvaluationMapper.selectByPrimaryKey(id);
-        recordPreEvaluationDetailResponse.setRecordPreEvaluation(recordPreEvaluation);
-        Condition condition = new Condition(RecordPreEvaluationData.class);
-        condition.createCriteria() .andEqualTo("preEvaluationId", id);
-        List<RecordPreEvaluationData> recordPreEvaluationDataList = this.recordPreEvaluationDataService.selectByCondition(condition);
-        recordPreEvaluationDetailResponse.setRecordPreEvaluationDataList(recordPreEvaluationDataList);
-        String projectIds = "";
-         for (RecordPreEvaluationData recordData : recordPreEvaluationDataList) {
-             projectIds += recordData.getPreEvaluationProjectId()+",";
+        //根据sceneId 获取表的数据
+        RecordPreEvaluation recordPreEvaluation = new RecordPreEvaluation();
+        recordPreEvaluation.setSceneId(id);
+        recordPreEvaluation = this.recordPreEvaluationMapper.selectOne(recordPreEvaluation);
+        if (recordPreEvaluation != null){
+            Long recordId = recordPreEvaluation.getId();
+            recordPreEvaluationDetailResponse.setRecordPreEvaluation(recordPreEvaluation);
+            Condition condition = new Condition(RecordPreEvaluationData.class);
+            condition.createCriteria() .andEqualTo("preEvaluationId", recordId);
+            List<RecordPreEvaluationData> recordPreEvaluationDataList = this.recordPreEvaluationDataService.selectByCondition(condition);
+            recordPreEvaluationDetailResponse.setRecordPreEvaluationDataList(recordPreEvaluationDataList);
+            String projectIds = "";
+            for (RecordPreEvaluationData recordData : recordPreEvaluationDataList) {
+                projectIds += recordData.getPreEvaluationProjectId()+",";
+            }
+            projectIds = projectIds.substring(0,projectIds.lastIndexOf(","));
+            List<RecordPreEvaluationProject> projectList = this.recordPreEvaluationProjectService.selectByIds(projectIds);
+            recordPreEvaluationDetailResponse.setRecordPreEvaluationProjectList(projectList);
         }
-        projectIds = projectIds.substring(0,projectIds.lastIndexOf(","));
-        List<RecordPreEvaluationProject> projectList = this.recordPreEvaluationProjectService.selectByIds(projectIds);
-        recordPreEvaluationDetailResponse.setRecordPreEvaluationProjectList(projectList);
         return recordPreEvaluationDetailResponse;
     }
 }

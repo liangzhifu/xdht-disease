@@ -72,10 +72,10 @@ public class RecordAntiNoiseFacilitiesController {
         return new ResponseEntity<>(Result.ok(recordAntiNoiseFacilitiesService.updateRecordAntiNoiseFacilities(recordAntiNoiseInputRequest)), HttpStatus.OK);
     }
 
-    @RequestMapping(value = "/detail/{id}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    @RequestMapping(value = "/detail/{sceneId}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     @ApiOperation(value = "获取 --详细内容")
-    public ResponseEntity<Result<RecordAntiNoiseDetailResponse>> getRecordAntiNoiseDetail(@PathVariable Long id) {
-        RecordAntiNoiseDetailResponse recordAntiNoiseDetailResponse = this.recordAntiNoiseFacilitiesService.queryAntiNoiseDetail(id);
+    public ResponseEntity<Result<RecordAntiNoiseDetailResponse>> getRecordAntiNoiseDetail(@PathVariable Long sceneId) {
+        RecordAntiNoiseDetailResponse recordAntiNoiseDetailResponse = this.recordAntiNoiseFacilitiesService.queryAntiNoiseDetail(sceneId);
         return new ResponseEntity<>(Result.ok(recordAntiNoiseDetailResponse), HttpStatus.OK);
     }
 

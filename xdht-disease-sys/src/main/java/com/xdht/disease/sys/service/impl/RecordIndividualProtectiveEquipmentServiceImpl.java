@@ -114,12 +114,17 @@ public class RecordIndividualProtectiveEquipmentServiceImpl extends AbstractServ
     @Override
     public RecordIndividualProtectiveDetailResponse queryIndividualProtetiveDetail(Long id) {
         RecordIndividualProtectiveDetailResponse response = new RecordIndividualProtectiveDetailResponse();
-        RecordIndividualProtectiveEquipment recordIndividualProtective = this.recordMapper.selectByPrimaryKey(id);
-        response.setRecordIndividualProtective(recordIndividualProtective);
-        Condition condition = new Condition(RecordIndividualProtectiveEquipmentData.class);
-        condition.createCriteria() .andEqualTo("relationId", id);
-        List<RecordIndividualProtectiveEquipmentData> recordIndividualProtectiveDataList = this.recordIndividualProtectiveEquipmentDataService.selectByCondition(condition);
-        response.setRecordIndividualProtectiveDataList(recordIndividualProtectiveDataList);
+        RecordIndividualProtectiveEquipment recordIndividualProtective = new RecordIndividualProtectiveEquipment();
+        recordIndividualProtective.setSceneId(id);
+        recordIndividualProtective = this.recordMapper.selectOne(recordIndividualProtective);
+        if (recordIndividualProtective != null){
+            Long recordId = recordIndividualProtective.getId();
+            response.setRecordIndividualProtective(recordIndividualProtective);
+            Condition condition = new Condition(RecordIndividualProtectiveEquipmentData.class);
+            condition.createCriteria() .andEqualTo("relationId", recordId);
+            List<RecordIndividualProtectiveEquipmentData> recordIndividualProtectiveDataList = this.recordIndividualProtectiveEquipmentDataService.selectByCondition(condition);
+            response.setRecordIndividualProtectiveDataList(recordIndividualProtectiveDataList);
+        }
         return response;
     }
 }

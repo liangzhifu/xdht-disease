@@ -4,19 +4,8 @@ import com.github.pagehelper.PageHelper;
 import com.xdht.disease.common.core.AbstractService;
 import com.xdht.disease.common.core.PageResult;
 import com.xdht.disease.sys.constant.SysEnum;
-import com.xdht.disease.sys.dao.SysEmployeeCaseMapper;
-import com.xdht.disease.sys.dao.SysEmployeeDiseaseMapper;
-import com.xdht.disease.sys.dao.SysEmployeeJobMapper;
-import com.xdht.disease.sys.dao.SysEmployeeMapper;
-import com.xdht.disease.sys.model.SysEmployee;
-import com.xdht.disease.sys.model.SysEmployeeCase;
-import com.xdht.disease.sys.model.SysEmployeeDisease;
-import com.xdht.disease.sys.model.SysEmployeeJob;
-import com.xdht.disease.sys.service.SysEmployeeCaseService;
-import com.xdht.disease.sys.service.SysEmployeeDiseaseService;
-import com.xdht.disease.sys.service.SysEmployeeJobService;
-import com.xdht.disease.sys.service.SysEmployeeService;
-import com.xdht.disease.sys.vo.request.SysEmployeeCompanyRequest;
+import com.xdht.disease.sys.model.*;
+import com.xdht.disease.sys.service.*;
 import com.xdht.disease.sys.vo.request.SysEmployeeRequest;
 import com.xdht.disease.sys.vo.response.SysEmployeeResponse;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,6 +13,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import tk.mybatis.mapper.entity.Condition;
 
+import java.util.LinkedList;
 import java.util.List;
 
 
@@ -35,197 +25,215 @@ import java.util.List;
 public class SysEmployeeServiceImpl extends AbstractService<SysEmployee> implements SysEmployeeService{
 
     @Autowired
-    private SysEmployeeMapper sysEmployeeMapper;
-    @Autowired
-    private SysEmployeeCaseMapper sysEmployeeCaseMapper;
-    @Autowired
-    private SysEmployeeDiseaseMapper sysEmployeeDiseaseMapper;
-    @Autowired
-    private SysEmployeeJobMapper sysEmployeeJobMapper;
-    @Autowired
     private SysEmployeeCaseService sysEmployeeCaseService;
     @Autowired
     private SysEmployeeDiseaseService sysEmployeeDiseaseService;
     @Autowired
     private SysEmployeeJobService sysEmployeeJobService;
 
-        @Override
-        public PageResult<SysEmployee> querySysEmpPage(SysEmployeeRequest sysEmployeeRequest) {
-            Condition condition = new Condition(SysEmployee.class);
-            condition.createCriteria()
-                    .andEqualTo("officeId", sysEmployeeRequest.getOfficeId())
-                    .andEqualTo("empSex",sysEmployeeRequest.getEmpSex())
-                    .andEqualTo("empMarriage",sysEmployeeRequest.getEmpMarriage())
-                    .andEqualTo("empEducation",sysEmployeeRequest.getEmpEducation());
-            if (sysEmployeeRequest.getEmpName() != null) {
-                condition.getOredCriteria().get(0).andLike("empName","%"+sysEmployeeRequest.getEmpName()+"%");
-            }
-            if(sysEmployeeRequest.getEmpNative() != null){
-                condition.getOredCriteria().get(0).andLike("empNative",sysEmployeeRequest.getEmpNative());
-            }
-            PageHelper.startPage(sysEmployeeRequest.getPageNumber(), sysEmployeeRequest.getPageSize());
-            List<SysEmployee> dataList = this.sysEmployeeMapper.selectByCondition(condition);
-            Integer conunt = this.selectCountByCondition(condition);
-            PageResult<SysEmployee> pageList = new PageResult<SysEmployee>();
-            pageList.setDataList(dataList);
-            pageList.setTotal(conunt);
-            return pageList;
-        }
-
-        @Override
-        public List<SysEmployee> queryCompanyEmployeeList(SysEmployeeCompanyRequest sysEmployeeCompanyRequest) {
-            Condition condition = new Condition(SysEmployee.class);
-            condition.createCriteria()
-                    .andEqualTo("officeId", sysEmployeeCompanyRequest.getCompanyOfficeId());
-            if (sysEmployeeCompanyRequest.getEmpName() != null) {
-                condition.getOredCriteria().get(0).andLike("empName","%"+sysEmployeeCompanyRequest.getEmpName()+"%");
-            }
-            if(sysEmployeeCompanyRequest.getEmpNative() != null){
-                condition.getOredCriteria().get(0).andLike("empNative",sysEmployeeCompanyRequest.getEmpNative());
-            }
-            condition.setOrderByClause("id desc");
-            List<SysEmployee> sysEmployeeList = this.sysEmployeeMapper.selectByCondition(condition);
-            return sysEmployeeList;
-        }
+    @Autowired
+    private SysCompanyOfficeService sysCompanyOfficeService;
 
     @Override
-    public SysEmployeeResponse addEmployee(SysEmployeeResponse sysEmployeeResponse) {
-        //
-        SysEmployee sysEmployee = sysEmployeeResponse.getSysEmployee();
-        sysEmployee.setStatus(SysEnum.StatusEnum.STATUS_NORMAL.getCode());
-        this.insertUseGeneratedKeys(sysEmployee);
-        //
-        List<SysEmployeeCase> sysEmployeeCaseList = sysEmployeeResponse.getSysEmployeeCaseList();
-        for (SysEmployeeCase sysEmployeeCase : sysEmployeeCaseList) {
-            sysEmployeeCase.setEmployeeId(sysEmployee.getId());
-            sysEmployeeCase.setStatus(SysEnum.StatusEnum.STATUS_NORMAL.getCode());
+    public PageResult<SysEmployee> querySysEmpPage(SysEmployeeRequest sysEmployeeRequest) {
+        Condition condition = new Condition(SysEmployee.class);
+        condition.createCriteria().andEqualTo("officeId", sysEmployeeRequest.getOfficeId())
+            .andEqualTo("status", SysEnum.StatusEnum.STATUS_NORMAL.getCode());
+        if (sysEmployeeRequest.getCompanyId() != null) {
+            Condition sysOfficeCondition = new Condition(SysCompanyOffice.class);
+            sysOfficeCondition.createCriteria().andEqualTo("status", SysEnum.StatusEnum.STATUS_NORMAL.getCode())
+                    .andEqualTo("companyId", sysEmployeeRequest.getCompanyId());
+            List<SysCompanyOffice> sysCompanyOfficeList = this.sysCompanyOfficeService.selectByCondition(sysOfficeCondition);
+            List<Long> sysOfficeIdList = new LinkedList<>();
+            for (SysCompanyOffice sysCompanyOffice : sysCompanyOfficeList) {
+                sysOfficeIdList.add(sysCompanyOffice.getId());
+            }
+            condition.getOredCriteria().get(0).andIn("officeId", sysOfficeIdList);
         }
-        sysEmployeeCaseService.insertList(sysEmployeeCaseList);
-        //
-        List<SysEmployeeDisease> sysEmployeeDiseaseList = sysEmployeeResponse.getSysEmployeeDiseaseList();
-        for (SysEmployeeDisease sysEmployeeDisease : sysEmployeeDiseaseList) {
-            sysEmployeeDisease.setEmployeeId(sysEmployee.getId());
-            sysEmployeeDisease.setStatus(SysEnum.StatusEnum.STATUS_NORMAL.getCode());
+        if (sysEmployeeRequest.getEmpName() != null && !"".equals(sysEmployeeRequest.getEmpName())) {
+            condition.getOredCriteria().get(0).andLike("empName","%"+sysEmployeeRequest.getEmpName()+"%");
         }
-        sysEmployeeDiseaseService.insertList(sysEmployeeDiseaseList);
-        //
-        List<SysEmployeeJob> sysEmployeeJobList = sysEmployeeResponse.getSysEmployeeJobList();
-        for (SysEmployeeJob sysEmployeeJob : sysEmployeeJobList) {
-            sysEmployeeJob.setEmployeeId(sysEmployee.getId());
-            sysEmployeeJob.setStatus(SysEnum.StatusEnum.STATUS_NORMAL.getCode());
+        if(sysEmployeeRequest.getEmpNative() != null && !"".equals(sysEmployeeRequest.getEmpNative())){
+            condition.getOredCriteria().get(0).andLike("empNative",sysEmployeeRequest.getEmpNative());
         }
-        sysEmployeeJobService.insertList(sysEmployeeJobList);
-        return sysEmployeeResponse;
+        PageHelper.startPage(sysEmployeeRequest.getPageNumber(), sysEmployeeRequest.getPageSize());
+        List<SysEmployee> dataList = this.selectByCondition(condition);
+        Integer total = this.selectCountByCondition(condition);
+        PageResult<SysEmployee> pageList = new PageResult<SysEmployee>();
+        pageList.setDataList(dataList);
+        pageList.setTotal(total);
+        return pageList;
     }
 
     @Override
-    public SysEmployeeResponse deleteEmployee(Long id) {
+    public List<SysEmployee> queryCompanyEmployeeList(SysEmployeeRequest sysEmployeeRequest) {
+        Condition condition = new Condition(SysEmployee.class);
+        condition.createCriteria().andEqualTo("officeId", sysEmployeeRequest.getOfficeId());
+        if (sysEmployeeRequest.getEmpName() != null && !"".equals(sysEmployeeRequest.getEmpName())) {
+            condition.getOredCriteria().get(0).andLike("empName","%"+sysEmployeeRequest.getEmpName()+"%");
+        }
+        if(sysEmployeeRequest.getEmpNative() != null && !"".equals(sysEmployeeRequest.getEmpNative())){
+            condition.getOredCriteria().get(0).andLike("empNative",sysEmployeeRequest.getEmpNative());
+        }
+        condition.setOrderByClause("id desc");
+        return this.selectByCondition(condition);
+    }
+
+    @Override
+    public void addEmployee(SysEmployeeResponse sysEmployeeResponse) {
+        SysEmployee sysEmployee = sysEmployeeResponse.getSysEmployee();
+        sysEmployee.setStatus(SysEnum.StatusEnum.STATUS_NORMAL.getCode());
+        this.insertUseGeneratedKeys(sysEmployee);
+        List<SysEmployeeCase> sysEmployeeCaseList = sysEmployeeResponse.getSysEmployeeCaseList();
+        if (sysEmployeeCaseList != null && sysEmployeeCaseList.size() > 0) {
+            for (SysEmployeeCase sysEmployeeCase : sysEmployeeCaseList) {
+                sysEmployeeCase.setEmployeeId(sysEmployee.getId());
+                sysEmployeeCase.setStatus(SysEnum.StatusEnum.STATUS_NORMAL.getCode());
+            }
+            sysEmployeeCaseService.insertList(sysEmployeeCaseList);
+        }
+
+        List<SysEmployeeDisease> sysEmployeeDiseaseList = sysEmployeeResponse.getSysEmployeeDiseaseList();
+        if (sysEmployeeDiseaseList != null && sysEmployeeDiseaseList.size() > 0) {
+            for (SysEmployeeDisease sysEmployeeDisease : sysEmployeeDiseaseList) {
+                sysEmployeeDisease.setEmployeeId(sysEmployee.getId());
+                sysEmployeeDisease.setStatus(SysEnum.StatusEnum.STATUS_NORMAL.getCode());
+            }
+            sysEmployeeDiseaseService.insertList(sysEmployeeDiseaseList);
+        }
+
+        List<SysEmployeeJob> sysEmployeeJobList = sysEmployeeResponse.getSysEmployeeJobList();
+        if (sysEmployeeJobList != null && sysEmployeeJobList.size() > 0) {
+            for (SysEmployeeJob sysEmployeeJob : sysEmployeeJobList) {
+                sysEmployeeJob.setEmployeeId(sysEmployee.getId());
+                sysEmployeeJob.setStatus(SysEnum.StatusEnum.STATUS_NORMAL.getCode());
+            }
+            sysEmployeeJobService.insertList(sysEmployeeJobList);
+        }
+    }
+
+    @Override
+    public void deleteEmployee(Long id) {
         SysEmployeeResponse employeeDetail = getEmployeeDetail(id);
-
-
         SysEmployee sysEmployee = employeeDetail.getSysEmployee();
         sysEmployee.setStatus(SysEnum.StatusEnum.STATUS_DELETE.getCode());
-        this.sysEmployeeMapper.updateByPrimaryKey(sysEmployee);
+        this.updateByPrimaryKeySelective(sysEmployee);
 
         List<SysEmployeeCase> sysEmployeeCases = employeeDetail.getSysEmployeeCaseList();
-        for (SysEmployeeCase sysEmployeeCase : sysEmployeeCases) {
-            sysEmployeeCase.setStatus(SysEnum.StatusEnum.STATUS_DELETE.getCode());
-            this.sysEmployeeCaseMapper.updateByPrimaryKey(sysEmployeeCase);
+        if (sysEmployeeCases != null && sysEmployeeCases.size() > 0) {
+            for (SysEmployeeCase sysEmployeeCase : sysEmployeeCases) {
+                sysEmployeeCase.setStatus(SysEnum.StatusEnum.STATUS_DELETE.getCode());
+                this.sysEmployeeCaseService.updateByPrimaryKeySelective(sysEmployeeCase);
+            }
         }
-        //
+
         List<SysEmployeeDisease> sysEmployeeDiseases = employeeDetail.getSysEmployeeDiseaseList();
-        for (SysEmployeeDisease sysEmployeeDisease : sysEmployeeDiseases) {
-            sysEmployeeDisease.setStatus(SysEnum.StatusEnum.STATUS_DELETE.getCode());
-            this.sysEmployeeDiseaseMapper.updateByPrimaryKey(sysEmployeeDisease);
+        if (sysEmployeeDiseases != null && sysEmployeeDiseases.size() > 0) {
+            for (SysEmployeeDisease sysEmployeeDisease : sysEmployeeDiseases) {
+                sysEmployeeDisease.setStatus(SysEnum.StatusEnum.STATUS_DELETE.getCode());
+                this.sysEmployeeDiseaseService.updateByPrimaryKeySelective(sysEmployeeDisease);
+            }
         }
-        //
+
         List<SysEmployeeJob> sysEmployeeJobs = employeeDetail.getSysEmployeeJobList();
-        for (SysEmployeeJob sysEmployeeJob : sysEmployeeJobs) {
-            sysEmployeeJob.setStatus(SysEnum.StatusEnum.STATUS_DELETE.getCode());
-            this.sysEmployeeJobMapper.updateByPrimaryKey(sysEmployeeJob);
+        if (sysEmployeeJobs != null && sysEmployeeJobs.size() > 0) {
+            for (SysEmployeeJob sysEmployeeJob : sysEmployeeJobs) {
+                sysEmployeeJob.setStatus(SysEnum.StatusEnum.STATUS_DELETE.getCode());
+                this.sysEmployeeJobService.updateByPrimaryKeySelective(sysEmployeeJob);
+            }
         }
-        //
-        SysEmployeeResponse sysEmployeeResponse = new SysEmployeeResponse();
-        sysEmployeeResponse.setSysEmployee(sysEmployee);
-        return sysEmployeeResponse;
     }
 
     /**
      * 修改
      * @param sysEmployeeResponse
-     * @return
      */
     @Override
-    public SysEmployeeResponse updateEmployee(SysEmployeeResponse sysEmployeeResponse) {
-        //
+    public void updateEmployee(SysEmployeeResponse sysEmployeeResponse) {
+
         SysEmployee sysEmployee = sysEmployeeResponse.getSysEmployee();
         Long sysEmployeeId = sysEmployee.getId();
-        this.sysEmployeeMapper.updateByPrimaryKeySelective(sysEmployee);
-        //
+        this.updateByPrimaryKeySelective(sysEmployee);
+
         Condition condition = new Condition(SysEmployeeCase.class);
-        condition.createCriteria().andEqualTo("employeeId", sysEmployeeId);
-        List<SysEmployeeCase> sysEmployeeCases = this.sysEmployeeCaseMapper.selectByCondition(condition);
-        for (SysEmployeeCase sysEmployeeCase : sysEmployeeCases) {
-            sysEmployeeCase.setStatus(SysEnum.StatusEnum.STATUS_DELETE.getCode());
-            this.sysEmployeeCaseMapper.updateByPrimaryKey(sysEmployeeCase);
+        condition.createCriteria().andEqualTo("employeeId", sysEmployeeId).andEqualTo("status",SysEnum.StatusEnum.STATUS_NORMAL.getCode());
+        List<SysEmployeeCase> sysEmployeeCases = this.sysEmployeeCaseService.selectByCondition(condition);
+        if (sysEmployeeCases != null && sysEmployeeCases.size() > 0) {
+            for (SysEmployeeCase sysEmployeeCase : sysEmployeeCases) {
+                sysEmployeeCase.setStatus(SysEnum.StatusEnum.STATUS_DELETE.getCode());
+                this.sysEmployeeCaseService.updateByPrimaryKeySelective(sysEmployeeCase);
+            }
         }
         List<SysEmployeeCase> sysEmployeeCaseList = sysEmployeeResponse.getSysEmployeeCaseList();
-        for (SysEmployeeCase sysEmployeeCase : sysEmployeeCaseList) {
-            sysEmployeeCase.setEmployeeId(sysEmployeeId);
-            sysEmployeeCase.setStatus(SysEnum.StatusEnum.STATUS_NORMAL.getCode());
+        if (sysEmployeeCaseList != null && sysEmployeeCaseList.size() > 0) {
+            for (SysEmployeeCase sysEmployeeCase : sysEmployeeCaseList) {
+                sysEmployeeCase.setEmployeeId(sysEmployeeId);
+                sysEmployeeCase.setStatus(SysEnum.StatusEnum.STATUS_NORMAL.getCode());
+            }
+            this.sysEmployeeCaseService.insertList(sysEmployeeCaseList);
         }
-        this.sysEmployeeCaseMapper.insertList(sysEmployeeCaseList);
-        //
+
         Condition condition1 = new Condition(SysEmployeeDisease.class);
-        condition1.createCriteria().andEqualTo("employeeId", sysEmployeeId);
-        List<SysEmployeeDisease> sysEmployeeDiseases = this.sysEmployeeDiseaseMapper.selectByCondition(condition1);
-        for (SysEmployeeDisease sysEmployeeDisease : sysEmployeeDiseases) {
-            sysEmployeeDisease.setStatus(SysEnum.StatusEnum.STATUS_DELETE.getCode());
-            this.sysEmployeeDiseaseMapper.updateByPrimaryKey(sysEmployeeDisease);
+        condition1.createCriteria().andEqualTo("employeeId", sysEmployeeId).andEqualTo("status",SysEnum.StatusEnum.STATUS_NORMAL.getCode());
+        List<SysEmployeeDisease> sysEmployeeDiseases = this.sysEmployeeDiseaseService.selectByCondition(condition1);
+        if (sysEmployeeDiseases != null && sysEmployeeDiseases.size() > 0) {
+            for (SysEmployeeDisease sysEmployeeDisease : sysEmployeeDiseases) {
+                sysEmployeeDisease.setStatus(SysEnum.StatusEnum.STATUS_DELETE.getCode());
+                this.sysEmployeeDiseaseService.updateByPrimaryKeySelective(sysEmployeeDisease);
+            }
         }
         List<SysEmployeeDisease> sysEmployeeDiseaseList = sysEmployeeResponse.getSysEmployeeDiseaseList();
-        for (SysEmployeeDisease sysEmployeeDisease : sysEmployeeDiseaseList) {
-            sysEmployeeDisease.setEmployeeId(sysEmployeeId);
-            sysEmployeeDisease.setStatus(SysEnum.StatusEnum.STATUS_NORMAL.getCode());
+        if (sysEmployeeDiseaseList != null && sysEmployeeDiseaseList.size() > 0) {
+            for (SysEmployeeDisease sysEmployeeDisease : sysEmployeeDiseaseList) {
+                sysEmployeeDisease.setEmployeeId(sysEmployeeId);
+                sysEmployeeDisease.setStatus(SysEnum.StatusEnum.STATUS_NORMAL.getCode());
+            }
+            this.sysEmployeeDiseaseService.insertList(sysEmployeeDiseaseList);
         }
-        this.sysEmployeeDiseaseMapper.insertList(sysEmployeeDiseaseList);
-        //
+
         Condition condition2 = new Condition(SysEmployeeJob.class);
-        condition2.createCriteria().andEqualTo("employeeId", sysEmployeeId);
-        List<SysEmployeeJob> sysEmployeeJobs = this.sysEmployeeJobMapper.selectByCondition(condition1);
-        for (SysEmployeeJob sysEmployeeJob : sysEmployeeJobs) {
-            sysEmployeeJob.setStatus(SysEnum.StatusEnum.STATUS_DELETE.getCode());
-            this.sysEmployeeJobMapper.updateByPrimaryKey(sysEmployeeJob);
+        condition2.createCriteria().andEqualTo("employeeId", sysEmployeeId).andEqualTo("status",SysEnum.StatusEnum.STATUS_NORMAL.getCode());
+        List<SysEmployeeJob> sysEmployeeJobs = this.sysEmployeeJobService.selectByCondition(condition1);
+        if (sysEmployeeJobs != null && sysEmployeeJobs.size() > 0) {
+            for (SysEmployeeJob sysEmployeeJob : sysEmployeeJobs) {
+                sysEmployeeJob.setStatus(SysEnum.StatusEnum.STATUS_DELETE.getCode());
+                this.sysEmployeeJobService.updateByPrimaryKeySelective(sysEmployeeJob);
+            }
         }
         List<SysEmployeeJob> sysEmployeeJobList = sysEmployeeResponse.getSysEmployeeJobList();
-        for (SysEmployeeJob sysEmployeeJob : sysEmployeeJobList) {
-            sysEmployeeJob.setEmployeeId(sysEmployeeId);
-            sysEmployeeJob.setStatus(SysEnum.StatusEnum.STATUS_NORMAL.getCode());
+        if (sysEmployeeJobList != null && sysEmployeeJobList.size() > 0) {
+            for (SysEmployeeJob sysEmployeeJob : sysEmployeeJobList) {
+                sysEmployeeJob.setEmployeeId(sysEmployeeId);
+                sysEmployeeJob.setStatus(SysEnum.StatusEnum.STATUS_NORMAL.getCode());
+            }
+            this.sysEmployeeJobService.insertList(sysEmployeeJobList);
         }
-        this.sysEmployeeJobMapper.insertList(sysEmployeeJobList);
-        //
-        return sysEmployeeResponse;
     }
 
     @Override
     public SysEmployeeResponse getEmployeeDetail(Long id) {
         SysEmployeeResponse sysEmployeeResponse = new SysEmployeeResponse();
-        SysEmployee sysEmployee = this.sysEmployeeMapper.selectByPrimaryKey(id);
+        SysEmployee sysEmployee = this.selectByPrimaryKey(id);
+        Long officeId = sysEmployee.getOfficeId();
+        if (officeId != null) {
+            SysCompanyOffice sysCompanyOffice = this.sysCompanyOfficeService.selectByPrimaryKey(officeId);
+            sysEmployeeResponse.setSysCompanyOffice(sysCompanyOffice);
+        }
         sysEmployeeResponse.setSysEmployee(sysEmployee);
-        //
+
         Condition condition = new Condition(SysEmployeeCase.class);
         condition.createCriteria().andEqualTo("employeeId", id).andEqualTo("status",SysEnum.StatusEnum.STATUS_NORMAL.getCode());
-        List<SysEmployeeCase> sysEmployeeCases = this.sysEmployeeCaseMapper.selectByCondition(condition);
+        List<SysEmployeeCase> sysEmployeeCases = this.sysEmployeeCaseService.selectByCondition(condition);
         sysEmployeeResponse.setSysEmployeeCaseList(sysEmployeeCases);
-        //
+
         Condition condition1 = new Condition(SysEmployeeDisease.class);
         condition1.createCriteria().andEqualTo("employeeId", id).andEqualTo("status",SysEnum.StatusEnum.STATUS_NORMAL.getCode());
-        List<SysEmployeeDisease> sysEmployeeDiseases = this.sysEmployeeDiseaseMapper.selectByCondition(condition1);
+        List<SysEmployeeDisease> sysEmployeeDiseases = this.sysEmployeeDiseaseService.selectByCondition(condition1);
         sysEmployeeResponse.setSysEmployeeDiseaseList(sysEmployeeDiseases);
-        //
+
         Condition condition2 = new Condition(SysEmployeeJob.class);
         condition2.createCriteria().andEqualTo("employeeId", id).andEqualTo("status",SysEnum.StatusEnum.STATUS_NORMAL.getCode());
-        List<SysEmployeeJob> sysEmployeeJobs = this.sysEmployeeJobMapper.selectByCondition(condition1);
+        List<SysEmployeeJob> sysEmployeeJobs = this.sysEmployeeJobService.selectByCondition(condition1);
         sysEmployeeResponse.setSysEmployeeJobList(sysEmployeeJobs);
         return sysEmployeeResponse;
     }

@@ -113,12 +113,17 @@ public class RecordEmergencyFacilitiesServiceImpl extends AbstractService<Record
     @Override
     public RecordEmergencyFacilitiesDetailResponse queryEmergencyFacilitiesDetail(Long id) {
         RecordEmergencyFacilitiesDetailResponse response = new RecordEmergencyFacilitiesDetailResponse();
-        RecordEmergencyFacilities recordEmergencyFacilities = this.recordEmergencyFacilitiesMapper.selectByPrimaryKey(id);
-        response.setRecordEmergencyFacilities(recordEmergencyFacilities);
-        Condition condition = new Condition(RecordEmergencyFacilitiesData.class);
-        condition.createCriteria() .andEqualTo("relationId", id);
-        List<RecordEmergencyFacilitiesData> recordEmergencyFacilitiesDataList = this.recordEmergencyFacilitiesDataService.selectByCondition(condition);
-        response.setRecordEmergencyFacilitiesDataList(recordEmergencyFacilitiesDataList);
+        RecordEmergencyFacilities recordEmergencyFacilities = new RecordEmergencyFacilities();
+        recordEmergencyFacilities.setSceneId(id);
+        recordEmergencyFacilities = this.recordEmergencyFacilitiesMapper.selectOne(recordEmergencyFacilities);
+        if (recordEmergencyFacilities != null) {
+            Long recordId = recordEmergencyFacilities.getId();
+            response.setRecordEmergencyFacilities(recordEmergencyFacilities);
+            Condition condition = new Condition(RecordEmergencyFacilitiesData.class);
+            condition.createCriteria() .andEqualTo("relationId", recordId);
+            List<RecordEmergencyFacilitiesData> recordEmergencyFacilitiesDataList = this.recordEmergencyFacilitiesDataService.selectByCondition(condition);
+            response.setRecordEmergencyFacilitiesDataList(recordEmergencyFacilitiesDataList);
+        }
         return response;
     }
 }
