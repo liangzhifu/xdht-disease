@@ -19,6 +19,7 @@ import tk.mybatis.mapper.entity.Condition;
 
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 
 
 /**
@@ -30,22 +31,9 @@ public class RecordPostPersonnelServiceImpl extends AbstractService<RecordPostPe
 
     @Autowired
     private RecordPostPersonnelMapper recordPostPersonnelMapper;
+
     @Autowired
     private RecordPostPersonnelDataService recordPostPersonnelDataService;
-
-    @Override
-    public List<RecordPostPersonnel> queryList(RecordPostPersonnelRequest recordRequest) {
-        Condition condition = new Condition(RecordPostPersonnel.class);
-        condition.createCriteria() .andEqualTo("id", recordRequest.getId())
-                .andEqualTo("postPersonnelNo",recordRequest.getPostPersonnelNo());
-        if (recordRequest.getVerificationResult() != null) {
-            condition.getOredCriteria().get(0).andLike("verificationResult","%"+recordRequest.getVerificationResult()+"%");
-        }
-        if (recordRequest.getStatus() != null){
-            condition.getOredCriteria().get(0).andEqualTo("status",recordRequest.getStatus());
-        }
-        return this.recordPostPersonnelMapper.selectByCondition(condition);
-    }
 
     @Override
     public PageResult<RecordPostPersonnel> queryListPage(RecordPostPersonnelRequest recordRequest) {
@@ -68,61 +56,61 @@ public class RecordPostPersonnelServiceImpl extends AbstractService<RecordPostPe
     }
 
     @Override
-    public RecordPostPersonnel add(RecordPostPersonnelInputRequest recordPostPersonnelInputRequest) {
+    public void add(RecordPostPersonnelInputRequest recordPostPersonnelInputRequest) {
         RecordPostPersonnel recordPostPersonnel = recordPostPersonnelInputRequest.getRecordPostPersonnel();
         recordPostPersonnel.setStatus(SysEnum.StatusEnum.STATUS_NORMAL.getCode());
         this.insertUseGeneratedKeys(recordPostPersonnel);
         List<RecordPostPersonnelData> recordPostPersonnelDataList = new LinkedList<>();
-        for ( RecordPostPersonnelData recordPostPersonnelData : recordPostPersonnelInputRequest.getRecordPostPersonnelDataList()) {
-            recordPostPersonnelData.setRelationId(recordPostPersonnel.getId());
-            recordPostPersonnelDataList.add(recordPostPersonnelData);
-        }
-        this.recordPostPersonnelDataService.insertList(recordPostPersonnelDataList);
-        return recordPostPersonnel;
-    }
-
-    @Override
-    public RecordPostPersonnel delete(Long id) {
-        RecordPostPersonnel recordPostPersonnel = this.recordPostPersonnelMapper.selectByPrimaryKey(id);
-        recordPostPersonnel.setStatus(SysEnum.StatusEnum.STATUS_DELETE.getCode());
-        this.recordPostPersonnelMapper.updateByPrimaryKeySelective(recordPostPersonnel);
-        return recordPostPersonnel;
-    }
-
-    @Override
-    public RecordPostPersonnel update(RecordPostPersonnelInputRequest recordPostPersonnelInputRequest) {
-        RecordPostPersonnel recordPostPersonnel = recordPostPersonnelInputRequest.getRecordPostPersonnel();
-        this.recordPostPersonnelMapper.updateByPrimaryKeySelective(recordPostPersonnel);
-        List<RecordPostPersonnelData> recordPostPersonnelDataList = new LinkedList<>();
-        for ( RecordPostPersonnelData recordPostPersonnelData : recordPostPersonnelInputRequest.getRecordPostPersonnelDataList() ) {
-            if (recordPostPersonnelData.getId() == null ){
-                recordPostPersonnelData.setRelationId(recordPostPersonnel.getId());
+        if (recordPostPersonnelInputRequest.getRecordPostPersonnelDataList() != null) {
+            for (RecordPostPersonnelData recordPostPersonnelData : recordPostPersonnelInputRequest.getRecordPostPersonnelDataList()) {
+                recordPostPersonnelData.setPostPersonnelId(recordPostPersonnel.getId());
                 recordPostPersonnelDataList.add(recordPostPersonnelData);
             }
-            this.recordPostPersonnelDataService.updateByPrimaryKeySelective(recordPostPersonnelData);
-        }
-        if (recordPostPersonnelDataList.size()>0){
             this.recordPostPersonnelDataService.insertList(recordPostPersonnelDataList);
         }
-        return recordPostPersonnel;
+    }
+
+    @Override
+    public void delete(Long id) {
+        RecordPostPersonnel recordPostPersonnel = new RecordPostPersonnel();
+        recordPostPersonnel.setId(id);
+        recordPostPersonnel.setStatus(SysEnum.StatusEnum.STATUS_DELETE.getCode());
+        this.recordPostPersonnelMapper.updateByPrimaryKeySelective(recordPostPersonnel);
+    }
+
+    @Override
+    public void update(RecordPostPersonnelInputRequest recordPostPersonnelInputRequest) {
+        RecordPostPersonnel recordPostPersonnel = recordPostPersonnelInputRequest.getRecordPostPersonnel();
+        this.recordPostPersonnelMapper.updateByPrimaryKeySelective(recordPostPersonnel);
+
+        Condition condition = new Condition(RecordPostPersonnelData.class);
+        condition.createCriteria().andEqualTo("postPersonnelId", recordPostPersonnel.getId());
+        List<RecordPostPersonnelData> recordPostPersonnelDataList = this.recordPostPersonnelDataService.selectByCondition(condition);
+        if (recordPostPersonnelDataList != null && recordPostPersonnelDataList.size() > 0) {
+            for (RecordPostPersonnelData recordPostPersonnelData : recordPostPersonnelDataList) {
+                this.recordPostPersonnelDataService.deleteByPrimaryKey(recordPostPersonnelData.getId());
+            }
+        }
+        recordPostPersonnelDataList = new LinkedList<>();
+        if (recordPostPersonnelInputRequest.getRecordPostPersonnelDataList() != null) {
+            for (RecordPostPersonnelData recordPostPersonnelData : recordPostPersonnelInputRequest.getRecordPostPersonnelDataList()) {
+                recordPostPersonnelData.setPostPersonnelId(recordPostPersonnel.getId());
+                recordPostPersonnelDataList.add(recordPostPersonnelData);
+            }
+            this.recordPostPersonnelDataService.insertList(recordPostPersonnelDataList);
+        }
     }
 
     @Override
     public RecordPostPersonnelDetailResponse queryPostPersonnelDetail(Long id) {
         RecordPostPersonnelDetailResponse response = new RecordPostPersonnelDetailResponse();
         //根据sceneId 获取表的数据
-        RecordPostPersonnel recordPostPersonnel = new RecordPostPersonnel();
-        recordPostPersonnel.setSceneId(id);
-        recordPostPersonnel = this.selectOne(recordPostPersonnel);
-        if (recordPostPersonnel != null) {
-            Long recordId = recordPostPersonnel.getId();
-            response.setRecordPostPersonnel(recordPostPersonnel);
-            Condition condition = new Condition(RecordPostPersonnelData.class);
-            condition.createCriteria() .andEqualTo("relationId", recordId);
-            List<RecordPostPersonnelData> recordPostPersonnelDataList = this.recordPostPersonnelDataService.selectByCondition(condition);
-            if (recordPostPersonnelDataList.size()>0){
-                response.setRecordPostPersonnelDataList(recordPostPersonnelDataList);
-            }
+        Map<String, Object> map = this.recordPostPersonnelMapper.selectRecordPostPersonnelBySceneId(id);
+        if (map != null) {
+            response.setRecordPostPersonnel(map);
+            Long recordId = (Long) map.get("id");
+            List<Map<String, Object>> mapList = this.recordPostPersonnelDataService.queryRecordPostPersonnelDataByPostPersonnel(recordId);
+            response.setRecordPostPersonnelDataList(mapList);
         }
         return response;
     }
