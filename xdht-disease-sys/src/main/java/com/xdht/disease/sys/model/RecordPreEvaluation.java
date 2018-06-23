@@ -41,7 +41,7 @@ public class RecordPreEvaluation {
     /**
      * 更新人
      */
-    @Column(name = "upadte_by")
+    @Column(name = "update_by")
     private Long updateBy;
 
     /**
