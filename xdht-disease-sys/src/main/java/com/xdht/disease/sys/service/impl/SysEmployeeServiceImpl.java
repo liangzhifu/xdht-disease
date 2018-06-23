@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import tk.mybatis.mapper.entity.Condition;
 
+import java.util.LinkedList;
 import java.util.List;
 
 
@@ -38,10 +39,21 @@ public class SysEmployeeServiceImpl extends AbstractService<SysEmployee> impleme
         Condition condition = new Condition(SysEmployee.class);
         condition.createCriteria().andEqualTo("officeId", sysEmployeeRequest.getOfficeId())
             .andEqualTo("status", SysEnum.StatusEnum.STATUS_NORMAL.getCode());
-        if (sysEmployeeRequest.getEmpName() != null) {
+        if (sysEmployeeRequest.getCompanyId() != null) {
+            Condition sysOfficeCondition = new Condition(SysCompanyOffice.class);
+            sysOfficeCondition.createCriteria().andEqualTo("status", SysEnum.StatusEnum.STATUS_NORMAL.getCode())
+                    .andEqualTo("companyId", sysEmployeeRequest.getCompanyId());
+            List<SysCompanyOffice> sysCompanyOfficeList = this.sysCompanyOfficeService.selectByCondition(sysOfficeCondition);
+            List<Long> sysOfficeIdList = new LinkedList<>();
+            for (SysCompanyOffice sysCompanyOffice : sysCompanyOfficeList) {
+                sysOfficeIdList.add(sysCompanyOffice.getId());
+            }
+            condition.getOredCriteria().get(0).andIn("officeId", sysOfficeIdList);
+        }
+        if (sysEmployeeRequest.getEmpName() != null && !"".equals(sysEmployeeRequest.getEmpName())) {
             condition.getOredCriteria().get(0).andLike("empName","%"+sysEmployeeRequest.getEmpName()+"%");
         }
-        if(sysEmployeeRequest.getEmpNative() != null){
+        if(sysEmployeeRequest.getEmpNative() != null && !"".equals(sysEmployeeRequest.getEmpNative())){
             condition.getOredCriteria().get(0).andLike("empNative",sysEmployeeRequest.getEmpNative());
         }
         PageHelper.startPage(sysEmployeeRequest.getPageNumber(), sysEmployeeRequest.getPageSize());
@@ -57,10 +69,10 @@ public class SysEmployeeServiceImpl extends AbstractService<SysEmployee> impleme
     public List<SysEmployee> queryCompanyEmployeeList(SysEmployeeRequest sysEmployeeRequest) {
         Condition condition = new Condition(SysEmployee.class);
         condition.createCriteria().andEqualTo("officeId", sysEmployeeRequest.getOfficeId());
-        if (sysEmployeeRequest.getEmpName() != null) {
+        if (sysEmployeeRequest.getEmpName() != null && !"".equals(sysEmployeeRequest.getEmpName())) {
             condition.getOredCriteria().get(0).andLike("empName","%"+sysEmployeeRequest.getEmpName()+"%");
         }
-        if(sysEmployeeRequest.getEmpNative() != null){
+        if(sysEmployeeRequest.getEmpNative() != null && !"".equals(sysEmployeeRequest.getEmpNative())){
             condition.getOredCriteria().get(0).andLike("empNative",sysEmployeeRequest.getEmpNative());
         }
         condition.setOrderByClause("id desc");

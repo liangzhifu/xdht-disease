@@ -1,8 +1,5 @@
 package com.xdht.disease.sys.vo.response;
 
-import com.xdht.disease.sys.model.RecordPreEvaluation;
-import com.xdht.disease.sys.model.RecordPreEvaluationData;
-import com.xdht.disease.sys.model.RecordPreEvaluationProject;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
@@ -16,14 +13,9 @@ import java.util.Map;
 public class RecordPreEvaluationDetailResponse {
 
     @ApiModelProperty(value = "建设项目概况调查表")
-    private RecordPreEvaluation recordPreEvaluation;
+    private Map<String, Object> recordPreEvaluation;
 
     @ApiModelProperty(value = "建设项目概况调查表--调查内容")
-    private List<RecordPreEvaluationData> recordPreEvaluationDataList;
-
-    @ApiModelProperty(value = "建设项目表--调查内容")
-    private List<RecordPreEvaluationProject> recordPreEvaluationProjectList;
-
-
+    private List<Map<String, Object>> recordPreEvaluationDataList;
 
 }

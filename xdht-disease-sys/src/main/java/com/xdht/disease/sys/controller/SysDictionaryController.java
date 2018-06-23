@@ -28,9 +28,15 @@ public class SysDictionaryController {
     @Autowired
     private SysDictionaryService sysDictionaryService;
 
+    @RequestMapping(value = "/list", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    @ApiOperation(value = "分页查询字典列表")
+    public ResponseEntity<Result<PageResult<SysDictionary>>> queryList(@RequestBody SysDictionaryRequest SysDictionaryRequest) {
+        return new ResponseEntity<>(Result.ok(sysDictionaryService.querySysDictionaryList(SysDictionaryRequest)), HttpStatus.OK);
+    }
+
     @RequestMapping(value = "/pageList", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     @ApiOperation(value = "分页查询字典列表")
-    public ResponseEntity<Result<PageResult<SysDictionary>>> rolePage(@RequestBody SysDictionaryRequest SysDictionaryRequest) {
+    public ResponseEntity<Result<PageResult<SysDictionary>>> queryPageList(@RequestBody SysDictionaryRequest SysDictionaryRequest) {
         return new ResponseEntity<>(Result.ok(sysDictionaryService.querySysDictionaryPage(SysDictionaryRequest)), HttpStatus.OK);
     }
 
@@ -40,8 +46,8 @@ public class SysDictionaryController {
     @ApiImplicitParams({
             @ApiImplicitParam(name = "authorization", value = "authorization", required = true, dataType = "string", paramType = "header"),
     })
-    public ResponseEntity<Result<String>> addRole(@RequestBody SysDictionary SysDictionary) {
-        this.sysDictionaryService.addRole(SysDictionary);
+    public ResponseEntity<Result<String>> add(@RequestBody SysDictionary SysDictionary) {
+        this.sysDictionaryService.addDictionary(SysDictionary);
         return new ResponseEntity<>(Result.ok(SysEnum.ResultEnum.RESULT_SUCCESS.getCode()), HttpStatus.OK);
     }
 
@@ -51,8 +57,8 @@ public class SysDictionaryController {
     @ApiImplicitParams({
             @ApiImplicitParam(name = "authorization", value = "authorization", required = true, dataType = "string", paramType = "header"),
     })
-    public ResponseEntity<Result<String>> deleteRole(@RequestParam Long id) {
-        this.sysDictionaryService.deleteRole(id);
+    public ResponseEntity<Result<String>> delete(@RequestParam Long id) {
+        this.sysDictionaryService.deleteDictionary(id);
         return new ResponseEntity<>(Result.ok(SysEnum.ResultEnum.RESULT_SUCCESS.getCode()), HttpStatus.OK);
     }
 
@@ -62,15 +68,15 @@ public class SysDictionaryController {
     @ApiImplicitParams({
             @ApiImplicitParam(name = "authorization", value = "authorization", required = true, dataType = "string", paramType = "header"),
     })
-    public ResponseEntity<Result<String>> updateRole(@RequestBody SysDictionary SysDictionary) {
-        this.sysDictionaryService.updateRole(SysDictionary);
+    public ResponseEntity<Result<String>> update(@RequestBody SysDictionary SysDictionary) {
+        this.sysDictionaryService.updateDictionary(SysDictionary);
         return new ResponseEntity<>(Result.ok(SysEnum.ResultEnum.RESULT_SUCCESS.getCode()), HttpStatus.OK);
     }
 
     @RequestMapping(value = "/detail/{id}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     @ApiOperation(value = "获取字典信息")
     @Authorization
-    public ResponseEntity<Result<SysDictionary>> getRoleDetail(@PathVariable Long id) {
+    public ResponseEntity<Result<SysDictionary>> getDetail(@PathVariable Long id) {
         return new ResponseEntity<>(Result.ok(sysDictionaryService.selectByPrimaryKey(id)), HttpStatus.OK);
     }
 

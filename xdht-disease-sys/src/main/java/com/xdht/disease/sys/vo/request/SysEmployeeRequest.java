@@ -12,6 +12,9 @@ public class SysEmployeeRequest {
     @ApiModelProperty(value = "身份证号")
     private String empIdentityNumber;
 
+    @ApiModelProperty(value = "公司id")
+    private Long companyId;
+
     @ApiModelProperty(value = "部门id")
     private Long officeId;
 

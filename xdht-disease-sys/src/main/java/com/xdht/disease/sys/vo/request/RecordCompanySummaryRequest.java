@@ -50,7 +50,11 @@ public class RecordCompanySummaryRequest {
     @ApiModelProperty(value = "备注")
     private String remarks;
 
+    @ApiModelProperty(value = "分页数")
+    private Integer  pageNumber;
 
+    @ApiModelProperty(value = "每页数量")
+    private Integer pageSize;
 
 
 }

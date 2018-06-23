@@ -3,6 +3,7 @@ package com.xdht.disease.sys.service.impl;
 import com.github.pagehelper.PageHelper;
 import com.xdht.disease.common.core.AbstractService;
 import com.xdht.disease.common.core.PageResult;
+import com.xdht.disease.sys.constant.SysEnum;
 import com.xdht.disease.sys.dao.RecordCompanySummaryMapper;
 import com.xdht.disease.sys.model.RecordCompanySummary;
 import com.xdht.disease.sys.service.RecordCompanySummaryService;
@@ -26,7 +27,7 @@ public class RecordCompanySummaryServiceImpl extends AbstractService<RecordCompa
     private RecordCompanySummaryMapper recordCompanySummaryMapper;
 
     @Override
-    public List<RecordCompanySummary> queryList(RecordCompanySummaryRequest recordCompanySummaryRequest) {
+    public PageResult<RecordCompanySummary> queryListPage(RecordCompanySummaryRequest recordCompanySummaryRequest) {
         Condition condition = new Condition(RecordCompanySummary.class);
         condition.createCriteria() .andEqualTo("id", recordCompanySummaryRequest.getId())
                 .andEqualTo("companyId",recordCompanySummaryRequest.getCompanyId())
@@ -42,52 +43,31 @@ public class RecordCompanySummaryServiceImpl extends AbstractService<RecordCompa
         if (recordCompanySummaryRequest.getPhysicalExaminationType() != null){
             condition.getOredCriteria().get(0).andEqualTo("physicalExaminationType",recordCompanySummaryRequest.getPhysicalExaminationType());
         }
-        return this.recordCompanySummaryMapper.selectByCondition(condition);
-    }
-
-    @Override
-    public PageResult<RecordCompanySummary> queryListPage(RecordCompanySummaryRequest recordCompanySummaryRequest, Integer pageNum, Integer pageSize) {
-
-        Condition condition = new Condition(RecordCompanySummary.class);
-        condition.createCriteria() .andEqualTo("id", recordCompanySummaryRequest.getId())
-                .andEqualTo("companyId",recordCompanySummaryRequest.getCompanyId())
-                .andEqualTo("inspectionDate",recordCompanySummaryRequest.getInspectionDate())
-                .andEqualTo("inspectedNumber",recordCompanySummaryRequest.getInspectedNumber())
-                .andEqualTo("actualInspectdNumber",recordCompanySummaryRequest.getActualInspectdNumber())
-                .andEqualTo("noAbnormality",recordCompanySummaryRequest.getNoAbnormality())
-                .andEqualTo("reviewNumber",recordCompanySummaryRequest.getReviewNumber())
-                .andEqualTo("doubtfulNumber",recordCompanySummaryRequest.getDoubtfulNumber());
-        if (recordCompanySummaryRequest.getInspectionAgency() != null) {
-            condition.getOredCriteria().get(0).andLike("inspectionAgency","%"+recordCompanySummaryRequest.getInspectionAgency()+"%");
-        }
-        if (recordCompanySummaryRequest.getPhysicalExaminationType() != null){
-            condition.getOredCriteria().get(0).andEqualTo("physicalExaminationType",recordCompanySummaryRequest.getPhysicalExaminationType());
-        }
-        PageHelper.startPage(pageNum, pageSize);
-        List<RecordCompanySummary> dataList = this.recordCompanySummaryMapper.selectByCondition(condition);
-        PageResult<RecordCompanySummary> pageList = new  PageResult<RecordCompanySummary>();
-        pageList.setTotal(dataList.size());
+        PageHelper.startPage(recordCompanySummaryRequest.getPageNumber(), recordCompanySummaryRequest.getPageSize());
+        List<RecordCompanySummary> dataList = this.selectByCondition(condition);
+        Integer count = this.selectCountByCondition(condition);
+        PageResult<RecordCompanySummary> pageList = new  PageResult<>();
+        pageList.setTotal(count);
         pageList.setDataList(dataList);
         return pageList;
     }
 
     @Override
-    public RecordCompanySummary add(RecordCompanySummary recordCompanySummary) {
-            this.recordCompanySummaryMapper.insertUseGeneratedKeys(recordCompanySummary);
-            return recordCompanySummary;
+    public void add(RecordCompanySummary recordCompanySummary) {
+        recordCompanySummary.setStatus(SysEnum.StatusEnum.STATUS_NORMAL.getCode());
+        this.insertUseGeneratedKeys(recordCompanySummary);
     }
 
     @Override
-    public RecordCompanySummary delete(Long id) {
-        this.recordCompanySummaryMapper.deleteByPrimaryKey(id);
-        RecordCompanySummary recordCompanySummary =  new RecordCompanySummary();
+    public void delete(Long id) {
+        RecordCompanySummary recordCompanySummary = new RecordCompanySummary();
         recordCompanySummary.setId(id);
-        return  recordCompanySummary;
+        recordCompanySummary.setStatus(SysEnum.StatusEnum.STATUS_DELETE.getCode());
+        this.updateByPrimaryKeySelective(recordCompanySummary);
     }
 
     @Override
-    public RecordCompanySummary update(RecordCompanySummary recordCompanySummary) {
-        this.recordCompanySummaryMapper.updateByPrimaryKeySelective(recordCompanySummary);
-        return  recordCompanySummary;
+    public void update(RecordCompanySummary recordCompanySummary) {
+        this.updateByPrimaryKeySelective(recordCompanySummary);
     }
 }

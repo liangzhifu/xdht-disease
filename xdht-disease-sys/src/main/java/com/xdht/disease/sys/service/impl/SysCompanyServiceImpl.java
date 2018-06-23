@@ -30,8 +30,9 @@ public class SysCompanyServiceImpl extends AbstractService<SysCompany> implement
         }
         PageHelper.startPage(sysCompanyRequest.getPageNumber(), sysCompanyRequest.getPageSize());
         List<SysCompany> dataList = this.selectByCondition(condition);
-        PageResult<SysCompany> pageList = new  PageResult<SysCompany>();
-        pageList.setTotal(dataList.size());
+        Integer count = this.selectCountByCondition(condition);
+        PageResult<SysCompany> pageList = new  PageResult<>();
+        pageList.setTotal(count);
         pageList.setDataList(dataList);
         return pageList;
     }

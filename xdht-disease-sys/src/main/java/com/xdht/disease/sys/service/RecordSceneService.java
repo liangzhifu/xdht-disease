@@ -2,7 +2,6 @@ package com.xdht.disease.sys.service;
 import com.xdht.disease.common.core.PageResult;
 import com.xdht.disease.sys.model.RecordScene;
 import com.xdht.disease.common.core.Service;
-import com.xdht.disease.sys.vo.request.RecordScenQuestionnaireRequest;
 import com.xdht.disease.sys.vo.request.RecordSceneInputRequest;
 import com.xdht.disease.sys.vo.request.RecordSceneRequest;
 import com.xdht.disease.sys.vo.response.RecordSceneDetailResponse;
@@ -25,23 +24,20 @@ public interface RecordSceneService extends Service<RecordScene> {
     /**
      * 删除
      * @param id 主键id
-     * @return 返回结果
      */
-    RecordScene deleteRecordScene(Long id);
+    void deleteRecordScene(Long id);
 
     /**
      * 修改
      * @param recordScene 实体
-     * @return 返回结果
      */
-    RecordScene updateRecordScene(RecordScene recordScene);
+    void updateRecordScene(RecordScene recordScene);
 
     /**
      * 添加调查表和调查表是否填写的状态
-     * @param recordSceneInputRequest
-     * @return 返回结果
+     * @param recordSceneInputRequest 实体
      */
-    RecordScene add(RecordSceneInputRequest recordSceneInputRequest);
+    void add(RecordSceneInputRequest recordSceneInputRequest);
 
     /**
      * 获取职业卫生现场调查记录表--详细内容
