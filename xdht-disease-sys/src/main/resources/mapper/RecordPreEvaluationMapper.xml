@@ -8,11 +8,20 @@
     <id column="id" jdbcType="BIGINT" property="id" />
     <result column="pre_evaluation_no" jdbcType="VARCHAR" property="preEvaluationNo" />
     <result column="verification_result" jdbcType="VARCHAR" property="verificationResult" />
+    <result column="scene_id" jdbcType="BIGINT" property="sceneId" />
     <result column="status" jdbcType="CHAR" property="status" />
     <result column="create_by" jdbcType="BIGINT" property="createBy" />
     <result column="create_date" jdbcType="TIMESTAMP" property="createDate" />
     <result column="upadte_by" jdbcType="BIGINT" property="upadteBy" />
     <result column="update_date" jdbcType="TIMESTAMP" property="updateDate" />
   </resultMap>
+
+  <select id = "selectRecordPreEvaluationBySceneId" resultType="java.util.HashMap" parameterType="java.lang.Long">
+    select rpe.id, rpe.pre_evaluation_no as preEvaluationNo,
+    rpe.verification_result as verificationResult, rpe.scene_id as sceneId
+    from record_pre_evaluation rpe
+    where rpe.status = '0'
+    and rpe.scene_id = #{sceneId, jdbcType=BIGINT}
+  </select>
 
 </mapper>

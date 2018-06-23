@@ -3,6 +3,7 @@ package com.xdht.disease.sys.controller;
 import com.xdht.disease.common.authorization.annotation.Authorization;
 import com.xdht.disease.common.core.PageResult;
 import com.xdht.disease.common.core.Result;
+import com.xdht.disease.sys.constant.SysEnum;
 import com.xdht.disease.sys.model.RecordPreEvaluation;
 import com.xdht.disease.sys.service.RecordPreEvaluationService;
 import com.xdht.disease.sys.vo.request.RecordPreEvaluationInputRequest;
@@ -18,8 +19,6 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
-
 /**
  * Created by L on 2018/5/30.
  */
@@ -30,12 +29,6 @@ public class RecordPreEvaluationController {
 
     @Autowired
     private RecordPreEvaluationService recordPreEvaluationService;
-
-    @RequestMapping(value = "/recordList", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
-    @ApiOperation(value = "查询列表")
-    public  ResponseEntity<Result<List<RecordPreEvaluation>>> recordList(@RequestBody RecordPreEvaluationRequest recordPreEvaluationRequest) {
-        return new ResponseEntity<>(Result.ok(recordPreEvaluationService.queryList(recordPreEvaluationRequest)), HttpStatus.OK);
-    }
 
     @RequestMapping(value = "/pageList", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     @ApiOperation(value = "分页查询")
@@ -49,8 +42,9 @@ public class RecordPreEvaluationController {
     @ApiImplicitParams({
             @ApiImplicitParam(name = "authorization", value = "authorization", required = true, dataType = "string", paramType = "header"),
     })
-    public ResponseEntity<Result<RecordPreEvaluation>> addRecordControlEffect(@RequestBody RecordPreEvaluationInputRequest recordPreEvaluationInputRequest) {
-        return new ResponseEntity<>(Result.ok(recordPreEvaluationService.add(recordPreEvaluationInputRequest)), HttpStatus.OK);
+    public ResponseEntity<Result<String>> addRecordControlEffect(@RequestBody RecordPreEvaluationInputRequest recordPreEvaluationInputRequest) {
+        recordPreEvaluationService.add(recordPreEvaluationInputRequest);
+        return new ResponseEntity<>(Result.ok(SysEnum.ResultEnum.RESULT_SUCCESS.getCode()), HttpStatus.OK);
     }
 
     @RequestMapping(value = "/delete/{id}", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
@@ -59,9 +53,9 @@ public class RecordPreEvaluationController {
     @ApiImplicitParams({
             @ApiImplicitParam(name = "authorization", value = "authorization", required = true, dataType = "string", paramType = "header"),
     })
-    public ResponseEntity<Result<RecordPreEvaluation>> deleteRecordPreEvaluation(@PathVariable Long id) {
-
-        return new ResponseEntity<>(Result.ok(recordPreEvaluationService.deleteRecordPreEvaluation(id)), HttpStatus.OK);
+    public ResponseEntity<Result<String>> deleteRecordPreEvaluation(@PathVariable Long id) {
+        recordPreEvaluationService.deleteRecordPreEvaluation(id);
+        return new ResponseEntity<>(Result.ok(SysEnum.ResultEnum.RESULT_SUCCESS.getCode()), HttpStatus.OK);
     }
 
     @RequestMapping(value = "/update", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
@@ -70,8 +64,9 @@ public class RecordPreEvaluationController {
     @ApiImplicitParams({
             @ApiImplicitParam(name = "authorization", value = "authorization", required = true, dataType = "string", paramType = "header"),
     })
-    public ResponseEntity<Result<RecordPreEvaluation>> updateRecordPreEvaluation(@RequestBody RecordPreEvaluationInputRequest recordPreEvaluationInputRequest) {
-        return new ResponseEntity<>(Result.ok(recordPreEvaluationService.updateRecordPreEvaluation(recordPreEvaluationInputRequest)), HttpStatus.OK);
+    public ResponseEntity<Result<String>> updateRecordPreEvaluation(@RequestBody RecordPreEvaluationInputRequest recordPreEvaluationInputRequest) {
+        recordPreEvaluationService.updateRecordPreEvaluation(recordPreEvaluationInputRequest);
+        return new ResponseEntity<>(Result.ok(SysEnum.ResultEnum.RESULT_SUCCESS.getCode()), HttpStatus.OK);
     }
 
     @RequestMapping(value = "/detail/{id}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)

@@ -19,6 +19,17 @@ import java.util.List;
 public class SysDictionaryServiceImpl extends AbstractService<SysDictionary> implements SysDictionaryService {
 
     @Override
+    public List<SysDictionary> querySysDictionaryList(SysDictionaryRequest sysDictionaryRequest) {
+        Condition condition = new Condition(SysDictionary.class);
+        condition.createCriteria().andEqualTo("status", SysEnum.StatusEnum.STATUS_NORMAL.getCode())
+                .andEqualTo("dictionaryTypeId", sysDictionaryRequest.getDictionaryTypeId());
+        if (sysDictionaryRequest.getDictionaryName() != null && ! "".equals(sysDictionaryRequest.getDictionaryName())){
+            condition.getOredCriteria().get(0).andLike("dictionaryName", "%" + sysDictionaryRequest.getDictionaryName() + "%");
+        }
+        return this.selectByCondition(condition);
+    }
+
+    @Override
     public PageResult<SysDictionary> querySysDictionaryPage(SysDictionaryRequest sysDictionaryRequest) {
         Condition condition = new Condition(SysDictionary.class);
         condition.createCriteria().andEqualTo("status", SysEnum.StatusEnum.STATUS_NORMAL.getCode())
@@ -36,13 +47,13 @@ public class SysDictionaryServiceImpl extends AbstractService<SysDictionary> imp
     }
 
     @Override
-    public void addRole(SysDictionary sysDictionary) {
+    public void addDictionary(SysDictionary sysDictionary) {
         sysDictionary.setStatus(SysEnum.StatusEnum.STATUS_NORMAL.getCode());
         this.insertUseGeneratedKeys(sysDictionary);
     }
 
     @Override
-    public void deleteRole(Long id) {
+    public void deleteDictionary(Long id) {
         SysDictionary sysDictionary = new SysDictionary();
         sysDictionary.setId(id);
         sysDictionary.setStatus(SysEnum.StatusEnum.STATUS_DELETE.getCode());
@@ -50,7 +61,7 @@ public class SysDictionaryServiceImpl extends AbstractService<SysDictionary> imp
     }
 
     @Override
-    public void updateRole(SysDictionary sysDictionary) {
+    public void updateDictionary(SysDictionary sysDictionary) {
         this.updateByPrimaryKeySelective(sysDictionary);
     }
 

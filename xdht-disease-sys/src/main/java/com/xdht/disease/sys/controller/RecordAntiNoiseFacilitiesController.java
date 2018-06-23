@@ -48,8 +48,8 @@ public class RecordAntiNoiseFacilitiesController {
     @ApiImplicitParams({
             @ApiImplicitParam(name = "authorization", value = "authorization", required = true, dataType = "string", paramType = "header"),
     })
-    public ResponseEntity<Result<RecordAntiNoiseFacilities>> addRecordAntiNoiseFacilities( @RequestBody RecordAntiNoiseInputRequest recordAntiNoiseInputRequest) {
-        return new ResponseEntity<>(Result.ok(recordAntiNoiseFacilitiesService.addRecordAntiNoiseFacilities(recordAntiNoiseInputRequest)), HttpStatus.OK);
+    public ResponseEntity<Result<RecordAntiNoiseFacilities>> addRecordAntiNoiseFacilities( @RequestBody RecordAntiNoiseInputRequest recordData) {
+        return new ResponseEntity<>(Result.ok(recordAntiNoiseFacilitiesService.addRecordAntiNoiseFacilities(recordData)), HttpStatus.OK);
     }
 
     @RequestMapping(value = "/delete/{id}", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
@@ -68,8 +68,8 @@ public class RecordAntiNoiseFacilitiesController {
     @ApiImplicitParams({
             @ApiImplicitParam(name = "authorization", value = "authorization", required = true, dataType = "string", paramType = "header"),
     })
-    public ResponseEntity<Result<RecordAntiNoiseFacilities>> updateRecordAntiNoiseFacilities( @RequestBody RecordAntiNoiseInputRequest recordAntiNoiseInputRequest) {
-        return new ResponseEntity<>(Result.ok(recordAntiNoiseFacilitiesService.updateRecordAntiNoiseFacilities(recordAntiNoiseInputRequest)), HttpStatus.OK);
+    public ResponseEntity<Result<RecordAntiNoiseFacilities>> updateRecordAntiNoiseFacilities( @RequestBody RecordAntiNoiseInputRequest recordData) {
+        return new ResponseEntity<>(Result.ok(recordAntiNoiseFacilitiesService.updateRecordAntiNoiseFacilities(recordData)), HttpStatus.OK);
     }
 
     @RequestMapping(value = "/detail/{sceneId}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
