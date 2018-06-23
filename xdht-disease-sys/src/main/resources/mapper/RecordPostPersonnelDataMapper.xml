@@ -6,6 +6,7 @@
       WARNING - @mbg.generated
     -->
     <id column="id" jdbcType="BIGINT" property="id" />
+    <result column="post_personnel_id" jdbcType="BIGINT" property="postPersonnelId" />
     <result column="company_office_id" jdbcType="BIGINT" property="companyOfficeId" />
     <result column="post_id" jdbcType="BIGINT" property="postId" />
     <result column="per_shift" jdbcType="BIGINT" property="perShift" />
@@ -13,6 +14,23 @@
     <result column="day_of_week" jdbcType="BIGINT" property="dayOfWeek" />
     <result column="class_of_date" jdbcType="BIGINT" property="classOfDate" />
     <result column="hour_of_class" jdbcType="BIGINT" property="hourOfClass" />
-    <result column="relation_id" jdbcType="BIGINT" property="relationId" />
+
   </resultMap>
+
+  <select id="selectRecordPostPersonnelDataByPostPersonnel" parameterType="java.lang.Long" resultType="java.util.HashMap">
+    SELECT rppd.id, rppd.post_personnel_id as postPersonnelId,
+    rppd.post_personnel_id as postPersonnelId,
+    rppd.company_office_id as companyOfficeId,
+    rppd.post_id as postId,
+    rppd.per_shift as perShift,
+    rppd.total_number as totalNumber,
+    rppd.day_of_week as dayOfWeek,
+    rppd.class_of_date as classOfDate,
+    rppd.hour_of_class as hourOfClass,
+    sco.`office_name` AS officeName
+    FROM `record_post_personnel_data` rppd, sys_company_office sco
+    WHERE rppd.`company_office_id` = sco.`id`
+    AND rppd.`post_personnel_id` = #{id, jdbcType=BIGINT}
+  </select>
+
 </mapper>

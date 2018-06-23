@@ -1,12 +1,16 @@
 package com.xdht.disease.sys.controller;
 
+import com.xdht.disease.common.authorization.annotation.Authorization;
 import com.xdht.disease.common.core.PageResult;
 import com.xdht.disease.common.core.Result;
+import com.xdht.disease.sys.constant.SysEnum;
 import com.xdht.disease.sys.model.RecordPostPersonnel;
 import com.xdht.disease.sys.service.RecordPostPersonnelService;
 import com.xdht.disease.sys.vo.request.RecordPostPersonnelInputRequest;
 import com.xdht.disease.sys.vo.request.RecordPostPersonnelRequest;
 import com.xdht.disease.sys.vo.response.RecordPostPersonnelDetailResponse;
+import io.swagger.annotations.ApiImplicitParam;
+import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.log4j.Log4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,11 +32,6 @@ public class RecordPostPersonnelController {
     @Autowired
     private RecordPostPersonnelService recordService;
 
-    @RequestMapping(value = "/recordList", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
-    @ApiOperation(value = "查询列表")
-    public  ResponseEntity<Result<List<RecordPostPersonnel>>> recordList(@RequestBody RecordPostPersonnelRequest recordRequest) {
-        return new ResponseEntity<>(Result.ok(recordService.queryList(recordRequest)), HttpStatus.OK);
-    }
     @RequestMapping(value = "/pageList", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     @ApiOperation(value = "分页查询")
     public ResponseEntity<Result<PageResult<RecordPostPersonnel>>> recordPage(@RequestBody RecordPostPersonnelRequest recordRequest) {
@@ -41,27 +40,42 @@ public class RecordPostPersonnelController {
 
     @RequestMapping(value = "/add", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     @ApiOperation(value = "添加")
-    public ResponseEntity<Result<RecordPostPersonnel>> add(@RequestBody RecordPostPersonnelInputRequest recordPostPersonnelInputRequest) {
-        return new ResponseEntity<>(Result.ok(recordService.add(recordPostPersonnelInputRequest)), HttpStatus.OK);
+    @Authorization
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "authorization", value = "authorization", required = true, dataType = "string", paramType = "header"),
+    })
+    public ResponseEntity<Result<String>> add(@RequestBody RecordPostPersonnelInputRequest recordPostPersonnelInputRequest) {
+        recordService.add(recordPostPersonnelInputRequest);
+        return new ResponseEntity<>(Result.ok(SysEnum.ResultEnum.RESULT_SUCCESS.getCode()), HttpStatus.OK);
     }
 
     @RequestMapping(value = "/delete/{id}", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     @ApiOperation(value = "删除")
-    public ResponseEntity<Result<RecordPostPersonnel>> delete(@PathVariable Long id) {
-        return new ResponseEntity<>(Result.ok(recordService.delete(id)), HttpStatus.OK);
+    @Authorization
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "authorization", value = "authorization", required = true, dataType = "string", paramType = "header"),
+    })
+    public ResponseEntity<Result<String>> delete(@PathVariable Long id) {
+        recordService.delete(id);
+        return new ResponseEntity<>(Result.ok(SysEnum.ResultEnum.RESULT_SUCCESS.getCode()), HttpStatus.OK);
     }
 
     @RequestMapping(value = "/update", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     @ApiOperation(value = "修改")
-    public ResponseEntity<Result<RecordPostPersonnel>> update(@RequestBody RecordPostPersonnelInputRequest recordPostPersonnelInputRequest) {
-        return new ResponseEntity<>(Result.ok(recordService.update(recordPostPersonnelInputRequest)), HttpStatus.OK);
+    @Authorization
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "authorization", value = "authorization", required = true, dataType = "string", paramType = "header"),
+    })
+    public ResponseEntity<Result<String>> update(@RequestBody RecordPostPersonnelInputRequest recordPostPersonnelInputRequest) {
+        recordService.update(recordPostPersonnelInputRequest);
+        return new ResponseEntity<>(Result.ok(SysEnum.ResultEnum.RESULT_SUCCESS.getCode()), HttpStatus.OK);
     }
+
     @RequestMapping(value = "/detail/{id}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     @ApiOperation(value = "获取 --详细内容")
     public ResponseEntity<Result<RecordPostPersonnelDetailResponse>> getRecordPostPersonnelDetail(@PathVariable Long id) {
         RecordPostPersonnelDetailResponse recordPostPersonnelDetailResponse = this.recordService.queryPostPersonnelDetail(id);
         return new ResponseEntity<>(Result.ok(recordPostPersonnelDetailResponse), HttpStatus.OK);
     }
-
 
 }
