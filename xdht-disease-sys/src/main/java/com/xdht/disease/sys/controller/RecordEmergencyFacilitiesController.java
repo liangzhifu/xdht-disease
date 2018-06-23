@@ -43,8 +43,8 @@ public class RecordEmergencyFacilitiesController {
 
     @RequestMapping(value = "/add", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     @ApiOperation(value = "添加")
-    public ResponseEntity<Result<RecordEmergencyFacilities>> add( @RequestBody RecordEmergencyFacilitiesInputRequest recordEmergencyFacilitiesInputRequest) {
-        return new ResponseEntity<>(Result.ok(recordEmergencyFacilitiesService.add(recordEmergencyFacilitiesInputRequest)), HttpStatus.OK);
+    public ResponseEntity<Result<RecordEmergencyFacilities>> add( @RequestBody RecordEmergencyFacilitiesInputRequest recordData) {
+        return new ResponseEntity<>(Result.ok(recordEmergencyFacilitiesService.add(recordData)), HttpStatus.OK);
     }
 
     @RequestMapping(value = "/delete/{id}", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
@@ -55,8 +55,8 @@ public class RecordEmergencyFacilitiesController {
 
     @RequestMapping(value = "/update", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     @ApiOperation(value = "修改")
-    public ResponseEntity<Result<RecordEmergencyFacilities>> update( @RequestBody RecordEmergencyFacilitiesInputRequest recordEmergencyFacilitiesInputRequest) {
-        return new ResponseEntity<>(Result.ok(recordEmergencyFacilitiesService.update(recordEmergencyFacilitiesInputRequest)), HttpStatus.OK);
+    public ResponseEntity<Result<RecordEmergencyFacilities>> update( @RequestBody RecordEmergencyFacilitiesInputRequest recordData) {
+        return new ResponseEntity<>(Result.ok(recordEmergencyFacilitiesService.update(recordData)), HttpStatus.OK);
     }
 
     @RequestMapping(value = "/detail/{id}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
