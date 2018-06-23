@@ -53,8 +53,8 @@ public class RecordPostPersonnelData {
     /**
      * 关联id
      */
-    @Column(name = "relation_id")
-    private Long relationId;
+    @Column(name = "post_personnel_id")
+    private Long postPersonnelId;
 
     /**
      * @return id
@@ -196,16 +196,11 @@ public class RecordPostPersonnelData {
         this.hourOfClass = hourOfClass;
     }
 
-    /**
-     * 获取关联id
-     * @return relationId
-     */
-    public Long getRelationId() {
-        return relationId;
+    public Long getPostPersonnelId() {
+        return postPersonnelId;
     }
 
-    /** 设置关联id
-     * @param relationId
-     */
-    public void setRelationId(Long relationId) { this.relationId = relationId; }
+    public void setPostPersonnelId(Long postPersonnelId) {
+        this.postPersonnelId = postPersonnelId;
+    }
 }

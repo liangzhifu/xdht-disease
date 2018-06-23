@@ -41,8 +41,8 @@ public class RecordPreEvaluation {
     /**
      * 更新人
      */
-    @Column(name = "upadte_by")
-    private Long upadteBy;
+    @Column(name = "update_by")
+    private Long updateBy;
 
     /**
      * 更新时间
@@ -161,24 +161,6 @@ public class RecordPreEvaluation {
     }
 
     /**
-     * 获取更新人
-     *
-     * @return upadte_by - 更新人
-     */
-    public Long getUpadteBy() {
-        return upadteBy;
-    }
-
-    /**
-     * 设置更新人
-     *
-     * @param upadteBy 更新人
-     */
-    public void setUpadteBy(Long upadteBy) {
-        this.upadteBy = upadteBy;
-    }
-
-    /**
      * 获取更新时间
      *
      * @return update_date - 更新时间
@@ -212,5 +194,13 @@ public class RecordPreEvaluation {
      */
     public void setSceneId(Long sceneId) {
         this.sceneId = sceneId;
+    }
+
+    public Long getUpdateBy() {
+        return updateBy;
+    }
+
+    public void setUpdateBy(Long updateBy) {
+        this.updateBy = updateBy;
     }
 }
