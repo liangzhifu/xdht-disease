@@ -12,4 +12,16 @@
     <result column="epuipment_number" jdbcType="BIGINT" property="epuipmentNumber" />
     <result column="relation_id" jdbcType="BIGINT" property="relationId" />
   </resultMap>
+
+  <select id="selectRecordDataByEquipment" parameterType="java.lang.Long" resultType="java.util.HashMap">
+    SELECT red.id, red.relation_id as relationId,
+    red.officd_id as officdId,
+    red.process_name as processName,
+    red.equipment_name as equipmentName,
+    red.epuipment_number as epuipmentNumber,
+    sco.`office_name` AS officeName
+    FROM `record_equipment_data` red, sys_company_office sco
+    WHERE red.`company_office_id` = sco.`id`
+    AND red.`relation_id` = #{id, jdbcType=BIGINT}
+  </select>
 </mapper>

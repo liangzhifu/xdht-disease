@@ -7,9 +7,7 @@ import com.xdht.disease.sys.constant.SysEnum;
 import com.xdht.disease.sys.dao.RecordControlEffectMapper;
 import com.xdht.disease.sys.model.RecordControlEffect;
 import com.xdht.disease.sys.model.RecordControlEffectData;
-import com.xdht.disease.sys.model.RecordControlEffectProject;
 import com.xdht.disease.sys.service.RecordControlEffectDataService;
-import com.xdht.disease.sys.service.RecordControlEffectProjectService;
 import com.xdht.disease.sys.service.RecordControlEffectService;
 import com.xdht.disease.sys.vo.request.RecordControlEffectInputRequest;
 import com.xdht.disease.sys.vo.request.RecordControlEffectRequest;
@@ -21,6 +19,7 @@ import tk.mybatis.mapper.entity.Condition;
 
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 
 
 /**
@@ -36,8 +35,6 @@ public class RecordControlEffectServiceImpl extends AbstractService<RecordContro
     @Autowired
     private RecordControlEffectDataService recordControlEffectDataService;
 
-    @Autowired
-    private RecordControlEffectProjectService recordControlEffectProjectService;
 
         @Override
         public List<RecordControlEffect> queryList(RecordControlEffectRequest recordControlEffectRequest) {
@@ -69,11 +66,9 @@ public class RecordControlEffectServiceImpl extends AbstractService<RecordContro
         }
 
         @Override
-        public RecordControlEffect addRecordControlEffect(RecordControlEffectInputRequest recordControlEffectInputRequest) {
-             RecordControlEffect recordControlEffect = new RecordControlEffect();
-             recordControlEffect.setStatus(SysEnum.StatusEnum.STATUS_NORMAL.getCode());
-             recordControlEffect.setPreEvaluationNo(recordControlEffectInputRequest.getRecordControlEffect().getPreEvaluationNo());
-             recordControlEffect.setVerificationResult(recordControlEffectInputRequest.getRecordControlEffect().getVerificationResult());
+        public void addRecordControlEffect(RecordControlEffectInputRequest recordControlEffectInputRequest) {
+            RecordControlEffect recordControlEffect = new RecordControlEffect();
+            recordControlEffect.setStatus(SysEnum.StatusEnum.STATUS_NORMAL.getCode());
             this.insertUseGeneratedKeys(recordControlEffect);
             List<RecordControlEffectData> recordControlEffectDataList = new LinkedList<>();
             for (RecordControlEffectData recordControlEffectData : recordControlEffectInputRequest.getRecordControlEffectDataList()) {
@@ -81,53 +76,36 @@ public class RecordControlEffectServiceImpl extends AbstractService<RecordContro
                 recordControlEffectDataList.add(recordControlEffectData);
             }
             this.recordControlEffectDataService.insertList(recordControlEffectDataList);
-            return  recordControlEffect;
         }
 
         @Override
-        public RecordControlEffect deleteRecordControlEffect(Long id) {
+        public void deleteRecordControlEffect(Long id) {
             RecordControlEffect recordControlEffect = this.recordControlEffectMapper.selectByPrimaryKey(id);
+            recordControlEffect.setId(id);
             recordControlEffect.setStatus(SysEnum.StatusEnum.STATUS_DELETE.getCode());
             this.recordControlEffectMapper.updateByPrimaryKeySelective(recordControlEffect);
-            return  recordControlEffect;
         }
 
         @Override
-        public RecordControlEffect updateRecordControlEffect(RecordControlEffectInputRequest recordControlEffectInputRequest) {
-            RecordControlEffect recordControlEffect = new RecordControlEffect();
-            recordControlEffect.setId(recordControlEffectInputRequest.getRecordControlEffect().getId());
-            recordControlEffect.setPreEvaluationNo(recordControlEffectInputRequest.getRecordControlEffect().getPreEvaluationNo());
-            recordControlEffect.setVerificationResult(recordControlEffectInputRequest.getRecordControlEffect().getVerificationResult());
+        public void updateRecordControlEffect(RecordControlEffectInputRequest recordControlEffectInputRequest) {
+            RecordControlEffect recordControlEffect = recordControlEffectInputRequest.getRecordControlEffect();
+            this.updateByPrimaryKeySelective(recordControlEffect);
 
-            List<RecordControlEffectData> recordControlEffectDataList = new LinkedList<>();
-            for (RecordControlEffectData recordPreEvaluationData : recordControlEffectInputRequest.getRecordControlEffectDataList() ) {
+            List<RecordControlEffectData> recordControlEffectDataList = recordControlEffectInputRequest.getRecordControlEffectDataList();
+            for (RecordControlEffectData recordPreEvaluationData : recordControlEffectDataList ) {
                 this.recordControlEffectDataService.updateByPrimaryKeySelective(recordPreEvaluationData);
             }
-            return recordControlEffect;
         }
 
     @Override
     public RecordControlEffectDetailResponse queryRecordControlEffectDetail(Long id) {
         RecordControlEffectDetailResponse recordControlEffectDetailResponse = new RecordControlEffectDetailResponse();
-        RecordControlEffect recordControlEffect = new RecordControlEffect();
-        recordControlEffect.setSceneId(id);
-        recordControlEffect = this.recordControlEffectMapper.selectOne(recordControlEffect);
-        if (recordControlEffect != null){
-            recordControlEffectDetailResponse.setRecordControlEffect(recordControlEffect);
-            Long recordId = recordControlEffect.getId();
-            Condition condition = new Condition(RecordControlEffectData.class);
-            condition.createCriteria() .andEqualTo("preEvaluationId", recordId);
-            List<RecordControlEffectData> recordControlEffectDataList = this.recordControlEffectDataService.selectByCondition(condition);
-            if (recordControlEffectDataList.size() > 0){
-                recordControlEffectDetailResponse.setRecordControlEffectDataList(recordControlEffectDataList);
-                String projectIds = "";
-                for (RecordControlEffectData recordData : recordControlEffectDataList) {
-                    projectIds += recordData.getPreEvaluationProjectId()+",";
-                }
-                projectIds = projectIds.substring(0,projectIds.lastIndexOf(","));
-                List<RecordControlEffectProject> projectList = this.recordControlEffectProjectService.selectByIds(projectIds);
-                recordControlEffectDetailResponse.setRecordControlEffectProjectList(projectList);
-            }
+        Map<String, Object> map = this.recordControlEffectMapper.selectRecordBySceneId(id);
+        if (map != null){
+            recordControlEffectDetailResponse.setRecordControlEffect(map);
+            Long recordId = (Long) map.get("id");
+            List<Map<String, Object>> mapList = this.recordControlEffectDataService.queryRecordDataByPreEvaluationId(recordId);
+            recordControlEffectDetailResponse.setRecordControlEffectDataList(mapList);
         }
         return recordControlEffectDetailResponse;
     }

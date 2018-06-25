@@ -5,6 +5,7 @@ import com.xdht.disease.common.core.AbstractService;
 import com.xdht.disease.common.core.PageResult;
 import com.xdht.disease.sys.constant.SysEnum;
 import com.xdht.disease.sys.dao.RecordEquipmentLayoutMapper;
+import com.xdht.disease.sys.model.RecordEquipmentData;
 import com.xdht.disease.sys.model.RecordEquipmentLayout;
 import com.xdht.disease.sys.model.RecordEquipmentLayoutData;
 import com.xdht.disease.sys.model.SysCompanyOffice;
@@ -21,6 +22,7 @@ import tk.mybatis.mapper.entity.Condition;
 
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 
 
 /**
@@ -39,19 +41,6 @@ public class RecordEquipmentLayoutServiceImpl extends AbstractService<RecordEqui
     @Autowired
     private SysCompanyOfficeService sysCompanyOfficeService;
 
-    @Override
-    public List<RecordEquipmentLayout> queryList(RecordEquipmentLayoutRequest recordEquipmentLayoutRequest) {
-        Condition condition = new Condition(RecordEquipmentLayout.class);
-        condition.createCriteria() .andEqualTo("id", recordEquipmentLayoutRequest.getId())
-                .andEqualTo("equipmentLayoutNo",recordEquipmentLayoutRequest.getEquipmentLayoutNo());
-        if (recordEquipmentLayoutRequest.getVerificationResult() != null) {
-            condition.getOredCriteria().get(0).andLike("verificationResult","%"+recordEquipmentLayoutRequest.getVerificationResult()+"%");
-        }
-        if (recordEquipmentLayoutRequest.getStatus() != null){
-            condition.getOredCriteria().get(0).andEqualTo("status",recordEquipmentLayoutRequest.getStatus());
-        }
-        return this.recordEquipmentLayoutMapper.selectByCondition(condition);
-    }
 
     @Override
     public PageResult<RecordEquipmentLayout> queryListPage(RecordEquipmentLayoutRequest recordEquipmentLayoutRequest) {
@@ -63,9 +52,7 @@ public class RecordEquipmentLayoutServiceImpl extends AbstractService<RecordEqui
         if (recordEquipmentLayoutRequest.getVerificationResult() != null) {
             condition.getOredCriteria().get(0).andLike("verificationResult","%"+recordEquipmentLayoutRequest.getVerificationResult()+"%");
         }
-        if (recordEquipmentLayoutRequest.getStatus() != null){
-            condition.getOredCriteria().get(0).andEqualTo("status",recordEquipmentLayoutRequest.getStatus());
-        }
+        condition.getOredCriteria().get(0).andEqualTo("status",SysEnum.StatusEnum.STATUS_NORMAL.getCode());
         PageHelper.startPage(recordEquipmentLayoutRequest.getPageNumber(), recordEquipmentLayoutRequest.getPageSize());
         List<RecordEquipmentLayout> dataList = this.recordEquipmentLayoutMapper.selectByCondition(condition);
         Integer count = this.recordEquipmentLayoutMapper.selectCountByCondition(condition);
@@ -76,60 +63,61 @@ public class RecordEquipmentLayoutServiceImpl extends AbstractService<RecordEqui
     }
 
     @Override
-    public RecordEquipmentLayout add(RecordEquipmentLayoutInputRequest recordEquipmentLayoutInputRequest) {
-        RecordEquipmentLayout recordEquipmentLayout = new RecordEquipmentLayout();
+    public void add(RecordEquipmentLayoutInputRequest recordEquipmentLayoutInputRequest) {
+        RecordEquipmentLayout recordEquipmentLayout = recordEquipmentLayoutInputRequest.getRecordEquipmentLayout();
         recordEquipmentLayout.setStatus(SysEnum.StatusEnum.STATUS_NORMAL.getCode());
-        recordEquipmentLayout.setEquipmentLayoutNo(recordEquipmentLayoutInputRequest.getRecordEquipmentLayout().getEquipmentLayoutNo());
-        recordEquipmentLayout.setVerificationResult(recordEquipmentLayoutInputRequest.getRecordEquipmentLayout().getVerificationResult());
         this.insertUseGeneratedKeys(recordEquipmentLayout);
         List<RecordEquipmentLayoutData> recordEquipmentLayoutDataList = new LinkedList<>();
-        for (RecordEquipmentLayoutData recordEquipmentLayoutData : recordEquipmentLayoutInputRequest.getRecordEquipmentLayoutDataList()) {
-            recordEquipmentLayoutData.setRelationId(recordEquipmentLayout.getId());
-            recordEquipmentLayoutDataList.add(recordEquipmentLayoutData);
+        if (recordEquipmentLayoutInputRequest.getRecordEquipmentLayoutDataList() != null) {
+            for (RecordEquipmentLayoutData recordEquipmentLayoutData : recordEquipmentLayoutInputRequest.getRecordEquipmentLayoutDataList()) {
+                recordEquipmentLayoutData.setRelationId(recordEquipmentLayout.getId());
+                recordEquipmentLayoutDataList.add(recordEquipmentLayoutData);
+            }
+            this.recordEquipmentLayoutDataService.insertList(recordEquipmentLayoutDataList);
         }
-        this.recordEquipmentLayoutDataService.insertList(recordEquipmentLayoutDataList);
-        return recordEquipmentLayout;
     }
 
     @Override
-    public RecordEquipmentLayout delete(Long id) {
-            RecordEquipmentLayout recordEquipmentLayout = this.recordEquipmentLayoutMapper.selectByPrimaryKey(id);
-            recordEquipmentLayout.setStatus(SysEnum.StatusEnum.STATUS_DELETE.getCode());
-            this.recordEquipmentLayoutMapper.updateByPrimaryKeySelective(recordEquipmentLayout);
-            return recordEquipmentLayout;
-
-    }
-
-    @Override
-    public RecordEquipmentLayout update(RecordEquipmentLayoutInputRequest recordEquipmentLayoutInputRequest) {
-        RecordEquipmentLayout recordEquipmentLayout = recordEquipmentLayoutInputRequest.getRecordEquipmentLayout();
-        for ( RecordEquipmentLayoutData recordEquipmentLayoutData : recordEquipmentLayoutInputRequest.getRecordEquipmentLayoutDataList() ) {
-            this.recordEquipmentLayoutDataService.updateByPrimaryKeySelective(recordEquipmentLayoutData);
-        }
+    public void delete(Long id) {
+        RecordEquipmentLayout recordEquipmentLayout = new RecordEquipmentLayout();
+        recordEquipmentLayout.setId(id);
+        recordEquipmentLayout.setStatus(SysEnum.StatusEnum.STATUS_DELETE.getCode());
         this.recordEquipmentLayoutMapper.updateByPrimaryKeySelective(recordEquipmentLayout);
-        return recordEquipmentLayout;
+
+    }
+
+    @Override
+    public void update(RecordEquipmentLayoutInputRequest recordEquipmentLayoutInputRequest) {
+        RecordEquipmentLayout recordEquipmentLayout = recordEquipmentLayoutInputRequest.getRecordEquipmentLayout();
+        this.recordEquipmentLayoutMapper.updateByPrimaryKeySelective(recordEquipmentLayout);
+        Condition condition = new Condition(RecordEquipmentLayoutData.class);
+        condition.createCriteria().andEqualTo("relationId", recordEquipmentLayout.getId());
+        List<RecordEquipmentLayoutData> recordEquipmentLayoutDataList = this.recordEquipmentLayoutDataService.selectByCondition(condition);
+        if (recordEquipmentLayoutDataList != null && recordEquipmentLayoutDataList.size() > 0) {
+            for ( RecordEquipmentLayoutData recordEquipmentLayoutData : recordEquipmentLayoutDataList ) {
+                this.recordEquipmentLayoutDataService.deleteByPrimaryKey(recordEquipmentLayoutData.getId());
+            }
+        }
+        recordEquipmentLayoutDataList = new LinkedList<>();
+        if (recordEquipmentLayoutInputRequest.getRecordEquipmentLayoutDataList() != null) {
+            for (RecordEquipmentLayoutData recordEquipmentLayoutData : recordEquipmentLayoutInputRequest.getRecordEquipmentLayoutDataList()){
+                recordEquipmentLayoutData.setRelationId(recordEquipmentLayout.getId());
+                recordEquipmentLayoutDataList.add(recordEquipmentLayoutData);
+            }
+            this.recordEquipmentLayoutDataService.insertList(recordEquipmentLayoutDataList);
+        }
     }
 
     @Override
     public RecordEquipmentLayoutDetailResponse queryEquipmentLayoutDetail(Long id) {
         RecordEquipmentLayoutDetailResponse response = new RecordEquipmentLayoutDetailResponse();
-        RecordEquipmentLayout recordEquipmentLayout = new RecordEquipmentLayout();
-        recordEquipmentLayout.setSceneId(id);
-        recordEquipmentLayout =  this.recordEquipmentLayoutMapper.selectOne(recordEquipmentLayout);
-        if (recordEquipmentLayout != null){
-            Long recordId = recordEquipmentLayout.getId();
-            response.setRecordEquipmentLayout(recordEquipmentLayout);
-            Condition condition = new Condition(RecordEquipmentLayoutData.class);
-            condition.createCriteria() .andEqualTo("relationId", recordId);
-            List<RecordEquipmentLayoutData> recordEquipmentLayoutDataList = this.recordEquipmentLayoutDataService.selectByCondition(condition);
-            response.setRecordEquipmentLayoutDataList(recordEquipmentLayoutDataList);
-            String officeIds = "";
-            for (RecordEquipmentLayoutData recordData : recordEquipmentLayoutDataList) {
-                officeIds += recordData.getOfficdId()+",";
-            }
-            officeIds = officeIds.substring(0,officeIds.lastIndexOf(","));
-            List<SysCompanyOffice> officeList = this.sysCompanyOfficeService.selectByIds(officeIds);
-            response.setSysCompanyOfficeList(officeList);
+        //根据sceneId 获取表的数据
+        Map<String, Object> map = this.recordEquipmentLayoutMapper.selectRecordBySceneId(id);
+        if (map != null) {
+            response.setRecordEquipmentLayout(map);
+            Long recordId = (Long) map.get("id");
+            List<Map<String, Object>> mapList = this.recordEquipmentLayoutDataService.queryRecordDataByEquipmentLayout(recordId);
+            response.setRecordEquipmentLayoutDataList(mapList);
         }
         return response;
     }

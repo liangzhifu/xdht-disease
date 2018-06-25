@@ -23,6 +23,7 @@ import tk.mybatis.mapper.entity.Condition;
 
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 
 
 /**
@@ -37,27 +38,6 @@ public class RecordWorkLogServiceImpl extends AbstractService<RecordWorkLog> imp
     @Autowired
     private RecordWorkLogDataService recordWorkLogDataService;
 
-    @Autowired
-    private SysCompanyOfficeService sysCompanyOfficeService;
-
-    @Autowired
-    private SysPostService sysPostService;
-
-    @Override
-    public List<RecordWorkLog> queryList(RecordWorkLogRequest recordWorkLogRequest) {
-
-        Condition condition = new Condition(RecordWorkLog.class);
-        condition.createCriteria() .andEqualTo("id", recordWorkLogRequest.getId())
-                .andEqualTo("workLogNo",recordWorkLogRequest.getWorkLogNo());
-        if (recordWorkLogRequest.getVerificationResult() != null) {
-            condition.getOredCriteria().get(0).andLike("verificationResult","%"+recordWorkLogRequest.getVerificationResult()+"%");
-        }
-        if (recordWorkLogRequest.getStatus() != null){
-            condition.getOredCriteria().get(0).andEqualTo("status",recordWorkLogRequest.getStatus());
-        }
-        return this.recordWorkLogMapper.selectByCondition(condition);
-    }
-
     @Override
     public PageResult<RecordWorkLog> queryListPage(RecordWorkLogRequest recordWorkLogRequest) {
 
@@ -69,9 +49,7 @@ public class RecordWorkLogServiceImpl extends AbstractService<RecordWorkLog> imp
         if (recordWorkLogRequest.getVerificationResult() != null) {
             condition.getOredCriteria().get(0).andLike("verificationResult","%"+recordWorkLogRequest.getVerificationResult()+"%");
         }
-        if (recordWorkLogRequest.getStatus() != null){
-            condition.getOredCriteria().get(0).andEqualTo("status",recordWorkLogRequest.getStatus());
-        }
+        condition.getOredCriteria().get(0).andEqualTo("status",recordWorkLogRequest.getStatus());
         PageHelper.startPage(recordWorkLogRequest.getPageNumber(), recordWorkLogRequest.getPageSize());
         List<RecordWorkLog> dataList = this.recordWorkLogMapper.selectByCondition(condition);
         Integer count = this.recordWorkLogMapper.selectCountByCondition(condition);
@@ -82,11 +60,9 @@ public class RecordWorkLogServiceImpl extends AbstractService<RecordWorkLog> imp
     }
 
     @Override
-    public RecordWorkLog add(RecordWorkLogInputRequest recordWorkLogInputRequest) {
+    public void add(RecordWorkLogInputRequest recordWorkLogInputRequest) {
             RecordWorkLog recordWorkLog = new RecordWorkLog();
             recordWorkLog.setStatus(SysEnum.StatusEnum.STATUS_NORMAL.getCode());
-            recordWorkLog.setWorkLogNo(recordWorkLogInputRequest.getRecordWorkLog().getWorkLogNo());
-            recordWorkLog.setVerificationResult(recordWorkLogInputRequest.getRecordWorkLog().getVerificationResult());
             this.insertUseGeneratedKeys(recordWorkLog);
             List<RecordWorkLogData> recordWorkLogDataList = new LinkedList<>();
             for ( RecordWorkLogData recordWorkLogData : recordWorkLogInputRequest.getRecordWorkLogDataList() ) {
@@ -94,48 +70,36 @@ public class RecordWorkLogServiceImpl extends AbstractService<RecordWorkLog> imp
                 recordWorkLogDataList.add(recordWorkLogData);
             }
             this.recordWorkLogDataService.insertList(recordWorkLogDataList);
-            return recordWorkLog;
     }
 
     @Override
-    public RecordWorkLog delete(Long id) {
-        RecordWorkLog recordWorkLog = this.recordWorkLogMapper.selectByPrimaryKey(id);
+    public void delete(Long id) {
+        RecordWorkLog recordWorkLog = new RecordWorkLog();
+        recordWorkLog.setId(id);
         recordWorkLog.setStatus(SysEnum.StatusEnum.STATUS_DELETE.getCode());
         this.recordWorkLogMapper.updateByPrimaryKeySelective(recordWorkLog);
-        return recordWorkLog;
     }
 
     @Override
-    public RecordWorkLog update(RecordWorkLogInputRequest recordWorkLogInputRequest) {
-            RecordWorkLog recordWorkLog = recordWorkLogInputRequest.getRecordWorkLog();
-            this.recordWorkLogMapper.updateByPrimaryKeySelective(recordWorkLog);
+    public void update(RecordWorkLogInputRequest recordWorkLogInputRequest) {
+        RecordWorkLog recordWorkLog = recordWorkLogInputRequest.getRecordWorkLog();
+        this.updateByPrimaryKeySelective(recordWorkLog);
         for ( RecordWorkLogData recordWorkLogData : recordWorkLogInputRequest.getRecordWorkLogDataList() ) {
             this.recordWorkLogDataService.updateByPrimaryKeySelective(recordWorkLogData);
         }
-            return recordWorkLog;
     }
 
     @Override
     public RecordWorkLogDetailResponse queryWorkLogDetail(Long id) {
         RecordWorkLogDetailResponse response = new RecordWorkLogDetailResponse();
-        RecordWorkLog recordWorkLog = this.recordWorkLogMapper.selectByPrimaryKey(id);
-        response.setRecordWorkLog(recordWorkLog);
-        Condition condition = new Condition(RecordWorkLogData.class);
-        condition.createCriteria() .andEqualTo("relationId", id);
-        List<RecordWorkLogData> recordWorkLogDataList = this.recordWorkLogDataService.selectByCondition(condition);
-        response.setRecordWorkLogDataList(recordWorkLogDataList);
-        String officeIds = "";
-        String postIds = "";
-        for (RecordWorkLogData recordData : recordWorkLogDataList) {
-            officeIds += recordData.getCompanyOfficeId() + ",";
-            postIds += recordData.getPostId() + ",";
+        //根据sceneId 获取表的数据
+        Map<String, Object> map = this.recordWorkLogMapper.selectRecordBySceneId(id);
+        if (map != null) {
+            response.setRecordWorkLog(map);
+            Long recordId = (Long) map.get("id");
+            List<Map<String, Object>> mapList = this.recordWorkLogDataService.queryRecordDataByorkLog(recordId);
+            response.setRecordWorkLogDataList(mapList);
         }
-        officeIds = officeIds.substring(0,officeIds.lastIndexOf(","));
-        postIds = postIds.substring(0,postIds.lastIndexOf(","));
-        List<SysCompanyOffice> officeList = this.sysCompanyOfficeService.selectByIds(officeIds);
-        response.setSysCompanyOfficeList(officeList);
-        List<SysPost> postList = this.sysPostService.selectByIds(postIds);
-        response.setSysPostList(postList);
         return response;
     }
 }

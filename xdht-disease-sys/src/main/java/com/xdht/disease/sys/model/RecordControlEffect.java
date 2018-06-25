@@ -41,8 +41,8 @@ public class RecordControlEffect {
     /**
      * 更新人
      */
-    @Column(name = "upadte_by")
-    private Long upadteBy;
+    @Column(name = "update_by")
+    private Long updateBy;
 
     /**
      * 更新时间
@@ -184,8 +184,8 @@ public class RecordControlEffect {
      *
      * @return upadte_by - 更新人
      */
-    public Long getUpadteBy() {
-        return upadteBy;
+    public Long getUpdateBy() {
+        return updateBy;
     }
 
     /**
@@ -194,7 +194,7 @@ public class RecordControlEffect {
      * @param upadteBy 更新人
      */
     public void setUpadteBy(Long upadteBy) {
-        this.upadteBy = upadteBy;
+        this.updateBy = updateBy;
     }
 
     /**

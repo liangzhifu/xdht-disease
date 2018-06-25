@@ -13,5 +13,15 @@
     <result column="create_date" jdbcType="TIMESTAMP" property="createDate" />
     <result column="upadte_by" jdbcType="BIGINT" property="upadteBy" />
     <result column="update_date" jdbcType="TIMESTAMP" property="updateDate" />
+    <result column="scene_id" jdbcType="BIGINT" property="sceneId" />
   </resultMap>
+
+
+  <select id = "selectRecordBySceneId" resultType="java.util.HashMap" parameterType="java.lang.Long">
+    select rce.id, rce.pre_evaluation_no as preEvaluationNo,
+    rce.verification_result as verificationResult, rce.scene_id as sceneId
+    from record_control_effect rce
+    where rce.status = '0'
+    and rce.scene_id = #{sceneId, jdbcType=BIGINT}
+  </select>
 </mapper>

@@ -13,4 +13,17 @@
     <result column="officd_id" jdbcType="BIGINT" property="officdId" />
     <result column="relation_id" jdbcType="BIGINT" property="relationId" />
   </resultMap>
+
+  <select id="selectRecordDataByEquipmentLayout" parameterType="java.lang.Long" resultType="java.util.HashMap">
+    SELECT reld.id, reld.relation_id as relationId,
+    reld.officd_id as officdId,
+    reld.process_and_equipment as processAndEquipment,
+    reld.hazard_factors as hazardFactors,
+    reld.layout_detail as layoutDetail,
+    reld.remarkds as remarkds,
+    sco.`office_name` AS officeName
+    FROM `record_equipment_layout_data` reld, sys_company_office sco
+    WHERE reld.`officd_id` = sco.`id`
+    AND reld.`relation_id` = #{id, jdbcType=BIGINT}
+  </select>
 </mapper>

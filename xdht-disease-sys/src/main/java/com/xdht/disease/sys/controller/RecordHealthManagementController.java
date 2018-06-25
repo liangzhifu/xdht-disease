@@ -1,9 +1,8 @@
 package com.xdht.disease.sys.controller;
 
-import com.xdht.disease.common.authorization.annotation.CurrentUser;
 import com.xdht.disease.common.core.PageResult;
 import com.xdht.disease.common.core.Result;
-import com.xdht.disease.common.model.User;
+import com.xdht.disease.sys.constant.SysEnum;
 import com.xdht.disease.sys.model.RecordHealthManagement;
 import com.xdht.disease.sys.service.RecordHealthManagementService;
 import com.xdht.disease.sys.vo.request.RecordHealthManagementInputRequest;
@@ -43,20 +42,23 @@ public class RecordHealthManagementController {
 
     @RequestMapping(value = "/add", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     @ApiOperation(value = "添加")
-    public ResponseEntity<Result<RecordHealthManagement>> add(@RequestBody RecordHealthManagementInputRequest recordHealthManagementInputRequest) {
-        return new ResponseEntity<>(Result.ok(recordHealthManagementService.add(recordHealthManagementInputRequest)), HttpStatus.OK);
+    public ResponseEntity<Result<String>> add(@RequestBody RecordHealthManagementInputRequest recordData) {
+        recordHealthManagementService.add(recordData);
+        return new ResponseEntity<>(Result.ok(SysEnum.ResultEnum.RESULT_SUCCESS.getCode()), HttpStatus.OK);
     }
 
     @RequestMapping(value = "/delete/{id}", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     @ApiOperation(value = "删除")
-    public ResponseEntity<Result<RecordHealthManagement>> delete(@PathVariable Long id) {
-        return new ResponseEntity<>(Result.ok(recordHealthManagementService.delete(id)), HttpStatus.OK);
+    public ResponseEntity<Result<String>> delete(@PathVariable Long id) {
+        recordHealthManagementService.delete(id);
+        return new ResponseEntity<>(Result.ok(SysEnum.ResultEnum.RESULT_SUCCESS.getCode()), HttpStatus.OK);
     }
 
     @RequestMapping(value = "/update", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     @ApiOperation(value = "修改")
-    public ResponseEntity<Result<RecordHealthManagement>> update(@RequestBody RecordHealthManagementInputRequest recordHealthManagementInputRequest) {
-        return new ResponseEntity<>(Result.ok(recordHealthManagementService.update(recordHealthManagementInputRequest)), HttpStatus.OK);
+    public ResponseEntity<Result<String>> update(@RequestBody RecordHealthManagementInputRequest recordData) {
+        recordHealthManagementService.update(recordData);
+        return new ResponseEntity<>(Result.ok(SysEnum.ResultEnum.RESULT_SUCCESS.getCode()), HttpStatus.OK);
     }
 
     @RequestMapping(value = "/detail/{id}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)

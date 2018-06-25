@@ -15,13 +15,6 @@ import java.util.List;
 public interface RecordEquipmentService extends Service<RecordEquipment> {
 
     /**
-     * 查询
-     * @param recordEquipmentRequest 查询条件
-     * @return 返回结果
-     */
-    public List<RecordEquipment> queryList(RecordEquipmentRequest recordEquipmentRequest);
-
-    /**
      * 分页查询
      * @param recordEquipmentRequest 查询条件
      * @return 返回结果
@@ -31,23 +24,20 @@ public interface RecordEquipmentService extends Service<RecordEquipment> {
     /**
      * 添加
      * @param recordEquipmentInputRequest 实体
-     * @return 返回结果
      */
-    public RecordEquipment add(RecordEquipmentInputRequest recordEquipmentInputRequest);
+    public void add(RecordEquipmentInputRequest recordEquipmentInputRequest);
 
     /**
      * 删除
      * @param id 主键id
-     * @return 返回结果
      */
-    public RecordEquipment delete(Long id);
+    public void delete(Long id);
 
     /**
      * 修改
      * @param recordEquipmentInputRequest 实体
-     * @return 返回结果
      */
-    public RecordEquipment update(RecordEquipmentInputRequest recordEquipmentInputRequest);
+    public void update(RecordEquipmentInputRequest recordEquipmentInputRequest);
 
     /**
      * 获取 设备设施调查表 信息

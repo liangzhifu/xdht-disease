@@ -7,9 +7,7 @@ import com.xdht.disease.sys.constant.SysEnum;
 import com.xdht.disease.sys.dao.RecordHealthManagementMapper;
 import com.xdht.disease.sys.model.RecordHealthManagement;
 import com.xdht.disease.sys.model.RecordHealthManagementData;
-import com.xdht.disease.sys.model.RecordHealthManagementProject;
 import com.xdht.disease.sys.service.RecordHealthManagementDataService;
-import com.xdht.disease.sys.service.RecordHealthManagementProjectService;
 import com.xdht.disease.sys.service.RecordHealthManagementService;
 import com.xdht.disease.sys.vo.request.RecordHealthManagementInputRequest;
 import com.xdht.disease.sys.vo.request.RecordHealthManagementRequest;
@@ -21,6 +19,7 @@ import tk.mybatis.mapper.entity.Condition;
 
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 
 
 /**
@@ -36,8 +35,6 @@ public class RecordHealthManagementServiceImpl extends AbstractService<RecordHea
     @Autowired
     private RecordHealthManagementDataService recordHealthManagementDataService;
 
-    @Autowired
-    private RecordHealthManagementProjectService recordHealthManagementProjectService;
     @Override
     public List<RecordHealthManagement> queryList(RecordHealthManagementRequest recordHealthManagementRequest) {
 
@@ -74,10 +71,10 @@ public class RecordHealthManagementServiceImpl extends AbstractService<RecordHea
     }
 
     @Override
-    public RecordHealthManagement add(RecordHealthManagementInputRequest recordHealthManagementInputRequest) {
+    public void add(RecordHealthManagementInputRequest recordHealthManagementInputRequest) {
         RecordHealthManagement recordHealthManagement = recordHealthManagementInputRequest.getRecordHealthManagement();
         recordHealthManagement.setStatus(SysEnum.StatusEnum.STATUS_NORMAL.getCode());
-        this.recordHealthManagementMapper.insertUseGeneratedKeys(recordHealthManagement);
+        this.insertUseGeneratedKeys(recordHealthManagement);
         List<RecordHealthManagementData> recordHealthManagementDataList = new LinkedList<>();
         for ( RecordHealthManagementData recordHealthManagementData :  recordHealthManagementInputRequest.getRecordHealthManagementDataList()) {
             recordHealthManagementData.setHealthManagementId(recordHealthManagement.getId());
@@ -86,22 +83,21 @@ public class RecordHealthManagementServiceImpl extends AbstractService<RecordHea
         if (recordHealthManagementDataList.size()>0){
             this.recordHealthManagementDataService.insertList(recordHealthManagementDataList);
         }
-        return recordHealthManagement;
     }
 
     @Override
-    public RecordHealthManagement delete(Long id) {
-        RecordHealthManagement recordHealthManagement = this.recordHealthManagementMapper.selectByPrimaryKey(id);
+    public void delete(Long id) {
+        RecordHealthManagement recordHealthManagement = new RecordHealthManagement();
+        recordHealthManagement.setId(id);
         recordHealthManagement.setStatus(SysEnum.StatusEnum.STATUS_DELETE.getCode());
-        this.recordHealthManagementMapper.updateByPrimaryKeySelective(recordHealthManagement);
-        return  recordHealthManagement;
+        this.updateByPrimaryKeySelective(recordHealthManagement);
     }
 
     @Override
-    public RecordHealthManagement update(RecordHealthManagementInputRequest recordHealthManagementInputRequest) {
+    public void update(RecordHealthManagementInputRequest recordHealthManagementInputRequest) {
 
         RecordHealthManagement recordHealthManagement = recordHealthManagementInputRequest.getRecordHealthManagement();
-        this.recordHealthManagementMapper.updateByPrimaryKeySelective(recordHealthManagement);
+        this.updateByPrimaryKeySelective(recordHealthManagement);
 
         List<RecordHealthManagementData> recordHealthManagementDataList = new LinkedList<>();
         for (RecordHealthManagementData recordHealthManagementData : recordHealthManagementInputRequest.getRecordHealthManagementDataList() ) {
@@ -114,29 +110,18 @@ public class RecordHealthManagementServiceImpl extends AbstractService<RecordHea
         if (recordHealthManagementDataList.size()>0){
             this.recordHealthManagementDataService.insertList(recordHealthManagementDataList);
         }
-        return recordHealthManagement;
     }
 
     @Override
     public RecordHealthManagementDetailResponse queryRecordHealthManagementDetail(Long id) {
         RecordHealthManagementDetailResponse recordHealthManagementDetailResponse = new RecordHealthManagementDetailResponse();
-        RecordHealthManagement recordHealthManagement = new RecordHealthManagement();
-        recordHealthManagement.setSceneId(id);
-        recordHealthManagement =  this.recordHealthManagementMapper.selectOne(recordHealthManagement);
-        if (recordHealthManagement != null) {
-            Long recordId = recordHealthManagement.getId();
-            recordHealthManagementDetailResponse.setRecordHealthManagement(recordHealthManagement);
-            Condition condition = new Condition(RecordHealthManagementData.class);
-            condition.createCriteria() .andEqualTo("healthManagementId", recordId);
-            List<RecordHealthManagementData> recordHealthManagementDataList = this.recordHealthManagementDataService.selectByCondition(condition);
-            recordHealthManagementDetailResponse.setRecordHealthManagementDataList(recordHealthManagementDataList);
-            String projectIds = "";
-            for (RecordHealthManagementData recordData : recordHealthManagementDataList) {
-                projectIds += recordData.getHealthManagementProjectId()+",";
-            }
-            projectIds = projectIds.substring(0,projectIds.lastIndexOf(","));
-            List<RecordHealthManagementProject> projectList = this.recordHealthManagementProjectService.selectByIds(projectIds);
-            recordHealthManagementDetailResponse.setRecordHealthManagementProjectList(projectList);
+        //根据sceneId 获取表的数据
+        Map<String, Object> map = this.recordHealthManagementMapper.selectRecordBySceneId(id);
+        if (map != null){
+            recordHealthManagementDetailResponse.setRecordHealthManagement(map);
+            Long recordId = (Long) map.get("id");
+            List<Map<String, Object>> mapList = this.recordHealthManagementDataService.queryRecordDataByHealthManagementId(recordId);
+            recordHealthManagementDetailResponse.setRecordHealthManagementDataList(mapList);
         }
         return recordHealthManagementDetailResponse;
     }
