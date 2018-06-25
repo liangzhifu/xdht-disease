@@ -42,7 +42,7 @@ public class RecordPreEvaluationController {
     @ApiImplicitParams({
             @ApiImplicitParam(name = "authorization", value = "authorization", required = true, dataType = "string", paramType = "header"),
     })
-    public ResponseEntity<Result<String>> addRecordControlEffect(@RequestBody RecordPreEvaluationInputRequest recordPreEvaluationInputRequest) {
+    public ResponseEntity<Result<String>> add(@RequestBody RecordPreEvaluationInputRequest recordPreEvaluationInputRequest) {
         recordPreEvaluationService.add(recordPreEvaluationInputRequest);
         return new ResponseEntity<>(Result.ok(SysEnum.ResultEnum.RESULT_SUCCESS.getCode()), HttpStatus.OK);
     }

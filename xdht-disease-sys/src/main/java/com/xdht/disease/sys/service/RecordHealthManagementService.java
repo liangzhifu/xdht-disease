@@ -31,23 +31,20 @@ public interface RecordHealthManagementService extends Service<RecordHealthManag
     /**
      * 添加
      * @param recordHealthManagementInputRequest 实体
-     * @return 返回结果
      */
-    public RecordHealthManagement add(RecordHealthManagementInputRequest recordHealthManagementInputRequest);
+    public void add(RecordHealthManagementInputRequest recordHealthManagementInputRequest);
 
     /**
      * 删除
      * @param id 主键id
-     * @return 返回结果
      */
-    public RecordHealthManagement delete(Long id);
+    public void delete(Long id);
 
     /**
      * 修改
      * @param recordHealthManagementInputRequest 实体
-     * @return 返回结果
      */
-    public RecordHealthManagement update(RecordHealthManagementInputRequest recordHealthManagementInputRequest);
+    public void update(RecordHealthManagementInputRequest recordHealthManagementInputRequest);
 
     /**
      * 获取 职业卫生管理情况调查表 信息

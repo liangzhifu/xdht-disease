@@ -1,10 +1,9 @@
 package com.xdht.disease.sys.controller;
 
 import com.xdht.disease.common.authorization.annotation.Authorization;
-import com.xdht.disease.common.authorization.annotation.CurrentUser;
 import com.xdht.disease.common.core.PageResult;
 import com.xdht.disease.common.core.Result;
-import com.xdht.disease.common.model.User;
+import com.xdht.disease.sys.constant.SysEnum;
 import com.xdht.disease.sys.model.RecordProduct;
 import com.xdht.disease.sys.service.RecordProductService;
 import com.xdht.disease.sys.vo.request.RecordProductInputRequest;
@@ -33,11 +32,6 @@ public class RecordProductController {
     @Autowired
     private RecordProductService recordProductService;
 
-    @RequestMapping(value = "/recordList", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
-    @ApiOperation(value = "查询列表")
-    public  ResponseEntity<Result<List<RecordProduct>>> recordList(@RequestBody RecordProductRequest recordProductRequest) {
-        return new ResponseEntity<>(Result.ok(recordProductService.queryList(recordProductRequest)), HttpStatus.OK);
-    }
     @RequestMapping(value = "/pageList", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     @ApiOperation(value = "分页查询")
     public ResponseEntity<Result<PageResult<RecordProduct>>> recordPage(@RequestBody RecordProductRequest recordProductRequest) {
@@ -50,8 +44,9 @@ public class RecordProductController {
     @ApiImplicitParams({
             @ApiImplicitParam(name = "authorization", value = "authorization", required = true, dataType = "string", paramType = "header"),
     })
-    public ResponseEntity<Result<RecordProduct>> add(@RequestBody RecordProductInputRequest recordProductInputRequest) {
-        return new ResponseEntity<>(Result.ok(recordProductService.add(recordProductInputRequest)), HttpStatus.OK);
+    public ResponseEntity<Result<String>> add(@RequestBody RecordProductInputRequest recordData) {
+        recordProductService.add(recordData);
+        return new ResponseEntity<>(Result.ok(SysEnum.ResultEnum.RESULT_SUCCESS.getCode()), HttpStatus.OK);
     }
 
     @RequestMapping(value = "/delete/{id}", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
@@ -60,8 +55,9 @@ public class RecordProductController {
     @ApiImplicitParams({
             @ApiImplicitParam(name = "authorization", value = "authorization", required = true, dataType = "string", paramType = "header"),
     })
-    public ResponseEntity<Result<RecordProduct>> delete(@PathVariable Long id) {
-        return new ResponseEntity<>(Result.ok(recordProductService.delete(id)), HttpStatus.OK);
+    public ResponseEntity<Result<String>> delete(@PathVariable Long id) {
+        recordProductService.delete(id);
+        return new ResponseEntity<>(Result.ok(SysEnum.ResultEnum.RESULT_SUCCESS.getCode()), HttpStatus.OK);
     }
 
     @RequestMapping(value = "/update", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
@@ -70,8 +66,9 @@ public class RecordProductController {
     @ApiImplicitParams({
             @ApiImplicitParam(name = "authorization", value = "authorization", required = true, dataType = "string", paramType = "header"),
     })
-    public ResponseEntity<Result<RecordProduct>> update(@RequestBody RecordProductInputRequest recordProductInputRequest) {
-        return new ResponseEntity<>(Result.ok(recordProductService.update(recordProductInputRequest)), HttpStatus.OK);
+    public ResponseEntity<Result<String>> update(@RequestBody RecordProductInputRequest recordData) {
+        recordProductService.update(recordData);
+        return new ResponseEntity<>(Result.ok(SysEnum.ResultEnum.RESULT_SUCCESS.getCode()), HttpStatus.OK);
     }
     @RequestMapping(value = "/detail/{id}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     @ApiOperation(value = "获取 --详细内容")

@@ -21,6 +21,7 @@ import tk.mybatis.mapper.entity.Condition;
 
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 
 
 /**
@@ -39,19 +40,6 @@ public class RecordEquipmentServiceImpl extends AbstractService<RecordEquipment>
     @Autowired
     private SysCompanyOfficeService sysCompanyOfficeService;
 
-    @Override
-    public List<RecordEquipment> queryList(RecordEquipmentRequest recordEquipmentRequest) {
-        Condition condition = new Condition(RecordEquipment.class);
-        condition.createCriteria() .andEqualTo("id", recordEquipmentRequest.getId())
-                .andEqualTo("equipmentNo",recordEquipmentRequest.getEquipmentNo());
-        if (recordEquipmentRequest.getVerificationResult() != null) {
-            condition.getOredCriteria().get(0).andLike("verificationResult","%"+recordEquipmentRequest.getVerificationResult()+"%");
-        }
-        if (recordEquipmentRequest.getStatus() != null){
-            condition.getOredCriteria().get(0).andEqualTo("status",recordEquipmentRequest.getStatus());
-        }
-        return this.recordEquipmentMapper.selectByCondition(condition);
-    }
 
     @Override
     public PageResult<RecordEquipment> queryListPage(RecordEquipmentRequest recordEquipmentRequest) {
@@ -59,14 +47,7 @@ public class RecordEquipmentServiceImpl extends AbstractService<RecordEquipment>
         if (recordEquipmentRequest.getEquipmentNo() != null) {
             condition.createCriteria().andLike("equipmentNo","%"+recordEquipmentRequest.getEquipmentNo()+"%");
         }
-//        condition.createCriteria() .andEqualTo("id", recordEquipmentRequest.getId())
-//                .andEqualTo("equipmentNo",recordEquipmentRequest.getEquipmentNo());
-//        if (recordEquipmentRequest.getVerificationResult() != null) {
-//            condition.getOredCriteria().get(0).andLike("verificationResult","%"+recordEquipmentRequest.getVerificationResult()+"%");
-//        }
-//        if (recordEquipmentRequest.getStatus() != null){
-//            condition.getOredCriteria().get(0).andEqualTo("status",recordEquipmentRequest.getStatus());
-//        }
+        condition.getOredCriteria().get(0).andEqualTo("status",recordEquipmentRequest.getStatus());
         PageHelper.startPage(recordEquipmentRequest.getPageNumber(), recordEquipmentRequest.getPageSize());
         List<RecordEquipment> dataList = this.recordEquipmentMapper.selectByCondition(condition);
         Integer count = this.recordEquipmentMapper.selectCountByCondition(condition);
@@ -77,63 +58,61 @@ public class RecordEquipmentServiceImpl extends AbstractService<RecordEquipment>
     }
 
     @Override
-    public RecordEquipment add(RecordEquipmentInputRequest recordEquipmentInputRequest) {
-        RecordEquipment recordEquipment = new RecordEquipment();
+    public void add(RecordEquipmentInputRequest recordEquipmentInputRequest) {
+        RecordEquipment recordEquipment = recordEquipmentInputRequest.getRecordEquipment();
         recordEquipment.setStatus(SysEnum.StatusEnum.STATUS_NORMAL.getCode());
-        recordEquipment.setEquipmentNo(recordEquipmentInputRequest.getRecordEquipment().getEquipmentNo());
-        recordEquipment.setVerificationResult(recordEquipmentInputRequest.getRecordEquipment().getVerificationResult());
         this.insertUseGeneratedKeys(recordEquipment);
         List<RecordEquipmentData> recordEquipmentDataList = new LinkedList<>();
-        for (RecordEquipmentData recordEquipmentData : recordEquipmentInputRequest.getRecordEquipmentDataList()) {
-            recordEquipmentData.setRelationId(recordEquipment.getId());
-            recordEquipmentDataList.add(recordEquipmentData);
+        if (recordEquipmentInputRequest.getRecordEquipmentDataList() != null){
+            for (RecordEquipmentData recordEquipmentData : recordEquipmentInputRequest.getRecordEquipmentDataList()) {
+                recordEquipmentData.setRelationId(recordEquipment.getId());
+                recordEquipmentDataList.add(recordEquipmentData);
+            }
+            this.recordEquipmentDataService.insertList(recordEquipmentDataList);
         }
-        this.recordEquipmentDataService.insertList(recordEquipmentDataList);
-        return recordEquipment;
     }
 
     @Override
-    public RecordEquipment delete(Long id) {
-
-        RecordEquipment recordEquipment = this.recordEquipmentMapper.selectByPrimaryKey(id);
+    public void delete(Long id) {
+        RecordEquipment recordEquipment = new RecordEquipment();
+        recordEquipment.setId(id);
         recordEquipment.setStatus(SysEnum.StatusEnum.STATUS_DELETE.getCode());
         this.recordEquipmentMapper.updateByPrimaryKeySelective(recordEquipment);
-        return recordEquipment;
     }
 
     @Override
-    public RecordEquipment update(RecordEquipmentInputRequest recordEquipmentInputRequest) {
-//        RecordEquipment recordEquipment = new RecordEquipment();
-//        recordEquipment.setId(recordEquipmentInputRequest.getRecordEquipment().getId());
+    public void update(RecordEquipmentInputRequest recordEquipmentInputRequest) {
         RecordEquipment recordEquipment = recordEquipmentInputRequest.getRecordEquipment();
-        List<RecordEquipmentData> recordEquipmentDataList = new LinkedList<>();
-        for ( RecordEquipmentData recordEquipmentData : recordEquipmentInputRequest.getRecordEquipmentDataList()) {
-            this.recordEquipmentDataService.updateByPrimaryKeySelective(recordEquipmentData);
-        }
         this.recordEquipmentMapper.updateByPrimaryKeySelective(recordEquipment);
-        return recordEquipment;
+
+        Condition condition = new Condition(RecordEquipmentData.class);
+        condition.createCriteria().andEqualTo("relationId", recordEquipment.getId());
+        List<RecordEquipmentData> recordEquipmentDataList = this.recordEquipmentDataService.selectByCondition(condition);
+        if (recordEquipmentDataList != null && recordEquipmentDataList.size() > 0) {
+            for ( RecordEquipmentData recordEquipmentData :  recordEquipmentDataList ){
+                this.recordEquipmentDataService.deleteByPrimaryKey(recordEquipmentData.getId());
+            }
+        }
+        recordEquipmentDataList = new LinkedList<>();
+        if (recordEquipmentInputRequest.getRecordEquipmentDataList() != null) {
+            for (RecordEquipmentData recordEquipmentData : recordEquipmentInputRequest.getRecordEquipmentDataList()) {
+                recordEquipmentData.setRelationId(recordEquipment.getId());
+                recordEquipmentDataList.add(recordEquipmentData);
+            }
+            this.recordEquipmentDataService.insertList(recordEquipmentDataList);
+        }
     }
 
     @Override
     public RecordEquipmentDetailResponse queryEquipmentDetail(Long id) {
         RecordEquipmentDetailResponse response = new RecordEquipmentDetailResponse();
-        RecordEquipment recordEquipment = new RecordEquipment();
-        recordEquipment.setSceneId(id);
-        recordEquipment =  this.recordEquipmentMapper.selectOne(recordEquipment);
-        if (recordEquipment != null) {
-            Long recordId = recordEquipment.getId();
-            response.setRecordEquipment(recordEquipment);
-            Condition condition = new Condition(RecordEquipmentData.class);
-            condition.createCriteria() .andEqualTo("relationId", recordId);
-            List<RecordEquipmentData> recordEquipmentDataList = this.recordEquipmentDataService.selectByCondition(condition);
-            response.setRecordEquipmentDataList(recordEquipmentDataList);
-            String officeIds = "";
-            for (RecordEquipmentData recordData : recordEquipmentDataList) {
-                officeIds += recordData.getOfficdId()+",";
-            }
-            officeIds = officeIds.substring(0,officeIds.lastIndexOf(","));
-            List<SysCompanyOffice> officeList = this.sysCompanyOfficeService.selectByIds(officeIds);
-            response.setSysCompanyOfficeList(officeList);
+        //根据sceneId 获取表的数据
+        Map<String, Object> map = this.recordEquipmentMapper.selectRecordBySceneId(id);
+        if (map != null) {
+            response.setRecordEquipment(map);
+            Long recordId = (Long) map.get("id");
+            List<Map<String, Object>> mapList = this.recordEquipmentDataService.queryRecordDataByEquipment(recordId);
+            response.setRecordEquipmentDataList(mapList);
         }
         return response;
     }

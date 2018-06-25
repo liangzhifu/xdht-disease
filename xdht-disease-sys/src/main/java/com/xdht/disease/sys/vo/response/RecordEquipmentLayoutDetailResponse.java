@@ -7,6 +7,7 @@ import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by L on 2018/6/14.
@@ -15,13 +16,11 @@ import java.util.List;
 public class RecordEquipmentLayoutDetailResponse {
 
     @ApiModelProperty(value = "设备设施布局调查表")
-    private RecordEquipmentLayout recordEquipmentLayout;
+    private Map<String, Object> recordEquipmentLayout;
 
     @ApiModelProperty(value = "设备设施布局调查表--调查内容")
-    private List<RecordEquipmentLayoutData> recordEquipmentLayoutDataList;
+    private List<Map<String, Object>> recordEquipmentLayoutDataList;
 
-    @ApiModelProperty(value = "设备设施布局调查表--部门列表内容")
-    private List<SysCompanyOffice> sysCompanyOfficeList;
 
 
 

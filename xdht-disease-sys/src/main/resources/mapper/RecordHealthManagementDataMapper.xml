@@ -12,4 +12,16 @@
     <result column="implement_info" jdbcType="VARCHAR" property="implementInfo" />
     <result column="remarks" jdbcType="VARCHAR" property="remarks" />
   </resultMap>
+
+  <select id="selectRecordDataByHealthManagementId" parameterType="java.lang.Long" resultType="java.util.HashMap">
+    select rhmd.id, rhmd.health_management_id as healthManagementId,
+    rhmd.health_management_project_id as healthManagementProjectId,
+    rhmd.set_up_info as setUpInfo,
+    rhmd.implement_info as implementInfo,
+    rhmd.remarks as remarks,
+    sd.`dictionary_name` AS projectName
+    from record_health_management_data rhmd, sys_dictionary sd
+    where rhmd.health_management_project_id = sd.id
+    and rpsd.pre_evaluation_id = #{id, jdbcType=BIGINT}
+  </select>
 </mapper>

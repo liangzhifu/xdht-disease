@@ -5,6 +5,7 @@ import com.xdht.disease.common.core.Service;
 import com.xdht.disease.sys.vo.request.RecordProductDataRequest;
 
 import java.util.List;
+import java.util.Map;
 
 
 /**
@@ -13,39 +14,9 @@ import java.util.List;
 public interface RecordProductDataService extends Service<RecordProductData> {
 
     /**
-     * 查询
-     * @param recordProductDataRequest 查询条件
+     * 查询 物料及产品调查表 数据
+     * @param id 调查表id
      * @return 返回结果
      */
-    public List<RecordProductData> queryList(RecordProductDataRequest recordProductDataRequest);
-
-    /**
-     * 分页查询
-     * @param recordProductDataRequest 查询条件
-     * @param pageNum 页数
-     * @param pageSize 每页大小
-     * @return 返回结果
-     */
-    public PageResult<RecordProductData> queryListPage(RecordProductDataRequest recordProductDataRequest, Integer pageNum, Integer pageSize);
-
-    /**
-     * 添加
-     * @param recordProductData 实体
-     * @return 返回结果
-     */
-    public RecordProductData add(RecordProductData recordProductData);
-
-    /**
-     * 删除
-     * @param id 主键id
-     * @return 返回结果
-     */
-    public RecordProductData delete(Long id);
-
-    /**
-     * 修改
-     * @param recordProductData 实体
-     * @return 返回结果
-     */
-    public RecordProductData update(RecordProductData recordProductData);
+    List<Map<String,Object>> queryRecordDataByProduct(Long id);
 }

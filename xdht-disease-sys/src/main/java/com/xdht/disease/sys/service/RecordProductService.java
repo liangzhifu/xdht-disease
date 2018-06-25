@@ -15,12 +15,6 @@ import java.util.List;
  */
 public interface RecordProductService extends Service<RecordProduct> {
 
-    /**
-     * 查询
-     * @param recordProductRequest 查询条件
-     * @return 返回结果
-     */
-    public List<RecordProduct> queryList(RecordProductRequest recordProductRequest);
 
     /**
      * 分页查询
@@ -32,23 +26,20 @@ public interface RecordProductService extends Service<RecordProduct> {
     /**
      * 添加
      * @param recordProductInputRequest 实体
-     * @return 返回结果
      */
-    public  RecordProduct add(RecordProductInputRequest recordProductInputRequest);
+    public  void add(RecordProductInputRequest recordProductInputRequest);
 
     /**
      * 删除
      * @param id 主键id
-     * @return 返回结果
      */
-    public  RecordProduct delete(Long id);
+    public  void delete(Long id);
 
     /**
      * 修改
      * @param recordProductInputRequest 实体
-     * @return 返回结果
      */
-    public  RecordProduct update(RecordProductInputRequest recordProductInputRequest);
+    public  void update(RecordProductInputRequest recordProductInputRequest);
 
     /**
      * 获取 - 物料及产品调查表 信息

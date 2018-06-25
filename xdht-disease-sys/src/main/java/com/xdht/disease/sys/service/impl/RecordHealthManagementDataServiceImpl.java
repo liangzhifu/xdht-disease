@@ -13,6 +13,7 @@ import org.springframework.transaction.annotation.Transactional;
 import tk.mybatis.mapper.entity.Condition;
 
 import java.util.List;
+import java.util.Map;
 
 
 /**
@@ -26,46 +27,7 @@ public class RecordHealthManagementDataServiceImpl extends AbstractService<Recor
     private RecordHealthManagementDataMapper recordHealthManagementDataMapper;
 
     @Override
-    public List<RecordHealthManagementData> queryList(RecordHealthManagementDataRequest recordHealthManagementDataRequest) {
-
-        Condition condition = new Condition(RecordHealthManagementData.class);
-        condition.createCriteria() .andEqualTo("id", recordHealthManagementDataRequest.getId())
-                .andEqualTo("healthManagementId",recordHealthManagementDataRequest.getHealthManagementId())
-                .andEqualTo("healthManagementProjectId",recordHealthManagementDataRequest.getHealthManagementProjectId());
-        return this.recordHealthManagementDataMapper.selectByCondition(condition);
-    }
-
-    @Override
-    public PageResult<RecordHealthManagementData> queryListPage(RecordHealthManagementDataRequest recordHealthManagementDataRequest, Integer pageNum, Integer pageSize) {
-        Condition condition = new Condition(RecordHealthManagementData.class);
-        condition.createCriteria() .andEqualTo("id", recordHealthManagementDataRequest.getId())
-                .andEqualTo("healthManagementId",recordHealthManagementDataRequest.getHealthManagementId())
-                .andEqualTo("healthManagementProjectId",recordHealthManagementDataRequest.getHealthManagementProjectId());
-        PageHelper.startPage(pageNum, pageSize);
-        List<RecordHealthManagementData> dataList = this.recordHealthManagementDataMapper.selectByCondition(condition);
-        PageResult<RecordHealthManagementData> pageList = new  PageResult<RecordHealthManagementData>();
-        pageList.setTotal(dataList.size());
-        pageList.setDataList(dataList);
-        return pageList;
-    }
-
-    @Override
-    public RecordHealthManagementData add(RecordHealthManagementData recordHealthManagementData) {
-            this.recordHealthManagementDataMapper.insertUseGeneratedKeys(recordHealthManagementData);
-            return recordHealthManagementData;
-    }
-
-    @Override
-    public RecordHealthManagementData delete(Long id) {
-            this.recordHealthManagementDataMapper.deleteByPrimaryKey(id);
-            RecordHealthManagementData recordHealthManagementData = new RecordHealthManagementData();
-            recordHealthManagementData.setId(id);
-            return recordHealthManagementData;
-    }
-
-    @Override
-    public RecordHealthManagementData update(RecordHealthManagementData recordHealthManagementData) {
-        this.recordHealthManagementDataMapper.updateByPrimaryKeySelective(recordHealthManagementData);
-        return recordHealthManagementData;
+    public List<Map<String, Object>> queryRecordDataByHealthManagementId(Long id) {
+        return this.recordHealthManagementDataMapper.selectRecordDataByHealthManagementId(id);
     }
 }

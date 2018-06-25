@@ -11,4 +11,15 @@
     <result column="survey_results" jdbcType="VARCHAR" property="surveyResults" />
     <result column="remarks" jdbcType="VARCHAR" property="remarks" />
   </resultMap>
+
+  <select id="selectRecordDataByPreEvaluationId" parameterType="java.lang.Long" resultType="java.util.HashMap">
+    select rpsd.id, rpsd.pre_evaluation_id as preEvaluationId,
+    rpsd.pre_evaluation_project_id as preEvaluationProjectId,
+    rpsd.survey_results as surveyResults,
+    rpsd.remarks as remarks,
+    sd.`dictionary_name` AS projectName
+    from record_present_situation_data rpsd, sys_dictionary sd
+    where rpsd.pre_evaluation_project_id = sd.id
+    and rpsd.pre_evaluation_id = #{id, jdbcType=BIGINT}
+  </select>
 </mapper>
