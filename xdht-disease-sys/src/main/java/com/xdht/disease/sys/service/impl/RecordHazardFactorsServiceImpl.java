@@ -19,6 +19,7 @@ import tk.mybatis.mapper.entity.Condition;
 
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 
 
 /**
@@ -34,19 +35,6 @@ public class RecordHazardFactorsServiceImpl extends AbstractService<RecordHazard
     @Autowired
     private RecordHazardFactorsDataService recordHazardFactorsDataService;
 
-    @Override
-    public List<RecordHazardFactors> queryList(RecordHazardFactorsRequest recordHazardFactorsRequest) {
-        Condition condition = new Condition(RecordHazardFactors.class);
-        condition.createCriteria() .andEqualTo("id", recordHazardFactorsRequest.getId())
-                .andEqualTo("hazardFactorsNo",recordHazardFactorsRequest.getHazardFactorsNo());
-        if (recordHazardFactorsRequest.getVerificationResult() != null) {
-            condition.getOredCriteria().get(0).andLike("verificationResult","%"+recordHazardFactorsRequest.getVerificationResult()+"%");
-        }
-        if (recordHazardFactorsRequest.getStatus() != null){
-            condition.getOredCriteria().get(0).andEqualTo("status",recordHazardFactorsRequest.getStatus());
-        }
-        return this.recordHazardFactorsMapper.selectByCondition(condition);
-    }
 
     @Override
     public PageResult<RecordHazardFactors> queryListPage(RecordHazardFactorsRequest recordHazardFactorsRequest) {
@@ -58,9 +46,7 @@ public class RecordHazardFactorsServiceImpl extends AbstractService<RecordHazard
         if (recordHazardFactorsRequest.getVerificationResult() != null) {
             condition.getOredCriteria().get(0).andLike("verificationResult","%"+recordHazardFactorsRequest.getVerificationResult()+"%");
         }
-        if (recordHazardFactorsRequest.getStatus() != null){
-            condition.getOredCriteria().get(0).andEqualTo("status",recordHazardFactorsRequest.getStatus());
-        }
+        condition.getOredCriteria().get(0).andEqualTo("status", SysEnum.StatusEnum.STATUS_NORMAL.getCode());
         PageHelper.startPage(recordHazardFactorsRequest.getPageNumber(), recordHazardFactorsRequest.getPageSize());
         List<RecordHazardFactors> dataList = this.recordHazardFactorsMapper.selectByCondition(condition);
         Integer count = this.recordHazardFactorsMapper.selectCountByCondition(condition);
@@ -72,60 +58,62 @@ public class RecordHazardFactorsServiceImpl extends AbstractService<RecordHazard
     }
 
     @Override
-    public RecordHazardFactors add(RecordHazardFactorsInputRequest recordHazardFactorsInputRequest) {
-            RecordHazardFactors  recordHazardFactors =  new RecordHazardFactors();
-            recordHazardFactors.setStatus(SysEnum.StatusEnum.STATUS_NORMAL.getCode());
-            recordHazardFactors.setHazardFactorsNo(recordHazardFactorsInputRequest.getRecordHazardFactors().getHazardFactorsNo());
-            recordHazardFactors.setVerificationResult(recordHazardFactorsInputRequest.getRecordHazardFactors().getVerificationResult());
-            this.insertUseGeneratedKeys(recordHazardFactors);
-            List<RecordHazardFactorsData> recordHazardFactorsDataList = new LinkedList<>();
-        for ( RecordHazardFactorsData recordHazardFactorsData : recordHazardFactorsInputRequest.getRecordHazardFactorsDataList()) {
-                recordHazardFactorsData.setRelationId(recordHazardFactors.getId());
-                recordHazardFactorsDataList.add(recordHazardFactorsData);
-        }
-            this.recordHazardFactorsDataService.insertList(recordHazardFactorsDataList);
-            return recordHazardFactors;
-    }
-
-    @Override
-    public RecordHazardFactors delete(Long id) {
-        RecordHazardFactors recordHazardFactors =this.recordHazardFactorsMapper.selectByPrimaryKey(id);
-        recordHazardFactors.setStatus(SysEnum.StatusEnum.STATUS_DELETE.getCode());
-        this.recordHazardFactorsMapper.updateByPrimaryKeySelective(recordHazardFactors);
-        return  recordHazardFactors;
-    }
-
-    @Override
-    public RecordHazardFactors update(RecordHazardFactorsInputRequest recordHazardFactorsInputRequest) {
-        RecordHazardFactors recordHazardFactors = recordHazardFactorsInputRequest.getRecordHazardFactors();
-        this.recordHazardFactorsMapper.updateByPrimaryKeySelective(recordHazardFactors);
+    public void add(RecordHazardFactorsInputRequest recordHazardFactorsInputRequest) {
+        RecordHazardFactors  recordHazardFactors =  new RecordHazardFactors();
+        recordHazardFactors.setStatus(SysEnum.StatusEnum.STATUS_NORMAL.getCode());
+        this.insertUseGeneratedKeys(recordHazardFactors);
         List<RecordHazardFactorsData> recordHazardFactorsDataList = new LinkedList<>();
-        for ( RecordHazardFactorsData recordHazardFactorsData : recordHazardFactorsInputRequest.getRecordHazardFactorsDataList() ) {
-            if (recordHazardFactorsData.getId() == null ){
+        if (recordHazardFactorsInputRequest.getRecordHazardFactorsDataList() != null ) {
+            for ( RecordHazardFactorsData recordHazardFactorsData : recordHazardFactorsInputRequest.getRecordHazardFactorsDataList()) {
                 recordHazardFactorsData.setRelationId(recordHazardFactors.getId());
                 recordHazardFactorsDataList.add(recordHazardFactorsData);
             }
-            this.recordHazardFactorsDataService.updateByPrimaryKeySelective(recordHazardFactorsData);
-        }
-        if (recordHazardFactorsDataList.size()>0){
             this.recordHazardFactorsDataService.insertList(recordHazardFactorsDataList);
         }
-        return recordHazardFactors;
+    }
+
+    @Override
+    public void delete(Long id) {
+        RecordHazardFactors recordHazardFactors = new RecordHazardFactors();
+        recordHazardFactors.setId(id);
+        recordHazardFactors.setStatus(SysEnum.StatusEnum.STATUS_DELETE.getCode());
+        this.recordHazardFactorsMapper.updateByPrimaryKeySelective(recordHazardFactors);
+    }
+
+    @Override
+    public void update(RecordHazardFactorsInputRequest recordHazardFactorsInputRequest) {
+        RecordHazardFactors recordHazardFactors = recordHazardFactorsInputRequest.getRecordHazardFactors();
+        this.recordHazardFactorsMapper.updateByPrimaryKeySelective(recordHazardFactors);
+
+        Condition condition = new Condition(RecordHazardFactorsData.class);
+        condition.createCriteria().andEqualTo("relationId", recordHazardFactors.getId());
+        List<RecordHazardFactorsData> recordHazardFactorsDataList = this.recordHazardFactorsDataService.selectByCondition(condition);
+       if (recordHazardFactorsDataList != null && recordHazardFactorsDataList.size() > 0 ) {
+
+           for ( RecordHazardFactorsData recordHazardFactorsData : recordHazardFactorsDataList ) {
+               this.recordHazardFactorsDataService.deleteByPrimaryKey(recordHazardFactorsData.getId());
+           }
+       }
+       recordHazardFactorsDataList = new LinkedList<>();
+        if (recordHazardFactorsInputRequest.getRecordHazardFactorsDataList() != null ){
+            for (RecordHazardFactorsData recordHazardFactorsData : recordHazardFactorsInputRequest.getRecordHazardFactorsDataList()) {
+                recordHazardFactorsData.setRelationId(recordHazardFactors.getId());
+                recordHazardFactorsDataList.add(recordHazardFactorsData);
+            }
+            this.recordHazardFactorsDataService.insertList(recordHazardFactorsDataList);
+        }
     }
 
     @Override
     public RecordHazardFactorsDetailResponse queryHazardFactorsDetail(Long id) {
         RecordHazardFactorsDetailResponse response = new RecordHazardFactorsDetailResponse();
-        RecordHazardFactors recordHazardFactors = new RecordHazardFactors();
-        recordHazardFactors.setSceneId(id);
-        recordHazardFactors = this.selectOne(recordHazardFactors);
-        if (recordHazardFactors != null) {
-            Long recordId = recordHazardFactors.getId();
-            response.setRecordHazardFactors(recordHazardFactors);
-            Condition condition = new Condition(RecordHazardFactorsData.class);
-            condition.createCriteria() .andEqualTo("relationId", recordId);
-            List<RecordHazardFactorsData> recordHazardFactorsDataList = this.recordHazardFactorsDataService.selectByCondition(condition);
-            response.setRecordHazardFactorsDataList(recordHazardFactorsDataList);
+        //根据sceneId 获取表的数据
+        Map<String, Object> map = this.recordHazardFactorsMapper.selectRecordBySceneId(id);
+        if (map != null) {
+            response.setRecordHazardFactors(map);
+            Long recordId = (Long) map.get("id");
+            List<Map<String, Object>> mapList = this.recordHazardFactorsDataService.queryRecordDataByHazardFactors(recordId);
+            response.setRecordHazardFactorsDataList(mapList);
         }
         return response;
     }

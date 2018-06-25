@@ -14,12 +14,6 @@ import java.util.List;
  */
 public interface RecordVddEquipmentService extends Service<RecordVddEquipment> {
 
-    /**
-     * 查询
-     * @param recordVddEquipmentRequest 查询条件
-     * @return 返回结果
-     */
-    public List<RecordVddEquipment> queryList(RecordVddEquipmentRequest recordVddEquipmentRequest);
 
     /**
      * 分页查询
@@ -31,23 +25,20 @@ public interface RecordVddEquipmentService extends Service<RecordVddEquipment> {
     /**
      * 添加
      * @param recordVddEquipmentInputRequest 实体
-     * @return 返回结果
      */
-    public RecordVddEquipment add(RecordVddEquipmentInputRequest recordVddEquipmentInputRequest);
+    public void add(RecordVddEquipmentInputRequest recordVddEquipmentInputRequest);
 
     /**
      * 删除
      * @param id 主键id
-     * @return 返回结果
      */
-    public RecordVddEquipment delete(Long id);
+    public void delete(Long id);
 
     /**
      * 修改
      * @param recordVddEquipmentInputRequest 实体
-     * @return 返回结果
      */
-    public RecordVddEquipment update(RecordVddEquipmentInputRequest recordVddEquipmentInputRequest);
+    public void update(RecordVddEquipmentInputRequest recordVddEquipmentInputRequest);
 
     /**
      * 获取 通风排毒除尘设施调查表 信息

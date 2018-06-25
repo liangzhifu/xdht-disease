@@ -42,8 +42,8 @@ public class RecordPreEvaluationController {
     @ApiImplicitParams({
             @ApiImplicitParam(name = "authorization", value = "authorization", required = true, dataType = "string", paramType = "header"),
     })
-    public ResponseEntity<Result<String>> add(@RequestBody RecordPreEvaluationInputRequest recordPreEvaluationInputRequest) {
-        recordPreEvaluationService.add(recordPreEvaluationInputRequest);
+    public ResponseEntity<Result<String>> add(@RequestBody RecordPreEvaluationInputRequest recordData) {
+        recordPreEvaluationService.add(recordData);
         return new ResponseEntity<>(Result.ok(SysEnum.ResultEnum.RESULT_SUCCESS.getCode()), HttpStatus.OK);
     }
 
@@ -64,8 +64,8 @@ public class RecordPreEvaluationController {
     @ApiImplicitParams({
             @ApiImplicitParam(name = "authorization", value = "authorization", required = true, dataType = "string", paramType = "header"),
     })
-    public ResponseEntity<Result<String>> updateRecordPreEvaluation(@RequestBody RecordPreEvaluationInputRequest recordPreEvaluationInputRequest) {
-        recordPreEvaluationService.updateRecordPreEvaluation(recordPreEvaluationInputRequest);
+    public ResponseEntity<Result<String>> updateRecordPreEvaluation(@RequestBody RecordPreEvaluationInputRequest recordData) {
+        recordPreEvaluationService.updateRecordPreEvaluation(recordData);
         return new ResponseEntity<>(Result.ok(SysEnum.ResultEnum.RESULT_SUCCESS.getCode()), HttpStatus.OK);
     }
 

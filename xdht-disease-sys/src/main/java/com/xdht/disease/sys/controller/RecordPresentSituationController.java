@@ -65,7 +65,8 @@ public class RecordPresentSituationController {
             @ApiImplicitParam(name = "authorization", value = "authorization", required = true, dataType = "string", paramType = "header"),
     })
     public ResponseEntity<Result<String>> deleteRecordPresentSituation(@PathVariable Long id) {
-        return new ResponseEntity<>(Result.ok(recordPresentSituationService.deleteRecordPresentSituation(id)), HttpStatus.OK);
+        recordPresentSituationService.deleteRecordPresentSituation(id);
+        return new ResponseEntity<>(Result.ok(SysEnum.ResultEnum.RESULT_SUCCESS.getCode()), HttpStatus.OK);
     }
 
     @RequestMapping(value = "/update", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
@@ -75,7 +76,8 @@ public class RecordPresentSituationController {
             @ApiImplicitParam(name = "authorization", value = "authorization", required = true, dataType = "string", paramType = "header"),
     })
     public ResponseEntity<Result<String>> updateRecordPresentSituation(@RequestBody RecordPresentSituationInputRequest recordPresentSituationInputRequest) {
-        return new ResponseEntity<>(Result.ok(recordPresentSituationService.updateRecordPresentSituation(recordPresentSituationInputRequest)), HttpStatus.OK);
+        recordPresentSituationService.updateRecordPresentSituation(recordPresentSituationInputRequest);
+        return new ResponseEntity<>(Result.ok(SysEnum.ResultEnum.RESULT_SUCCESS.getCode()), HttpStatus.OK);
     }
     @RequestMapping(value = "/detail/{id}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     @ApiOperation(value = "获取 用人单位概况调查表（现状评价）--详细内容")

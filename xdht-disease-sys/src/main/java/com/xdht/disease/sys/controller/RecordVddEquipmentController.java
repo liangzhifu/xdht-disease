@@ -4,6 +4,7 @@ import com.xdht.disease.common.authorization.annotation.CurrentUser;
 import com.xdht.disease.common.core.PageResult;
 import com.xdht.disease.common.core.Result;
 import com.xdht.disease.common.model.User;
+import com.xdht.disease.sys.constant.SysEnum;
 import com.xdht.disease.sys.model.RecordVddEquipment;
 import com.xdht.disease.sys.service.RecordVddEquipmentService;
 import com.xdht.disease.sys.vo.request.RecordVddEquipmentInputRequest;
@@ -30,11 +31,6 @@ public class RecordVddEquipmentController {
     @Autowired
     private RecordVddEquipmentService recordVddEquipmentService;
 
-    @RequestMapping(value = "/recordList", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
-    @ApiOperation(value = "查询列表")
-    public  ResponseEntity<Result<List<RecordVddEquipment>>> recordList(@RequestBody RecordVddEquipmentRequest recordVddEquipmentRequest) {
-        return new ResponseEntity<>(Result.ok(recordVddEquipmentService.queryList(recordVddEquipmentRequest)), HttpStatus.OK);
-    }
     @RequestMapping(value = "/pageList", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     @ApiOperation(value = "分页查询")
     public ResponseEntity<Result<PageResult<RecordVddEquipment>>> recordPage(@RequestBody RecordVddEquipmentRequest recordVddEquipmentRequest) {
@@ -43,20 +39,23 @@ public class RecordVddEquipmentController {
 
     @RequestMapping(value = "/add", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     @ApiOperation(value = "添加")
-    public ResponseEntity<Result<RecordVddEquipment>> add(@RequestBody RecordVddEquipmentInputRequest recordVddEquipmentInputRequest) {
-        return new ResponseEntity<>(Result.ok(recordVddEquipmentService.add(recordVddEquipmentInputRequest)), HttpStatus.OK);
+    public ResponseEntity<Result<String>> add(@RequestBody RecordVddEquipmentInputRequest recordData) {
+        recordVddEquipmentService.add(recordData);
+        return new ResponseEntity<>(Result.ok(SysEnum.ResultEnum.RESULT_SUCCESS.getCode()), HttpStatus.OK);
     }
 
     @RequestMapping(value = "/delete/{id}", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     @ApiOperation(value = "删除")
-    public ResponseEntity<Result<RecordVddEquipment>> delete(@PathVariable Long id) {
-        return new ResponseEntity<>(Result.ok(recordVddEquipmentService.delete(id)), HttpStatus.OK);
+    public ResponseEntity<Result<String>> delete(@PathVariable Long id) {
+        recordVddEquipmentService.delete(id);
+        return new ResponseEntity<>(Result.ok(SysEnum.ResultEnum.RESULT_SUCCESS.getCode()), HttpStatus.OK);
     }
 
     @RequestMapping(value = "/update", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     @ApiOperation(value = "修改")
-    public ResponseEntity<Result<RecordVddEquipment>> update(@RequestBody RecordVddEquipmentInputRequest recordVddEquipmentInputRequest) {
-        return new ResponseEntity<>(Result.ok(recordVddEquipmentService.update(recordVddEquipmentInputRequest)), HttpStatus.OK);
+    public ResponseEntity<Result<String>> update(@RequestBody RecordVddEquipmentInputRequest recordVddEquipmentInputRequest) {
+        recordVddEquipmentService.update(recordVddEquipmentInputRequest);
+        return new ResponseEntity<>(Result.ok(SysEnum.ResultEnum.RESULT_SUCCESS.getCode()), HttpStatus.OK);
     }
 
     @RequestMapping(value = "/detail/{id}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)

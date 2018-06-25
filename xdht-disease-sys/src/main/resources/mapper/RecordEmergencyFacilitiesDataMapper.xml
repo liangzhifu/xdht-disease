@@ -15,4 +15,18 @@
     <result column="hazard_factors" jdbcType="VARCHAR" property="hazardFactors" />
     <result column="relation_id" jdbcType="BIGINT" property="relationId" />
   </resultMap>
+
+  <select id="selectRecordDataByEmergency" parameterType="java.lang.Long" resultType="java.util.HashMap">
+    SELECT refd.id, refd.relation_id as relationId,
+    refd.office_id as officeId,
+    refd.work_place as workPlace,
+    refd.emergency_facilities as emergencyFacilities,
+    refd.technical_parameter as technicalParameter,
+    refd.number as number,
+    refd.hazard_factors as hazardFactors,
+    sco.`office_name` AS officeName
+    FROM `record_emergency_facilities_data` refd, sys_company_office sco
+    WHERE refd.`office_id` = sco.`id`
+    AND refd.`relation_id` = #{id, jdbcType=BIGINT}
+  </select>
 </mapper>

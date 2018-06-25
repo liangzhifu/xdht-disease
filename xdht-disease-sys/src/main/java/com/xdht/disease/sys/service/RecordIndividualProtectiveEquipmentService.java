@@ -14,12 +14,6 @@ import java.util.List;
  */
 public interface RecordIndividualProtectiveEquipmentService extends Service<RecordIndividualProtectiveEquipment> {
 
-    /**
-     * 查询
-     * @param recordRequest 查询条件
-     * @return 返回结果
-     */
-    public List<RecordIndividualProtectiveEquipment> queryList(RecordIndividualProtectiveEquipmentRequest recordRequest);
 
     /**
      * 分页查询
@@ -31,23 +25,20 @@ public interface RecordIndividualProtectiveEquipmentService extends Service<Reco
     /**
      * 添加
      * @param recordIndividualProtectiveInputRequest 实体
-     * @return 返回结果
      */
-    public  RecordIndividualProtectiveEquipment add(RecordIndividualProtectiveInputRequest recordIndividualProtectiveInputRequest);
+    public  void add(RecordIndividualProtectiveInputRequest recordIndividualProtectiveInputRequest);
 
     /**
      * 删除
      * @param id 主键id
-     * @return 返回结果
      */
-    public  RecordIndividualProtectiveEquipment delete(Long id);
+    public  void delete(Long id);
 
     /**
      * 修改
      * @param recordIndividualProtectiveInputRequest 实体
-     * @return 返回结果
      */
-    public  RecordIndividualProtectiveEquipment update(RecordIndividualProtectiveInputRequest recordIndividualProtectiveInputRequest);
+    public  void update(RecordIndividualProtectiveInputRequest recordIndividualProtectiveInputRequest);
 
     /**
      *  获取 个体防护用品调查表 信息

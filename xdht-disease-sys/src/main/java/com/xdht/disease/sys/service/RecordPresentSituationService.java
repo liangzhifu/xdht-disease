@@ -33,21 +33,21 @@ public interface RecordPresentSituationService extends Service<RecordPresentSitu
      * @param recordPresentSituationInputRequest 实体
      * @return 返回结果
      */
-    public RecordPresentSituation addRecordPresentSituation(RecordPresentSituationInputRequest recordPresentSituationInputRequest);
+    public void addRecordPresentSituation(RecordPresentSituationInputRequest recordPresentSituationInputRequest);
 
     /**
      * 删除
      * @param id 主键id
      * @return 返回结果
      */
-    public RecordPresentSituation deleteRecordPresentSituation(Long id);
+    public void deleteRecordPresentSituation(Long id);
 
     /**
      * 修改
      * @param recordPresentSituationInputRequest 实体
      * @return 返回结果
      */
-    public RecordPresentSituation updateRecordPresentSituation(RecordPresentSituationInputRequest recordPresentSituationInputRequest);
+    public void updateRecordPresentSituation(RecordPresentSituationInputRequest recordPresentSituationInputRequest);
 
     /**
      * 获取 用人单位概况调查表（现状评价） 详细信息

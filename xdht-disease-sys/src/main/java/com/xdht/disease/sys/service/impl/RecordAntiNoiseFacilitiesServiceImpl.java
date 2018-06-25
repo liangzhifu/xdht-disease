@@ -19,6 +19,7 @@ import tk.mybatis.mapper.entity.Condition;
 
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 
 
 /**
@@ -34,19 +35,6 @@ public class RecordAntiNoiseFacilitiesServiceImpl extends AbstractService<Record
     @Autowired
     private RecordAntiNoiseFacilitiesDataService recordAntiNoiseFacilitiesDataService;
 
-    @Override
-    public List<RecordAntiNoiseFacilities> queryList(RecordAntiNoiseFacilitiesRequest recordAntiNoiseFacilitiesRequest) {
-        Condition condition =  new Condition(RecordAntiNoiseFacilities.class);
-        condition.createCriteria() .andEqualTo("id", recordAntiNoiseFacilitiesRequest.getId())
-                .andEqualTo("antiNoiseFacilitiesNo",recordAntiNoiseFacilitiesRequest.getAntiNoiseFacilitiesNo());
-        if (recordAntiNoiseFacilitiesRequest.getVerificationResult() != null) {
-            condition.getOredCriteria().get(0).andLike("verificationResult","%"+recordAntiNoiseFacilitiesRequest.getVerificationResult()+"%");
-        }
-        if (recordAntiNoiseFacilitiesRequest.getStatus() != null){
-            condition.getOredCriteria().get(0).andEqualTo("status",recordAntiNoiseFacilitiesRequest.getStatus());
-        }
-        return this.recordAntiNoiseFacilitiesMapper.selectByCondition(condition);
-    }
 
     @Override
     public PageResult<RecordAntiNoiseFacilities> queryListPage(RecordAntiNoiseFacilitiesRequest recordAntiNoiseFacilitiesRequest) {
@@ -58,9 +46,7 @@ public class RecordAntiNoiseFacilitiesServiceImpl extends AbstractService<Record
         if (recordAntiNoiseFacilitiesRequest.getVerificationResult() != null) {
             condition.getOredCriteria().get(0).andLike("verificationResult","%"+recordAntiNoiseFacilitiesRequest.getVerificationResult()+"%");
         }
-        if (recordAntiNoiseFacilitiesRequest.getStatus() != null){
-            condition.getOredCriteria().get(0).andEqualTo("status",recordAntiNoiseFacilitiesRequest.getStatus());
-        }
+        condition.getOredCriteria().get(0).andEqualTo("status",SysEnum.StatusEnum.STATUS_NORMAL.getCode());
         PageHelper.startPage(recordAntiNoiseFacilitiesRequest.getPageNumber(), recordAntiNoiseFacilitiesRequest.getPageSize());
         List<RecordAntiNoiseFacilities> dataList = this.recordAntiNoiseFacilitiesMapper.selectByCondition(condition);
         Integer count = this.recordAntiNoiseFacilitiesMapper.selectCountByCondition(condition);
@@ -71,65 +57,61 @@ public class RecordAntiNoiseFacilitiesServiceImpl extends AbstractService<Record
     }
 
     @Override
-    public RecordAntiNoiseFacilities addRecordAntiNoiseFacilities(RecordAntiNoiseInputRequest recordAntiNoiseInputRequest) {
+    public void addRecordAntiNoiseFacilities(RecordAntiNoiseInputRequest recordAntiNoiseInputRequest) {
         RecordAntiNoiseFacilities recordAntiNoiseFacilities = recordAntiNoiseInputRequest.getRecordAntiNoiseFacilities();
         recordAntiNoiseFacilities.setStatus(SysEnum.StatusEnum.STATUS_NORMAL.getCode());
         this.insertUseGeneratedKeys(recordAntiNoiseFacilities);
         List<RecordAntiNoiseFacilitiesData> recordAntiNoiseFacilitiesDataList = new LinkedList<>();
-        for ( RecordAntiNoiseFacilitiesData recordAntiNoiseFacilitiesData : recordAntiNoiseInputRequest.getRecordAntiNoiseFacilitiesDataList()) {
-            recordAntiNoiseFacilitiesData.setRelationId(recordAntiNoiseFacilities.getId());
-            recordAntiNoiseFacilitiesDataList.add(recordAntiNoiseFacilitiesData);
-        }
-        this.recordAntiNoiseFacilitiesDataService.insertList(recordAntiNoiseFacilitiesDataList);
-        return recordAntiNoiseFacilities;
-    }
-
-    @Override
-    public RecordAntiNoiseFacilities deleteRecordAntiNoiseFacilities(Long id) {
-        RecordAntiNoiseFacilities recordAntiNoiseFacilities = this.recordAntiNoiseFacilitiesMapper.selectByPrimaryKey(id);
-        recordAntiNoiseFacilities.setStatus(SysEnum.StatusEnum.STATUS_DELETE.getCode());
-        this.recordAntiNoiseFacilitiesMapper.updateByPrimaryKeySelective(recordAntiNoiseFacilities);
-        return recordAntiNoiseFacilities;
-    }
-
-    @Override
-    public RecordAntiNoiseFacilities updateRecordAntiNoiseFacilities(RecordAntiNoiseInputRequest recordAntiNoiseInputRequest) {
-
-        RecordAntiNoiseFacilities recordAntiNoiseFacilities = recordAntiNoiseInputRequest.getRecordAntiNoiseFacilities();
-        this.recordAntiNoiseFacilitiesMapper.updateByPrimaryKeySelective(recordAntiNoiseFacilities);
-        List<RecordAntiNoiseFacilitiesData> recordAntiNoiseFacilitiesDataList = new LinkedList<>();
-        for ( RecordAntiNoiseFacilitiesData recordAntiNoiseFacilitiesData : recordAntiNoiseInputRequest.getRecordAntiNoiseFacilitiesDataList() ) {
-            if (recordAntiNoiseFacilitiesData.getId() == null ){
+        if (recordAntiNoiseInputRequest.getRecordAntiNoiseFacilitiesDataList() != null) {
+            for ( RecordAntiNoiseFacilitiesData recordAntiNoiseFacilitiesData : recordAntiNoiseInputRequest.getRecordAntiNoiseFacilitiesDataList()) {
                 recordAntiNoiseFacilitiesData.setRelationId(recordAntiNoiseFacilities.getId());
                 recordAntiNoiseFacilitiesDataList.add(recordAntiNoiseFacilitiesData);
             }
-            this.recordAntiNoiseFacilitiesDataService.updateByPrimaryKeySelective(recordAntiNoiseFacilitiesData);
-        }
-        if (recordAntiNoiseFacilitiesDataList.size()>0){
             this.recordAntiNoiseFacilitiesDataService.insertList(recordAntiNoiseFacilitiesDataList);
         }
-        return recordAntiNoiseFacilities;
     }
 
     @Override
-    public RecordAntiNoiseDetailResponse queryAntiNoiseDetail(Long sceneId) {
-        RecordAntiNoiseDetailResponse response = new RecordAntiNoiseDetailResponse();
+    public void deleteRecordAntiNoiseFacilities(Long id) {
         RecordAntiNoiseFacilities recordAntiNoiseFacilities = new RecordAntiNoiseFacilities();
-        recordAntiNoiseFacilities.setSceneId(sceneId);
-        recordAntiNoiseFacilities = this.selectOne(recordAntiNoiseFacilities);
-        List<RecordAntiNoiseFacilitiesData> recordAntiNoiseFacilitiesDataList = new LinkedList<>();
-        if (recordAntiNoiseFacilities != null){
-            response.setRecordAntiNoiseFacilities(recordAntiNoiseFacilities);
-            Long recordId = recordAntiNoiseFacilities.getSceneId();
-            Condition condition = new Condition(RecordAntiNoiseFacilitiesData.class);
-            condition.createCriteria() .andEqualTo("relationId", recordId);
-            recordAntiNoiseFacilitiesDataList = this.recordAntiNoiseFacilitiesDataService.selectByCondition(condition);
-            if (recordAntiNoiseFacilitiesDataList.size()>0){
-                response.setRecordAntiNoiseFacilitiesDataList(recordAntiNoiseFacilitiesDataList);
+        recordAntiNoiseFacilities.setId(id);
+        recordAntiNoiseFacilities.setStatus(SysEnum.StatusEnum.STATUS_DELETE.getCode());
+        this.recordAntiNoiseFacilitiesMapper.updateByPrimaryKeySelective(recordAntiNoiseFacilities);
+    }
+
+    @Override
+    public void updateRecordAntiNoiseFacilities(RecordAntiNoiseInputRequest recordAntiNoiseInputRequest) {
+        RecordAntiNoiseFacilities recordAntiNoiseFacilities = recordAntiNoiseInputRequest.getRecordAntiNoiseFacilities();
+        this.recordAntiNoiseFacilitiesMapper.updateByPrimaryKeySelective(recordAntiNoiseFacilities);
+
+        Condition condition = new Condition(RecordAntiNoiseFacilitiesData.class);
+        condition.createCriteria().andEqualTo("relationId", recordAntiNoiseFacilities.getId());
+        List<RecordAntiNoiseFacilitiesData> recordAntiNoiseFacilitiesDataList = this.recordAntiNoiseFacilitiesDataService.selectByCondition(condition);
+        if (recordAntiNoiseFacilitiesDataList != null && recordAntiNoiseFacilitiesDataList.size() > 0 ) {
+            for ( RecordAntiNoiseFacilitiesData recordAntiNoiseFacilitiesData : recordAntiNoiseFacilitiesDataList) {
+                this.recordAntiNoiseFacilitiesDataService.deleteByPrimaryKey(recordAntiNoiseFacilitiesData.getId());
             }
         }
+        recordAntiNoiseFacilitiesDataList = new LinkedList<>();
+        if (recordAntiNoiseInputRequest.getRecordAntiNoiseFacilitiesDataList() != null){
+            for (RecordAntiNoiseFacilitiesData recordAntiNoiseFacilitiesData : recordAntiNoiseInputRequest.getRecordAntiNoiseFacilitiesDataList()) {
+                recordAntiNoiseFacilitiesData.setRelationId(recordAntiNoiseFacilities.getId());
+                recordAntiNoiseFacilitiesDataList.add(recordAntiNoiseFacilitiesData);
+            }
+            this.recordAntiNoiseFacilitiesDataService.insertList(recordAntiNoiseFacilitiesDataList);
+        }
+    }
 
-//        response.setRecordAntiNoiseFacilitiesDataList(recordAntiNoiseFacilitiesDataList);
+    @Override
+    public RecordAntiNoiseDetailResponse queryAntiNoiseDetail(Long id) {
+        RecordAntiNoiseDetailResponse response = new RecordAntiNoiseDetailResponse();
+        Map<String, Object> map = this.recordAntiNoiseFacilitiesMapper.selectRecordBySceneId(id);
+        if (map != null) {
+            response.setRecordAntiNoiseFacilities(map);
+            Long recordId = (Long) map.get("id");
+            List<Map<String, Object>> mapList = this.recordAntiNoiseFacilitiesDataService.queryRecordDataByAntiNoise(recordId);
+            response.setRecordAntiNoiseFacilitiesDataList(mapList);
+        }
         return response;
     }
 }

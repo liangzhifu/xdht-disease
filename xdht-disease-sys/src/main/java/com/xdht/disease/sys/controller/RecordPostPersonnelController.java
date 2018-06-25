@@ -44,8 +44,8 @@ public class RecordPostPersonnelController {
     @ApiImplicitParams({
             @ApiImplicitParam(name = "authorization", value = "authorization", required = true, dataType = "string", paramType = "header"),
     })
-    public ResponseEntity<Result<String>> add(@RequestBody RecordPostPersonnelInputRequest recordPostPersonnelInputRequest) {
-        recordService.add(recordPostPersonnelInputRequest);
+    public ResponseEntity<Result<String>> add(@RequestBody RecordPostPersonnelInputRequest recordData) {
+        recordService.add(recordData);
         return new ResponseEntity<>(Result.ok(SysEnum.ResultEnum.RESULT_SUCCESS.getCode()), HttpStatus.OK);
     }
 
@@ -66,8 +66,8 @@ public class RecordPostPersonnelController {
     @ApiImplicitParams({
             @ApiImplicitParam(name = "authorization", value = "authorization", required = true, dataType = "string", paramType = "header"),
     })
-    public ResponseEntity<Result<String>> update(@RequestBody RecordPostPersonnelInputRequest recordPostPersonnelInputRequest) {
-        recordService.update(recordPostPersonnelInputRequest);
+    public ResponseEntity<Result<String>> update(@RequestBody RecordPostPersonnelInputRequest recordData) {
+        recordService.update(recordData);
         return new ResponseEntity<>(Result.ok(SysEnum.ResultEnum.RESULT_SUCCESS.getCode()), HttpStatus.OK);
     }
 

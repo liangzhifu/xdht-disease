@@ -31,11 +31,6 @@ public class RecordControlEffectController {
     @Autowired
     private RecordControlEffectService recordControlEffectService;
 
-    @RequestMapping(value = "/recordList", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
-    @ApiOperation(value = "查询列表")
-    public  ResponseEntity<Result<List<RecordControlEffect>>> recordList(@RequestBody RecordControlEffectRequest recordControlEffectRequest) {
-        return new ResponseEntity<>(Result.ok(recordControlEffectService.queryList(recordControlEffectRequest)), HttpStatus.OK);
-    }
     @RequestMapping(value = "/pageList", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     @ApiOperation(value = "分页查询")
     public ResponseEntity<Result<PageResult<RecordControlEffect>>> pageList(@RequestBody RecordControlEffectRequest recordControlEffectRequest) {
@@ -58,8 +53,8 @@ public class RecordControlEffectController {
 
     @RequestMapping(value = "/update", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     @ApiOperation(value = "修改")
-    public ResponseEntity<Result<String>> updateRecordControlEffect(@RequestBody RecordControlEffectInputRequest recordControlEffectInputRequest) {
-        recordControlEffectService.updateRecordControlEffect(recordControlEffectInputRequest);
+    public ResponseEntity<Result<String>> updateRecordControlEffect(@RequestBody RecordControlEffectInputRequest recordData) {
+        recordControlEffectService.updateRecordControlEffect(recordData);
         return new ResponseEntity<>(Result.ok(SysEnum.ResultEnum.RESULT_SUCCESS.getCode()), HttpStatus.OK);
     }
 

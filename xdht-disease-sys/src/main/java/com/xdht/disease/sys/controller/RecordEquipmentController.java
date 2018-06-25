@@ -46,8 +46,8 @@ public class RecordEquipmentController {
     @ApiImplicitParams({
             @ApiImplicitParam(name = "authorization", value = "authorization", required = true, dataType = "string", paramType = "header"),
     })
-    public ResponseEntity<Result<String>> add(@RequestBody RecordEquipmentInputRequest recordEquipmentInputRequest) {
-        recordEquipmentService.add(recordEquipmentInputRequest);
+    public ResponseEntity<Result<String>> add(@RequestBody RecordEquipmentInputRequest recordData) {
+        recordEquipmentService.add(recordData);
         return new ResponseEntity<>(Result.ok(SysEnum.ResultEnum.RESULT_SUCCESS.getCode()), HttpStatus.OK);
     }
 
@@ -68,8 +68,8 @@ public class RecordEquipmentController {
     @ApiImplicitParams({
             @ApiImplicitParam(name = "authorization", value = "authorization", required = true, dataType = "string", paramType = "header"),
     })
-    public ResponseEntity<Result<String>> update(@RequestBody RecordEquipmentInputRequest recordEquipmentInputRequest) {
-        recordEquipmentService.update(recordEquipmentInputRequest);
+    public ResponseEntity<Result<String>> update(@RequestBody RecordEquipmentInputRequest recordData) {
+        recordEquipmentService.update(recordData);
         return new ResponseEntity<>(Result.ok(SysEnum.ResultEnum.RESULT_SUCCESS.getCode()), HttpStatus.OK);
     }
 

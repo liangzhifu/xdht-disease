@@ -15,13 +15,6 @@ import java.util.List;
 public interface RecordHazardFactorsService extends Service<RecordHazardFactors> {
 
     /**
-     * 查询
-     * @param recordHazardFactorsRequest 查询条件
-     * @return 返回结果
-     */
-    public List<RecordHazardFactors> queryList(RecordHazardFactorsRequest recordHazardFactorsRequest);
-
-    /**
      * 分页查询
      * @param recordHazardFactorsRequest 查询条件
      * @return 返回结果
@@ -31,23 +24,20 @@ public interface RecordHazardFactorsService extends Service<RecordHazardFactors>
     /**
      * 添加
      * @param recordHazardFactorsInputRequest 实体
-     * @return 返回结果
      */
-    public RecordHazardFactors add(RecordHazardFactorsInputRequest recordHazardFactorsInputRequest);
+    public void add(RecordHazardFactorsInputRequest recordHazardFactorsInputRequest);
 
     /**
      * 删除
      * @param id 主键id
-     * @return 返回结果
      */
-    public RecordHazardFactors delete(Long id);
+    public void delete(Long id);
 
     /**
      * 修改
      * @param recordHazardFactorsInputRequest 实体
-     * @return 返回结果
      */
-    public RecordHazardFactors update(RecordHazardFactorsInputRequest recordHazardFactorsInputRequest);
+    public void update(RecordHazardFactorsInputRequest recordHazardFactorsInputRequest);
 
     /**
      * 获取 职业病危害因素调查表 信息

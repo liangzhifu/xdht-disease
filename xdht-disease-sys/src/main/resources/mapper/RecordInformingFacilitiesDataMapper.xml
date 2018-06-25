@@ -12,5 +12,20 @@
     <result column="informing_facilities" jdbcType="VARCHAR" property="informingFacilities" />
     <result column="setting_place" jdbcType="VARCHAR" property="settingPlace" />
     <result column="remarks" jdbcType="VARCHAR" property="remarks" />
+    <result column="relation_id" jdbcType="BIGINT" property="relationId" />
   </resultMap>
+
+  <select id="selectRecordDataByInformingFacilities" parameterType="java.lang.Long" resultType="java.util.HashMap">
+    SELECT rifd.id, rifd.relation_id as relationId,
+    rifd.company_office_id as companyOfficeId,
+    rifd.process_name as processName,
+    rifd.hazard_factors as hazardFactors,
+    rifd.informing_facilities as informingFacilities,
+    rifd.setting_place as settingPlace,
+    rifd.remarks as remarks,
+    sco.`office_name` AS officeName
+    FROM `record_informing_facilities_data` rifd, sys_company_office sco
+    WHERE rifd.`company_office_id` = sco.`id`
+    AND rifd.`relation_id` = #{id, jdbcType=BIGINT}
+  </select>
 </mapper>

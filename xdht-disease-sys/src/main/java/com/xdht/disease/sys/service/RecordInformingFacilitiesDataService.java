@@ -5,6 +5,7 @@ import com.xdht.disease.common.core.Service;
 import com.xdht.disease.sys.vo.request.RecordInformingFacilitiesDataRequest;
 
 import java.util.List;
+import java.util.Map;
 
 
 /**
@@ -13,39 +14,9 @@ import java.util.List;
 public interface RecordInformingFacilitiesDataService extends Service<RecordInformingFacilitiesData> {
 
     /**
-     * 查询
-     * @param recordDataRequest 查询条件
+     * 查询职业病危害告知设施调查表数据
+     * @param id 调查表主键id
      * @return 返回结果
      */
-    public List<RecordInformingFacilitiesData> queryList(RecordInformingFacilitiesDataRequest recordDataRequest);
-
-    /**
-     * 分页查询
-     * @param recordDataRequest 查询条件
-     * @param pageNum   页数
-     * @param pageSize  每页大小
-     * @return 返回结果
-     */
-    public PageResult<RecordInformingFacilitiesData> queryListPage(RecordInformingFacilitiesDataRequest recordDataRequest, Integer pageNum, Integer pageSize);
-
-    /**
-     * 添加
-     * @param recordInformingFacilitiesData 实体
-     * @return 返回结果
-     */
-    public RecordInformingFacilitiesData add(RecordInformingFacilitiesData recordInformingFacilitiesData);
-
-    /**
-     * 删除
-     * @param id 主键id
-     * @return 返回结果
-     */
-    public RecordInformingFacilitiesData delete(Long id);
-
-    /**
-     * 修改
-     * @param recordInformingFacilitiesData 实体
-     * @return 返回结果
-     */
-    public RecordInformingFacilitiesData update(RecordInformingFacilitiesData recordInformingFacilitiesData);
+    List<Map<String,Object>> queryRecordDataByInformingFacilities(Long id);
 }
