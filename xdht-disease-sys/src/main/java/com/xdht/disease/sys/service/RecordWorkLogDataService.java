@@ -1,10 +1,10 @@
 package com.xdht.disease.sys.service;
-import com.xdht.disease.common.core.PageResult;
-import com.xdht.disease.sys.model.RecordWorkLogData;
+
 import com.xdht.disease.common.core.Service;
-import com.xdht.disease.sys.vo.request.RecordWorkLogDataRequest;
+import com.xdht.disease.sys.model.RecordWorkLogData;
 
 import java.util.List;
+import java.util.Map;
 
 
 /**
@@ -13,39 +13,9 @@ import java.util.List;
 public interface RecordWorkLogDataService extends Service<RecordWorkLogData> {
 
     /**
-     * 查询
-     * @param recordDataRequest 查询条件
+     * 查询 工作日写实记录表 调查表数据
+     * @param id 调查表id
      * @return 返回结果
      */
-    public List<RecordWorkLogData> queryList(RecordWorkLogDataRequest recordDataRequest);
-
-    /**
-     * 分页查询
-     * @param recordDataRequest 查询条件
-     * @param pageNum  页数
-     * @param pageSize 每页大小
-     * @return 返回结果
-     */
-    public PageResult<RecordWorkLogData> queryListPage(RecordWorkLogDataRequest recordDataRequest, Integer pageNum, Integer pageSize);
-
-    /**
-     * 添加
-     * @param recordData 实体
-     * @return 返回结果
-     */
-    public RecordWorkLogData add(RecordWorkLogData recordData);
-
-    /**
-     * 删除
-     * @param id 主键id
-     * @return 返回结果
-     */
-    public RecordWorkLogData delete(Long id);
-
-    /**
-     * 修改
-     * @param recordData 实体
-     * @return 返回结果
-     */
-    public RecordWorkLogData update(RecordWorkLogData recordData);
+    List<Map<String,Object>> queryRecordDataByorkLog(Long id);
 }

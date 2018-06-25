@@ -5,6 +5,7 @@ import com.xdht.disease.common.authorization.annotation.CurrentUser;
 import com.xdht.disease.common.core.PageResult;
 import com.xdht.disease.common.core.Result;
 import com.xdht.disease.common.model.User;
+import com.xdht.disease.sys.constant.SysEnum;
 import com.xdht.disease.sys.model.RecordPresentSituation;
 import com.xdht.disease.sys.service.RecordPresentSituationService;
 import com.xdht.disease.sys.vo.request.RecordPresentSituationInputRequest;
@@ -52,8 +53,9 @@ public class RecordPresentSituationController {
     @ApiImplicitParams({
             @ApiImplicitParam(name = "authorization", value = "authorization", required = true, dataType = "string", paramType = "header"),
     })
-    public ResponseEntity<Result<RecordPresentSituation>> addRecordPresentSituation(@RequestBody RecordPresentSituationInputRequest recordPresentSituationInputRequest) {
-        return new ResponseEntity<>(Result.ok(recordPresentSituationService.addRecordPresentSituation(recordPresentSituationInputRequest)), HttpStatus.OK);
+    public ResponseEntity<Result<String>> addRecordPresentSituation(@RequestBody RecordPresentSituationInputRequest recordData) {
+        recordPresentSituationService.addRecordPresentSituation(recordData);
+        return new ResponseEntity<>(Result.ok(SysEnum.ResultEnum.RESULT_SUCCESS.getCode()), HttpStatus.OK);
     }
 
     @RequestMapping(value = "/delete/{id}", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
@@ -62,7 +64,7 @@ public class RecordPresentSituationController {
     @ApiImplicitParams({
             @ApiImplicitParam(name = "authorization", value = "authorization", required = true, dataType = "string", paramType = "header"),
     })
-    public ResponseEntity<Result<RecordPresentSituation>> deleteRecordPresentSituation(@PathVariable Long id) {
+    public ResponseEntity<Result<String>> deleteRecordPresentSituation(@PathVariable Long id) {
         return new ResponseEntity<>(Result.ok(recordPresentSituationService.deleteRecordPresentSituation(id)), HttpStatus.OK);
     }
 
@@ -72,7 +74,7 @@ public class RecordPresentSituationController {
     @ApiImplicitParams({
             @ApiImplicitParam(name = "authorization", value = "authorization", required = true, dataType = "string", paramType = "header"),
     })
-    public ResponseEntity<Result<RecordPresentSituation>> updateRecordPresentSituation(@RequestBody RecordPresentSituationInputRequest recordPresentSituationInputRequest) {
+    public ResponseEntity<Result<String>> updateRecordPresentSituation(@RequestBody RecordPresentSituationInputRequest recordPresentSituationInputRequest) {
         return new ResponseEntity<>(Result.ok(recordPresentSituationService.updateRecordPresentSituation(recordPresentSituationInputRequest)), HttpStatus.OK);
     }
     @RequestMapping(value = "/detail/{id}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)

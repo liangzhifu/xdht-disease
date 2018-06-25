@@ -21,6 +21,7 @@ import tk.mybatis.mapper.entity.Condition;
 
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 
 
 /**
@@ -77,8 +78,6 @@ public class RecordPresentSituationServiceImpl extends AbstractService<RecordPre
     public RecordPresentSituation addRecordPresentSituation(RecordPresentSituationInputRequest recordPresentSituationInputRequest) {
         RecordPresentSituation recordPresentSituation = new RecordPresentSituation();
         recordPresentSituation.setStatus(SysEnum.StatusEnum.STATUS_NORMAL.getCode());
-        recordPresentSituation.setVerificationResult(recordPresentSituationInputRequest.getRecordPresentSituation().getVerificationResult());
-        recordPresentSituation.setPreEvaluationNo(recordPresentSituationInputRequest.getRecordPresentSituation().getPreEvaluationNo());
         this.insertUseGeneratedKeys(recordPresentSituation);
         List<RecordPresentSituationData> recordPresentSituationDataList = new LinkedList<>();
         for ( RecordPresentSituationData recordPresentSituationData: recordPresentSituationInputRequest.getRecordPresentSituationDataList()) {
@@ -114,19 +113,14 @@ public class RecordPresentSituationServiceImpl extends AbstractService<RecordPre
     @Override
     public RecordPresentSituationDetailResponse queryRecordPresentSituationDetail(Long id) {
         RecordPresentSituationDetailResponse response = new RecordPresentSituationDetailResponse();
-        RecordPresentSituation recordPresentSituation = this.recordPresentSituationMapper.selectByPrimaryKey(id);
-        response.setRecordPresentSituation(recordPresentSituation);
-        Condition condition = new Condition(RecordPresentSituationData.class);
-        condition.createCriteria() .andEqualTo("preEvaluationId", id);
-        List<RecordPresentSituationData> recordPresentSituationDataList = this.recordPresentSituationDataService.selectByCondition(condition);
-        response.setRecordPresentSituationDataList(recordPresentSituationDataList);
-        String projectIds = "";
-        for (RecordPresentSituationData recordData : recordPresentSituationDataList) {
-            projectIds += recordData.getPreEvaluationProjectId()+",";
+        //根据sceneId 获取表的数据
+        Map<String, Object> map = this.recordPresentSituationMapper.selectRecordBySceneId(id);
+        if (map != null){
+            response.setRecordPresentSituation(map);
+            Long recordId = (Long) map.get("id");
+            List<Map<String, Object>> mapList = this.recordPresentSituationDataService.queryRecordDataByPreEvaluationId(recordId);
+            response.setRecordPresentSituationDataList(mapList);
         }
-        projectIds = projectIds.substring(0,projectIds.lastIndexOf(","));
-        List<RecordPresentSituationProject> projectList = this.recordPresentSituationProjectService.selectByIds(projectIds);
-        response.setRecordPresentSituationProjectList(projectList);
         return response;
     }
 }

@@ -13,5 +13,14 @@
     <result column="create_date" jdbcType="TIMESTAMP" property="createDate" />
     <result column="upadte_by" jdbcType="BIGINT" property="upadteBy" />
     <result column="update_date" jdbcType="TIMESTAMP" property="updateDate" />
+    <result column="scene_id" jdbcType="BIGINT" property="sceneId" />
   </resultMap>
+
+  <select id="selectRecordBySceneId" resultType="java.util.HashMap" parameterType="java.lang.Long">
+    SELECT rwl.`id`, rwl.work_log_no as workLogNo,
+    rwl.verification_result as verificationResult, rwl.scene_id as sceneId
+    FROM record_work_log rwl
+    WHERE rwl.`status` = '0'
+    AND rwl.`scene_id` = #{id, jdbcType=BIGINT}
+  </select>
 </mapper>

@@ -4,6 +4,7 @@ import com.xdht.disease.common.authorization.annotation.CurrentUser;
 import com.xdht.disease.common.core.PageResult;
 import com.xdht.disease.common.core.Result;
 import com.xdht.disease.common.model.User;
+import com.xdht.disease.sys.constant.SysEnum;
 import com.xdht.disease.sys.model.RecordControlEffect;
 import com.xdht.disease.sys.service.RecordControlEffectService;
 import com.xdht.disease.sys.vo.request.RecordControlEffectInputRequest;
@@ -43,20 +44,23 @@ public class RecordControlEffectController {
 
     @RequestMapping(value = "/add", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     @ApiOperation(value = "添加")
-    public ResponseEntity<Result<RecordControlEffect>> addRecordControlEffect(@RequestBody RecordControlEffectInputRequest recordControlEffectInputRequest) {
-        return new ResponseEntity<>(Result.ok(recordControlEffectService.addRecordControlEffect(recordControlEffectInputRequest)), HttpStatus.OK);
+    public ResponseEntity<Result<String>> addRecordControlEffect(@RequestBody RecordControlEffectInputRequest recordData) {
+        recordControlEffectService.addRecordControlEffect(recordData);
+        return new ResponseEntity<>(Result.ok(SysEnum.ResultEnum.RESULT_SUCCESS.getCode()), HttpStatus.OK);
     }
 
     @RequestMapping(value = "/delete/{id}", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     @ApiOperation(value = "删除")
-    public ResponseEntity<Result<RecordControlEffect>> deleteRecordControlEffect(@PathVariable Long id) {
-        return new ResponseEntity<>(Result.ok(recordControlEffectService.deleteRecordControlEffect(id)), HttpStatus.OK);
+    public ResponseEntity<Result<String>> deleteRecordControlEffect(@PathVariable Long id) {
+        recordControlEffectService.deleteRecordControlEffect(id);
+        return new ResponseEntity<>(Result.ok(SysEnum.ResultEnum.RESULT_SUCCESS.getCode()), HttpStatus.OK);
     }
 
     @RequestMapping(value = "/update", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     @ApiOperation(value = "修改")
-    public ResponseEntity<Result<RecordControlEffect>> updateRecordControlEffect(@RequestBody RecordControlEffectInputRequest recordControlEffectInputRequest) {
-        return new ResponseEntity<>(Result.ok(recordControlEffectService.updateRecordControlEffect(recordControlEffectInputRequest)), HttpStatus.OK);
+    public ResponseEntity<Result<String>> updateRecordControlEffect(@RequestBody RecordControlEffectInputRequest recordControlEffectInputRequest) {
+        recordControlEffectService.updateRecordControlEffect(recordControlEffectInputRequest);
+        return new ResponseEntity<>(Result.ok(SysEnum.ResultEnum.RESULT_SUCCESS.getCode()), HttpStatus.OK);
     }
 
     @RequestMapping(value = "/detail/{id}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)

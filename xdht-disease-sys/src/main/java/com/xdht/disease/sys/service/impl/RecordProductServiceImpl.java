@@ -7,10 +7,8 @@ import com.xdht.disease.sys.constant.SysEnum;
 import com.xdht.disease.sys.dao.RecordProductMapper;
 import com.xdht.disease.sys.model.RecordProduct;
 import com.xdht.disease.sys.model.RecordProductData;
-import com.xdht.disease.sys.model.SysCompanyOffice;
 import com.xdht.disease.sys.service.RecordProductDataService;
 import com.xdht.disease.sys.service.RecordProductService;
-import com.xdht.disease.sys.service.SysCompanyOfficeService;
 import com.xdht.disease.sys.vo.request.RecordProductInputRequest;
 import com.xdht.disease.sys.vo.request.RecordProductRequest;
 import com.xdht.disease.sys.vo.response.RecordProductDetailResponse;
@@ -21,6 +19,7 @@ import tk.mybatis.mapper.entity.Condition;
 
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 
 
 /**
@@ -36,22 +35,6 @@ public class RecordProductServiceImpl extends AbstractService<RecordProduct> imp
     @Autowired
     private RecordProductDataService recordProductDataService;
 
-    @Autowired
-    private SysCompanyOfficeService sysCompanyOfficeService;
-
-    @Override
-    public List<RecordProduct> queryList(RecordProductRequest recordProductRequest) {
-        Condition condition = new Condition(RecordProduct.class);
-        condition.createCriteria() .andEqualTo("id", recordProductRequest.getId())
-                .andEqualTo("productNo",recordProductRequest.getProductNo());
-        if (recordProductRequest.getVerificationResult() != null) {
-            condition.getOredCriteria().get(0).andLike("verificationResult","%"+recordProductRequest.getVerificationResult()+"%");
-        }
-        if (recordProductRequest.getStatus() != null){
-            condition.getOredCriteria().get(0).andEqualTo("status",recordProductRequest.getStatus());
-        }
-        return this.recordProductMapper.selectByCondition(condition);
-    }
 
     @Override
     public PageResult<RecordProduct> queryListPage(RecordProductRequest recordProductRequest) {
@@ -63,9 +46,7 @@ public class RecordProductServiceImpl extends AbstractService<RecordProduct> imp
         if (recordProductRequest.getVerificationResult() != null) {
             condition.getOredCriteria().get(0).andLike("verificationResult","%"+recordProductRequest.getVerificationResult()+"%");
         }
-        if (recordProductRequest.getStatus() != null){
-            condition.getOredCriteria().get(0).andEqualTo("status",recordProductRequest.getStatus());
-        }
+        condition.getOredCriteria().get(0).andEqualTo("status",recordProductRequest.getStatus());
         PageHelper.startPage(recordProductRequest.getPageNumber(), recordProductRequest.getPageSize());
         List<RecordProduct> dataList = this.recordProductMapper.selectByCondition(condition);
         Integer count = this.recordProductMapper.selectCountByCondition(condition);
@@ -76,63 +57,62 @@ public class RecordProductServiceImpl extends AbstractService<RecordProduct> imp
     }
 
     @Override
-    public RecordProduct add(RecordProductInputRequest recordProductInputRequest) {
+    public void add(RecordProductInputRequest recordProductInputRequest) {
         RecordProduct recordProduct = new RecordProduct();
         recordProduct.setStatus(SysEnum.StatusEnum.STATUS_NORMAL.getCode());
-        recordProduct.setProductNo(recordProductInputRequest.getRecordProduct().getProductNo());
-        recordProduct.setVerificationResult(recordProductInputRequest.getRecordProduct().getVerificationResult());
         this.insertUseGeneratedKeys(recordProduct);
         List<RecordProductData> recordProductDataList = new LinkedList<>();
-        for (RecordProductData recordProductData : recordProductInputRequest.getRecordProductDataList()) {
-            recordProductData.setRelationId(recordProduct.getId());
-            recordProductDataList.add(recordProductData);
-        }
-        this.recordProductDataService.insertList(recordProductDataList);
-        return  recordProduct;
-    }
-
-    @Override
-    public RecordProduct delete(Long id) {
-        RecordProduct recordProduct = this.recordProductMapper.selectByPrimaryKey(id);
-        recordProduct.setStatus(SysEnum.StatusEnum.STATUS_DELETE.getCode());
-        this.recordProductMapper.updateByPrimaryKeySelective(recordProduct);
-        return  recordProduct;
-    }
-
-    @Override
-    public RecordProduct update(RecordProductInputRequest recordProductInputRequest) {
-        RecordProduct recordProduct = recordProductInputRequest.getRecordProduct();
-        this.recordProductMapper.updateByPrimaryKeySelective(recordProduct);
-        List<RecordProductData> recordProductDataList = new LinkedList<>();
-        for ( RecordProductData recordProductData : recordProductInputRequest.getRecordProductDataList() ) {
-            if (recordProductData.getId() == null){
+        if (recordProductInputRequest.getRecordProductDataList().size() > 0){
+            for (RecordProductData recordProductData : recordProductInputRequest.getRecordProductDataList()) {
                 recordProductData.setRelationId(recordProduct.getId());
                 recordProductDataList.add(recordProductData);
             }
-            this.recordProductDataService.updateByPrimaryKeySelective(recordProductData);
-        }
-        if (recordProductDataList.size()>0){
             this.recordProductDataService.insertList(recordProductDataList);
         }
-        return  recordProduct;
+    }
+
+    @Override
+    public void delete(Long id) {
+        RecordProduct recordProduct = this.recordProductMapper.selectByPrimaryKey(id);
+        recordProduct.setId(id);
+        recordProduct.setStatus(SysEnum.StatusEnum.STATUS_DELETE.getCode());
+        this.recordProductMapper.updateByPrimaryKeySelective(recordProduct);;
+    }
+
+    @Override
+    public void update(RecordProductInputRequest recordProductInputRequest) {
+        RecordProduct recordProduct = recordProductInputRequest.getRecordProduct();
+        this.recordProductMapper.updateByPrimaryKeySelective(recordProduct);
+
+        Condition condition = new Condition(RecordProductData.class);
+        condition.createCriteria().andEqualTo("relationId", recordProduct.getId());
+        List<RecordProductData> recordProductDataList = this.recordProductDataService.selectByCondition(condition);
+        if (recordProductDataList != null && recordProductDataList.size() > 0){
+            for (RecordProductData recordProductData : recordProductDataList){
+                this.recordProductDataService.deleteByPrimaryKey(recordProductData.getId());
+            }
+        }
+       recordProductDataList = new LinkedList<>();
+        if (recordProductInputRequest.getRecordProductDataList() != null){
+            for ( RecordProductData recordProductData : recordProductInputRequest.getRecordProductDataList() ) {
+                    recordProductData.setRelationId(recordProduct.getId());
+                    recordProductDataList.add(recordProductData);
+                }
+            this.recordProductDataService.insertList(recordProductDataList);
+        }
     }
 
     @Override
     public RecordProductDetailResponse queryProductDetail(Long id) {
         RecordProductDetailResponse response = new RecordProductDetailResponse();
-        RecordProduct recordProduct = this.recordProductMapper.selectByPrimaryKey(id);
-        response.setRecordProduct(recordProduct);
-        Condition condition = new Condition(RecordProductData.class);
-        condition.createCriteria() .andEqualTo("relationId", id);
-        List<RecordProductData> recordProductDataList = this.recordProductDataService.selectByCondition(condition);
-        response.setRecordProductDataList(recordProductDataList);
-        String officeIds = "";
-        for (RecordProductData recordData : recordProductDataList) {
-            officeIds += recordData.getCompanyOfficeId()+",";
+        //根据sceneId 获取表的数据
+        Map<String, Object> map = this.recordProductMapper.selectRecordBySceneId(id);
+        if (map != null) {
+            response.setRecordProduct(map);
+            Long recordId = (Long) map.get("id");
+            List<Map<String, Object>> mapList = this.recordProductDataService.queryRecordDataByProduct(recordId);
+            response.setRecordProductDataList(mapList);
         }
-        officeIds = officeIds.substring(0,officeIds.lastIndexOf(","));
-        List<SysCompanyOffice> officeList = this.sysCompanyOfficeService.selectByIds(officeIds);
-        response.setSysCompanyOfficeList(officeList);
         return response;
     }
 }

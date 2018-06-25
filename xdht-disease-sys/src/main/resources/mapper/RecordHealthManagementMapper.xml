@@ -13,5 +13,14 @@
     <result column="create_date" jdbcType="TIMESTAMP" property="createDate" />
     <result column="upadte_by" jdbcType="BIGINT" property="upadteBy" />
     <result column="update_date" jdbcType="TIMESTAMP" property="updateDate" />
+    <result column="scene_id" jdbcType="BIGINT" property="sceneId" />
   </resultMap>
+
+  <select id = "selectRecordBySceneId" resultType="java.util.HashMap" parameterType="java.lang.Long">
+    select rhm.id, rhm.pre_evaluation_no as preEvaluationNo,
+    rhm.verification_result as verificationResult, rhm.scene_id as sceneId
+    from record_health_management rhm
+    where rhm.status = '0'
+    and rhm.scene_id = #{sceneId, jdbcType=BIGINT}
+  </select>
 </mapper>

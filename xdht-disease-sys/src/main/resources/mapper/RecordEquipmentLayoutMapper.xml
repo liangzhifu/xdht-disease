@@ -13,5 +13,14 @@
     <result column="create_date" jdbcType="TIMESTAMP" property="createDate" />
     <result column="upadte_by" jdbcType="BIGINT" property="upadteBy" />
     <result column="update_date" jdbcType="TIMESTAMP" property="updateDate" />
+    <result column="scene_id" jdbcType="BIGINT" property="sceneId" />
   </resultMap>
+
+  <select id="selectRecordBySceneId" resultType="java.util.HashMap" parameterType="java.lang.Long">
+    SELECT rel.`id`, rel.equipment_layout_no as equipmentLayoutNo,
+    rel.verification_result as verificationResult, rel.scene_id as sceneId
+    FROM record_equipment_layout rel
+    WHERE rel.`status` = '0'
+    AND rel.`scene_id` = #{id, jdbcType=BIGINT}
+  </select>
 </mapper>

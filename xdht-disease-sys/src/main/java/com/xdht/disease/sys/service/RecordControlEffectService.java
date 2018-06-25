@@ -30,23 +30,20 @@ public interface RecordControlEffectService extends Service<RecordControlEffect>
     /**
      * 添加
      * @param recordControlEffectInputRequest 实体
-     * @return 返回结果
      */
-    public  RecordControlEffect addRecordControlEffect(RecordControlEffectInputRequest recordControlEffectInputRequest);
+    public  void addRecordControlEffect(RecordControlEffectInputRequest recordControlEffectInputRequest);
 
     /**
      * 删除
      * @param id 主键id
-     * @return 返回结果
      */
-    public RecordControlEffect deleteRecordControlEffect(Long id);
+    public void deleteRecordControlEffect(Long id);
 
     /**
      * 修改
      * @param recordControlEffectInputRequest 实体
-     * @return 返回结果
      */
-    public RecordControlEffect updateRecordControlEffect(RecordControlEffectInputRequest recordControlEffectInputRequest);
+    public void updateRecordControlEffect(RecordControlEffectInputRequest recordControlEffectInputRequest);
 
     /**
      * 获取 建设项目概况调查表（控制效果评价） 的详细信息

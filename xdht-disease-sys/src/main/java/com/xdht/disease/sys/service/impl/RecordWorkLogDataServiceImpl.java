@@ -13,6 +13,7 @@ import org.springframework.transaction.annotation.Transactional;
 import tk.mybatis.mapper.entity.Condition;
 
 import java.util.List;
+import java.util.Map;
 
 
 /**
@@ -25,58 +26,9 @@ public class RecordWorkLogDataServiceImpl extends AbstractService<RecordWorkLogD
     @Autowired
     private RecordWorkLogDataMapper recordWorkLogDataMapper;
 
-    @Override
-    public List<RecordWorkLogData> queryList(RecordWorkLogDataRequest recordDataRequest) {
-        Condition condition =  new Condition(RecordWorkLogData.class);
-        condition.createCriteria().andEqualTo("id",recordDataRequest.getId())
-                .andEqualTo("companyOfficeId",recordDataRequest.getCompanyOfficeId())
-                .andEqualTo("postId",recordDataRequest.getPostId());
-        if (recordDataRequest.getWorkPlace() != null){
-            condition.getOredCriteria().get(0).andLike("workPlace","%"+recordDataRequest.getWorkPlace()+"%");
-        }
-        if (recordDataRequest.getHazardFactors() != null){
-            condition.getOredCriteria().get(0).andLike("hazardFactors","%"+recordDataRequest.getHazardFactors()+"%");
-        }
-        return this.recordWorkLogDataMapper.selectByCondition(condition);
-    }
 
     @Override
-    public PageResult<RecordWorkLogData> queryListPage(RecordWorkLogDataRequest recordDataRequest, Integer pageNum, Integer pageSize) {
-        Condition condition =  new Condition(RecordWorkLogData.class);
-        condition.createCriteria().andEqualTo("id",recordDataRequest.getId())
-                .andEqualTo("companyOfficeId",recordDataRequest.getCompanyOfficeId())
-                .andEqualTo("postId",recordDataRequest.getPostId());
-        if (recordDataRequest.getWorkPlace() != null){
-            condition.getOredCriteria().get(0).andLike("workPlace","%"+recordDataRequest.getWorkPlace()+"%");
-        }
-        if (recordDataRequest.getHazardFactors() != null){
-            condition.getOredCriteria().get(0).andLike("hazardFactors","%"+recordDataRequest.getHazardFactors()+"%");
-        }
-        PageHelper.startPage(pageNum, pageSize);
-        List<RecordWorkLogData> dataList = this.recordWorkLogDataMapper.selectByCondition(condition);
-        PageResult<RecordWorkLogData> pageList = new  PageResult<RecordWorkLogData>();
-        pageList.setTotal(dataList.size());
-        pageList.setDataList(dataList);
-        return pageList;
-    }
-
-    @Override
-    public RecordWorkLogData add(RecordWorkLogData recordData) {
-            this.recordWorkLogDataMapper.insertUseGeneratedKeys(recordData);
-            return recordData;
-    }
-
-    @Override
-    public RecordWorkLogData delete(Long id) {
-        this.recordWorkLogDataMapper.deleteByPrimaryKey(id);
-        RecordWorkLogData recordWorkLogData = new RecordWorkLogData();
-        recordWorkLogData.setId(id);
-        return recordWorkLogData;
-    }
-
-    @Override
-    public RecordWorkLogData update(RecordWorkLogData recordData) {
-            this.recordWorkLogDataMapper.updateByPrimaryKeySelective(recordData);
-            return recordData;
+    public List<Map<String, Object>> queryRecordDataByorkLog(Long id) {
+        return this.recordWorkLogDataMapper.selectRecordDataByWorkLog(id);
     }
 }

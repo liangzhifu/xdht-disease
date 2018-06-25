@@ -5,6 +5,7 @@ import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by L on 2018/6/14.
@@ -13,13 +14,11 @@ import java.util.List;
 public class RecordControlEffectDetailResponse {
 
     @ApiModelProperty(value = "建设项目概况调查表（控制效果评价）")
-    private RecordControlEffect recordControlEffect;
+    private Map<String, Object> recordControlEffect;
 
     @ApiModelProperty(value = "建设项目概况调查表（控制效果评价）--调查内容")
-    private List<RecordControlEffectData> recordControlEffectDataList;
+    private List<Map<String, Object>> recordControlEffectDataList;
 
-    @ApiModelProperty(value = "建设项目表（控制效果评价）--调查内容")
-    private List<RecordControlEffectProject> recordControlEffectProjectList;
 
 
 

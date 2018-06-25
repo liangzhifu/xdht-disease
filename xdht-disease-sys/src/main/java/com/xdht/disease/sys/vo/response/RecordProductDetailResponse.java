@@ -5,6 +5,7 @@ import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by L on 2018/6/14.
@@ -13,13 +14,10 @@ import java.util.List;
 public class RecordProductDetailResponse {
 
     @ApiModelProperty(value = "物料及产品调查表")
-    private RecordProduct recordProduct;
+    private Map<String, Object> recordProduct;
 
     @ApiModelProperty(value = "物料及产品调查表--调查内容")
-    private List<RecordProductData> recordProductDataList;
-
-    @ApiModelProperty(value = "物料及产品调查表--部门列表内容")
-    private List<SysCompanyOffice> sysCompanyOfficeList;
+    private List<Map<String, Object>> recordProductDataList;
 
 
 
