@@ -13,6 +13,7 @@ import org.springframework.transaction.annotation.Transactional;
 import tk.mybatis.mapper.entity.Condition;
 
 import java.util.List;
+import java.util.Map;
 
 
 /**
@@ -25,71 +26,9 @@ public class RecordAntiNoiseFacilitiesDataServiceImpl extends AbstractService<Re
     @Autowired
     private RecordAntiNoiseFacilitiesDataMapper recordAntiNoiseFacilitiesDataMapper;
 
-    @Override
-    public List<RecordAntiNoiseFacilitiesData> queryList(RecordAntiNoiseFacilitiesDataRequest recordAntiNoiseFacilitiesDataRequest) {
-        Condition condition =  new Condition(RecordAntiNoiseFacilitiesData.class);
-        condition.createCriteria() .andEqualTo("id", recordAntiNoiseFacilitiesDataRequest.getId())
-                .andEqualTo("companyOfficeId",recordAntiNoiseFacilitiesDataRequest.getCompanyOfficeId())
-                .andEqualTo("postId",recordAntiNoiseFacilitiesDataRequest.getPostId());
-        if (recordAntiNoiseFacilitiesDataRequest.getWorkPlace() != null) {
-            condition.getOredCriteria().get(0).andLike("workPlace","%"+recordAntiNoiseFacilitiesDataRequest.getWorkPlace()+"%");
-        }
-        if (recordAntiNoiseFacilitiesDataRequest.getNoiseSource() != null){
-            condition.getOredCriteria().get(0).andLike("noiseSource","%"+recordAntiNoiseFacilitiesDataRequest.getNoiseSource()+"%");
-        }
-        if (recordAntiNoiseFacilitiesDataRequest.getNoiseProtectionFacilities() != null){
-            condition.getOredCriteria().get(0).andLike("noiseProtectionFacilities","%"+recordAntiNoiseFacilitiesDataRequest.getNoiseProtectionFacilities()+"%");
-        }
-        if (recordAntiNoiseFacilitiesDataRequest.getOperationAndMaintenance() != null){
-            condition.getOredCriteria().get(0).andLike("operationAndMaintenance","%"+recordAntiNoiseFacilitiesDataRequest.getOperationAndMaintenance()+"%");
-        }
-        return this.recordAntiNoiseFacilitiesDataMapper.selectByCondition(condition);
-    }
 
     @Override
-    public PageResult<RecordAntiNoiseFacilitiesData> queryListPage(RecordAntiNoiseFacilitiesDataRequest recordAntiNoiseFacilitiesDataRequest, Integer pageNum, Integer pageSize) {
-        Condition condition =  new Condition(RecordAntiNoiseFacilitiesData.class);
-        condition.createCriteria() .andEqualTo("id", recordAntiNoiseFacilitiesDataRequest.getId())
-                .andEqualTo("companyOfficeId",recordAntiNoiseFacilitiesDataRequest.getCompanyOfficeId())
-                .andEqualTo("postId",recordAntiNoiseFacilitiesDataRequest.getPostId());
-        if (recordAntiNoiseFacilitiesDataRequest.getWorkPlace() != null) {
-            condition.getOredCriteria().get(0).andLike("workPlace","%"+recordAntiNoiseFacilitiesDataRequest.getWorkPlace()+"%");
-        }
-        if (recordAntiNoiseFacilitiesDataRequest.getNoiseSource() != null){
-            condition.getOredCriteria().get(0).andLike("noiseSource","%"+recordAntiNoiseFacilitiesDataRequest.getNoiseSource()+"%");
-        }
-        if (recordAntiNoiseFacilitiesDataRequest.getNoiseProtectionFacilities() != null){
-            condition.getOredCriteria().get(0).andLike("noiseProtectionFacilities","%"+recordAntiNoiseFacilitiesDataRequest.getNoiseProtectionFacilities()+"%");
-        }
-        if (recordAntiNoiseFacilitiesDataRequest.getOperationAndMaintenance() != null){
-            condition.getOredCriteria().get(0).andLike("operationAndMaintenance","%"+recordAntiNoiseFacilitiesDataRequest.getOperationAndMaintenance()+"%");
-        }
-        PageHelper.startPage(pageNum, pageSize);
-        List<RecordAntiNoiseFacilitiesData> dataList = this.recordAntiNoiseFacilitiesDataMapper.selectByCondition(condition);
-        PageResult<RecordAntiNoiseFacilitiesData> pageList = new  PageResult<RecordAntiNoiseFacilitiesData>();
-        pageList.setTotal(dataList.size());
-        pageList.setDataList(dataList);
-        return pageList;
-    }
-
-    @Override
-    public RecordAntiNoiseFacilitiesData add(RecordAntiNoiseFacilitiesData recordAntiNoiseFacilitiesData) {
-            this.recordAntiNoiseFacilitiesDataMapper.insertUseGeneratedKeys(recordAntiNoiseFacilitiesData);
-            return  recordAntiNoiseFacilitiesData;
-    }
-
-    @Override
-    public RecordAntiNoiseFacilitiesData delete(Long id) {
-
-            this.recordAntiNoiseFacilitiesDataMapper.deleteByPrimaryKey(id);
-            RecordAntiNoiseFacilitiesData recordAntiNoiseFacilitiesData = new RecordAntiNoiseFacilitiesData();
-            recordAntiNoiseFacilitiesData.setId(id);
-            return recordAntiNoiseFacilitiesData;
-    }
-
-    @Override
-    public RecordAntiNoiseFacilitiesData update(RecordAntiNoiseFacilitiesData recordAntiNoiseFacilitiesData) {
-        this.recordAntiNoiseFacilitiesDataMapper.updateByPrimaryKeySelective(recordAntiNoiseFacilitiesData);
-        return recordAntiNoiseFacilitiesData;
+    public List<Map<String, Object>> queryRecordDataByAntiNoise(Long id) {
+        return this.recordAntiNoiseFacilitiesDataMapper.selectRecordDataByAntiNoise(id);
     }
 }

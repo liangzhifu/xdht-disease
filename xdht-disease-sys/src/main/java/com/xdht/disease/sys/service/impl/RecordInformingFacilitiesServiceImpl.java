@@ -22,6 +22,7 @@ import tk.mybatis.mapper.entity.Condition;
 
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 
 
 /**
@@ -38,20 +39,6 @@ public class RecordInformingFacilitiesServiceImpl extends AbstractService<Record
     private RecordInformingFacilitiesDataService recordInformingFacilitiesDataService;
 
     @Override
-    public List<RecordInformingFacilities> queryList(RecordInformingFacilitiesRequest recordRequest) {
-        Condition condition = new Condition(RecordInformingFacilities.class);
-        condition.createCriteria() .andEqualTo("id", recordRequest.getId())
-                .andEqualTo("informingFacilitiesNo",recordRequest.getInformingFacilitiesNo());
-        if (recordRequest.getVerificationResult() != null) {
-            condition.getOredCriteria().get(0).andLike("verificationResult","%"+recordRequest.getVerificationResult()+"%");
-        }
-        if (recordRequest.getStatus() != null){
-            condition.getOredCriteria().get(0).andEqualTo("status",recordRequest.getStatus());
-        }
-        return this.recordMapper.selectByCondition(condition);
-    }
-
-    @Override
     public PageResult<RecordInformingFacilities> queryListPage(RecordInformingFacilitiesRequest recordRequest) {
         Condition condition = new Condition(RecordInformingFacilities.class);
         condition.createCriteria() .andEqualTo("id", recordRequest.getId());
@@ -61,9 +48,7 @@ public class RecordInformingFacilitiesServiceImpl extends AbstractService<Record
         if (recordRequest.getVerificationResult() != null) {
             condition.getOredCriteria().get(0).andLike("verificationResult","%"+recordRequest.getVerificationResult()+"%");
         }
-        if (recordRequest.getStatus() != null){
-            condition.getOredCriteria().get(0).andEqualTo("status",recordRequest.getStatus());
-        }
+        condition.getOredCriteria().get(0).andEqualTo("status",SysEnum.StatusEnum.STATUS_NORMAL.getCode());
         PageHelper.startPage(recordRequest.getPageNumber(), recordRequest.getPageSize());
         List<RecordInformingFacilities> dataList = this.recordMapper.selectByCondition(condition);
         Integer count = this.recordMapper.selectCountByCondition(condition);
@@ -74,60 +59,59 @@ public class RecordInformingFacilitiesServiceImpl extends AbstractService<Record
     }
 
     @Override
-    public RecordInformingFacilities add(RecordInformingFacilitiesInputRequest recordInformingFacilitiesInputRequest) {
+    public void add(RecordInformingFacilitiesInputRequest recordInformingFacilitiesInputRequest) {
         RecordInformingFacilities recordInformingFacilities = recordInformingFacilitiesInputRequest.getRecordInformingFacilities();
         recordInformingFacilities.setStatus(SysEnum.StatusEnum.STATUS_NORMAL.getCode());
         this.insertUseGeneratedKeys(recordInformingFacilities);
         List<RecordInformingFacilitiesData> recordInformingFacilitiesDataList = new LinkedList<>();
-        for ( RecordInformingFacilitiesData recordInformingFacilitiesData :  recordInformingFacilitiesInputRequest.getRecordInformingFacilitiesDataList()) {
-            recordInformingFacilitiesData.setRelationId(recordInformingFacilities.getId());
-            recordInformingFacilitiesDataList.add(recordInformingFacilitiesData);
-        }
-        if (recordInformingFacilitiesDataList.size()>0){
-            this.recordInformingFacilitiesDataService.insertList(recordInformingFacilitiesDataList);
-        }
-        return recordInformingFacilities;
+       if (recordInformingFacilitiesInputRequest.getRecordInformingFacilitiesDataList() != null ) {
+           for ( RecordInformingFacilitiesData recordInformingFacilitiesData :  recordInformingFacilitiesInputRequest.getRecordInformingFacilitiesDataList()) {
+               recordInformingFacilitiesData.setRelationId(recordInformingFacilities.getId());
+               recordInformingFacilitiesDataList.add(recordInformingFacilitiesData);
+           }
+           this.recordInformingFacilitiesDataService.insertList(recordInformingFacilitiesDataList);
+       }
     }
 
     @Override
-    public RecordInformingFacilities delete(Long id) {
-        RecordInformingFacilities recordInformingFacilities = this.recordMapper.selectByPrimaryKey(id);
+    public void delete(Long id) {
+        RecordInformingFacilities recordInformingFacilities = new RecordInformingFacilities();
+        recordInformingFacilities.setId(id);
         recordInformingFacilities.setStatus(SysEnum.StatusEnum.STATUS_DELETE.getCode());
         this.recordMapper.updateByPrimaryKeySelective(recordInformingFacilities);
-        return recordInformingFacilities;
     }
 
     @Override
-    public RecordInformingFacilities update(RecordInformingFacilitiesInputRequest recordInformingFacilitiesInputRequest) {
+    public void update(RecordInformingFacilitiesInputRequest recordInformingFacilitiesInputRequest) {
         RecordInformingFacilities recordInformingFacilities = recordInformingFacilitiesInputRequest.getRecordInformingFacilities();
         this.recordMapper.updateByPrimaryKeySelective(recordInformingFacilities);
-        List<RecordInformingFacilitiesData> recordInformingFacilitiesDataList = new LinkedList<>();
-        for ( RecordInformingFacilitiesData recordInformingFacilitiesData: recordInformingFacilitiesInputRequest.getRecordInformingFacilitiesDataList() ) {
-            if (recordInformingFacilitiesData.getId() == null){
+
+        Condition condition = new Condition(RecordInformingFacilitiesData.class);
+        condition.createCriteria().andEqualTo("relationId", recordInformingFacilities.getId());
+        List<RecordInformingFacilitiesData> recordInformingFacilitiesDataList = this.recordInformingFacilitiesDataService.selectByCondition(condition);
+        if (recordInformingFacilitiesDataList != null & recordInformingFacilitiesDataList.size() > 0 ) {
+            for ( RecordInformingFacilitiesData recordInformingFacilitiesData: recordInformingFacilitiesInputRequest.getRecordInformingFacilitiesDataList() ) {
+                this.recordInformingFacilitiesDataService.deleteByPrimaryKey(recordInformingFacilitiesData.getId());
+            }
+        }
+        if (recordInformingFacilitiesInputRequest.getRecordInformingFacilitiesDataList() != null ) {
+            for (RecordInformingFacilitiesData recordInformingFacilitiesData : recordInformingFacilitiesInputRequest.getRecordInformingFacilitiesDataList()) {
                 recordInformingFacilitiesData.setRelationId(recordInformingFacilities.getId());
                 recordInformingFacilitiesDataList.add(recordInformingFacilitiesData);
             }
-            this.recordInformingFacilitiesDataService.updateByPrimaryKeySelective(recordInformingFacilitiesData);
-        }
-        if (recordInformingFacilitiesDataList.size()>0){
             this.recordInformingFacilitiesDataService.insertList(recordInformingFacilitiesDataList);
         }
-        return recordInformingFacilities;
     }
 
     @Override
     public RecordInformingFacilitiesDetailResponse queryInformingFacilitiesDetail(Long id) {
         RecordInformingFacilitiesDetailResponse response = new RecordInformingFacilitiesDetailResponse();
-        RecordInformingFacilities recordInformingFacilities = new RecordInformingFacilities();
-        recordInformingFacilities.setSceneId(id);
-        recordInformingFacilities = this.recordMapper.selectOne(recordInformingFacilities);
-        if (recordInformingFacilities != null) {
-            Long recordId = recordInformingFacilities.getId();
-            response.setRecordInformingFacilities(recordInformingFacilities);
-            Condition condition = new Condition(RecordIndividualProtectiveEquipmentData.class);
-            condition.createCriteria() .andEqualTo("relationId", recordId);
-            List<RecordInformingFacilitiesData> recordInformingFacilitiesDataList = this.recordInformingFacilitiesDataService.selectByCondition(condition);
-            response.setRecordInformingFacilitiesDataList(recordInformingFacilitiesDataList);
+        Map<String, Object> map = this.recordMapper.selectRecordBySceneId(id);
+        if (map != null) {
+            response.setRecordInformingFacilities(map);
+            Long recordId = (Long) map.get("id");
+            List<Map<String, Object>> mapList = this.recordInformingFacilitiesDataService.queryRecordDataByInformingFacilities(recordId);
+            response.setRecordInformingFacilitiesDataList(mapList);
         }
         return response;
     }

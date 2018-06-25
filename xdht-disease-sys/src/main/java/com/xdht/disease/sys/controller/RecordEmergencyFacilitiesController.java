@@ -4,6 +4,7 @@ import com.xdht.disease.common.authorization.annotation.CurrentUser;
 import com.xdht.disease.common.core.PageResult;
 import com.xdht.disease.common.core.Result;
 import com.xdht.disease.common.model.User;
+import com.xdht.disease.sys.constant.SysEnum;
 import com.xdht.disease.sys.model.RecordEmergencyFacilities;
 import com.xdht.disease.sys.service.RecordEmergencyFacilitiesService;
 import com.xdht.disease.sys.vo.request.RecordEmergencyFacilitiesInputRequest;
@@ -30,11 +31,6 @@ public class RecordEmergencyFacilitiesController {
     @Autowired
     private RecordEmergencyFacilitiesService recordEmergencyFacilitiesService;
 
-    @RequestMapping(value = "/recordList", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
-    @ApiOperation(value = "查询列表")
-    public  ResponseEntity<Result<List<RecordEmergencyFacilities>>> recordList( @RequestBody RecordEmergencyFacilitiesRequest recordEmergencyFacilitiesRequest) {
-        return new ResponseEntity<>(Result.ok(recordEmergencyFacilitiesService.queryList(recordEmergencyFacilitiesRequest)), HttpStatus.OK);
-    }
     @RequestMapping(value = "/pageList", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     @ApiOperation(value = "分页查询")
     public ResponseEntity<Result<PageResult<RecordEmergencyFacilities>>> recordPage( @RequestBody RecordEmergencyFacilitiesRequest recordEmergencyFacilitiesRequest) {
@@ -43,20 +39,23 @@ public class RecordEmergencyFacilitiesController {
 
     @RequestMapping(value = "/add", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     @ApiOperation(value = "添加")
-    public ResponseEntity<Result<RecordEmergencyFacilities>> add( @RequestBody RecordEmergencyFacilitiesInputRequest recordData) {
-        return new ResponseEntity<>(Result.ok(recordEmergencyFacilitiesService.add(recordData)), HttpStatus.OK);
+    public ResponseEntity<Result<String>> add( @RequestBody RecordEmergencyFacilitiesInputRequest recordData) {
+        recordEmergencyFacilitiesService.add(recordData);
+        return new ResponseEntity<>(Result.ok(SysEnum.ResultEnum.RESULT_SUCCESS.getCode()), HttpStatus.OK);
     }
 
     @RequestMapping(value = "/delete/{id}", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     @ApiOperation(value = "删除")
-    public ResponseEntity<Result<RecordEmergencyFacilities>> delete( @PathVariable Long id) {
-        return new ResponseEntity<>(Result.ok(recordEmergencyFacilitiesService.delete(id)), HttpStatus.OK);
+    public ResponseEntity<Result<String>> delete( @PathVariable Long id) {
+        recordEmergencyFacilitiesService.delete(id);
+        return new ResponseEntity<>(Result.ok(SysEnum.ResultEnum.RESULT_SUCCESS.getCode()), HttpStatus.OK);
     }
 
     @RequestMapping(value = "/update", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     @ApiOperation(value = "修改")
-    public ResponseEntity<Result<RecordEmergencyFacilities>> update( @RequestBody RecordEmergencyFacilitiesInputRequest recordData) {
-        return new ResponseEntity<>(Result.ok(recordEmergencyFacilitiesService.update(recordData)), HttpStatus.OK);
+    public ResponseEntity<Result<String>> update( @RequestBody RecordEmergencyFacilitiesInputRequest recordData) {
+        recordEmergencyFacilitiesService.update(recordData);
+        return new ResponseEntity<>(Result.ok(SysEnum.ResultEnum.RESULT_SUCCESS.getCode()), HttpStatus.OK);
     }
 
     @RequestMapping(value = "/detail/{id}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)

@@ -11,7 +11,16 @@
     <result column="status" jdbcType="CHAR" property="status" />
     <result column="create_by" jdbcType="BIGINT" property="createBy" />
     <result column="create_date" jdbcType="TIMESTAMP" property="createDate" />
-    <result column="upadte_by" jdbcType="BIGINT" property="upadteBy" />
+    <result column="update_by" jdbcType="BIGINT" property="updateBy" />
     <result column="update_date" jdbcType="TIMESTAMP" property="updateDate" />
+    <result column="scene_id" jdbcType="BIGINT" property="sceneId" />
   </resultMap>
+
+  <select id="selectRecordBySceneId" resultType="java.util.HashMap" parameterType="java.lang.Long">
+    SELECT ropf.`id`, ropf.other_protective_facilities_no as otherProtectiveFacilitiesNo,
+    ropf.verification_result as verificationResult, ropf.scene_id as sceneId
+    FROM record_other_protective_facilities ropf
+    WHERE ropf.`status` = '0'
+    AND ropf.`scene_id` = #{id, jdbcType=BIGINT}
+  </select>
 </mapper>

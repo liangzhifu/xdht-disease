@@ -14,4 +14,18 @@
     <result column="operation_and_maintenance" jdbcType="VARCHAR" property="operationAndMaintenance" />
     <result column="relation_id" jdbcType="BIGINT" property="relationId" />
   </resultMap>
+
+  <select id="selectRecordDataByOtherProtective" parameterType="java.lang.Long" resultType="java.util.HashMap">
+    SELECT ropfd.id, ropfd.relation_id as relationId,
+    ropfd.office_id as officeId,
+    ropfd.post_id as postId,
+    ropfd.work_place as workPlace,
+    ropfd.hazard_factors as hazardFactors,
+    ropfd.protective_facilities as protectiveFacilities,
+    ropfd.operation_and_maintenance as operationAndMaintenance,
+    sco.`office_name` AS officeName
+    FROM `record_other_protective_facilities_data` ropfd, sys_company_office sco
+    WHERE ropfd.`office_id` = sco.`id`
+    AND ropfd.`relation_id` = #{id, jdbcType=BIGINT}
+  </select>
 </mapper>

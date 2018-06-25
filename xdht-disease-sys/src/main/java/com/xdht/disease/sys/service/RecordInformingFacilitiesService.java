@@ -14,12 +14,6 @@ import java.util.List;
  */
 public interface RecordInformingFacilitiesService extends Service<RecordInformingFacilities> {
 
-    /**
-     * 查询
-     * @param recordRequest 查询条件
-     * @return 返回结果
-     */
-    public List<RecordInformingFacilities> queryList(RecordInformingFacilitiesRequest recordRequest);
 
     /**
      * 分页查询
@@ -31,23 +25,20 @@ public interface RecordInformingFacilitiesService extends Service<RecordInformin
     /**
      * 添加
      * @param recordInformingFacilitiesInputRequest 实体
-     * @return 返回结果
      */
-    public RecordInformingFacilities add(RecordInformingFacilitiesInputRequest recordInformingFacilitiesInputRequest);
+    public void add(RecordInformingFacilitiesInputRequest recordInformingFacilitiesInputRequest);
 
     /**
      * 删除
      * @param id 主键id
-     * @return 返回结果
      */
-    public RecordInformingFacilities delete(Long id);
+    public void delete(Long id);
 
     /**
      * 修改
      * @param recordInformingFacilitiesInputRequest 实体
-     * @return 返回结果
      */
-    public RecordInformingFacilities update(RecordInformingFacilitiesInputRequest recordInformingFacilitiesInputRequest);
+    public void update(RecordInformingFacilitiesInputRequest recordInformingFacilitiesInputRequest);
 
     /**
      * 获取 职业病危害告知设施调查表 信息

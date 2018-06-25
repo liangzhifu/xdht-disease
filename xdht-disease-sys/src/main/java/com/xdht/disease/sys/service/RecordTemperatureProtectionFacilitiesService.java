@@ -16,13 +16,6 @@ import java.util.List;
 public interface RecordTemperatureProtectionFacilitiesService extends Service<RecordTemperatureProtectionFacilities> {
 
     /**
-     * 查询
-     * @param recordRequest 查询条件
-     * @return 返回结果
-     */
-    public List<RecordTemperatureProtectionFacilities> queryList(RecordTemperatureProtectionFacilitiesRequest recordRequest);
-
-    /**
      * 分页查询
      * @param recordRequest 查询条件
      * @return 返回结果
@@ -34,21 +27,21 @@ public interface RecordTemperatureProtectionFacilitiesService extends Service<Re
      * @param recordTemperatureInputRequest 实体
      * @return 返回结果
      */
-    public RecordTemperatureProtectionFacilities add(RecordTemperatureInputRequest recordTemperatureInputRequest);
+    public void add(RecordTemperatureInputRequest recordTemperatureInputRequest);
 
     /**
      * 删除
      * @param id 主键id
      * @return 返回结果
      */
-    public RecordTemperatureProtectionFacilities delete(Long id);
+    public void delete(Long id);
 
     /**
      * 修改
      * @param recordTemperatureInputRequest 实体
      * @return 返回结果
      */
-    public RecordTemperatureProtectionFacilities update(RecordTemperatureInputRequest recordTemperatureInputRequest);
+    public void update(RecordTemperatureInputRequest recordTemperatureInputRequest);
 
     /**
      * 获取 防高温设施调查表 信息

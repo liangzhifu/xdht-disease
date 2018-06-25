@@ -29,11 +29,6 @@ public class RecordHealthManagementController {
     @Autowired
     private RecordHealthManagementService recordHealthManagementService;
 
-    @RequestMapping(value = "/recordList", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
-    @ApiOperation(value = "查询列表")
-    public  ResponseEntity<Result<List<RecordHealthManagement>>> recordList(@RequestBody RecordHealthManagementRequest recordHealthManagementRequest) {
-        return new ResponseEntity<>(Result.ok(recordHealthManagementService.queryList(recordHealthManagementRequest)), HttpStatus.OK);
-    }
     @RequestMapping(value = "/pageList", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     @ApiOperation(value = "分页查询")
     public ResponseEntity<Result<PageResult<RecordHealthManagement>>> recordPage(@RequestBody RecordHealthManagementRequest recordHealthManagementRequest) {

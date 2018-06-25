@@ -5,6 +5,7 @@ import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by L on 2018/6/14.
@@ -13,10 +14,10 @@ import java.util.List;
 public class RecordHazardFactorsDetailResponse {
 
     @ApiModelProperty(value = "职业病危害因素调查表")
-    private RecordHazardFactors recordHazardFactors;
+    private Map<String, Object> recordHazardFactors;
 
     @ApiModelProperty(value = "职业病危害因素调查表--调查内容")
-    private List<RecordHazardFactorsData> recordHazardFactorsDataList;
+    private List<Map<String, Object>> recordHazardFactorsDataList;
 
 
 

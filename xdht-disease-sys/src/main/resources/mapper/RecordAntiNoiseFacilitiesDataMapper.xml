@@ -14,4 +14,18 @@
     <result column="operation_and_maintenance" jdbcType="VARCHAR" property="operationAndMaintenance" />
     <result column="relation_id" jdbcType="BIGINT" property="relationId" />
   </resultMap>
+
+  <select id="selectRecordDataByAntiNoise" parameterType="java.lang.Long" resultType="java.util.HashMap">
+    SELECT ranf.id, ranf.relation_id as relationId,
+    ranf.company_office_id as companyOfficeId,
+    ranf.post_id as postId,
+    ranf.work_place as workPlace,
+    ranf.noise_source as noiseSource,
+    ranf.noise_protection_facilities as noiseProtectionFacilities,
+    ranf.operation_and_maintenance as operationAndMaintenance,
+    sco.`office_name` AS officeName
+    FROM `record_anti_noise_facilities_data` ranf, sys_company_office sco
+    WHERE ranf.`company_office_id` = sco.`id`
+    AND ranf.`relation_id` = #{id, jdbcType=BIGINT}
+  </select>
 </mapper>

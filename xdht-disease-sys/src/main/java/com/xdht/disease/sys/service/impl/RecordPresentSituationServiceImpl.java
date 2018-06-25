@@ -59,12 +59,10 @@ public class RecordPresentSituationServiceImpl extends AbstractService<RecordPre
         if (recordPresentSituationRequest.getPreEvaluationNo() != null) {
             condition.createCriteria().andLike("preEvaluationNo","%" + recordPresentSituationRequest.getPreEvaluationNo() + "%");
         }
-/*        if (recordPresentSituationRequest.getVerificationResult() != null) {
+        if (recordPresentSituationRequest.getVerificationResult() != null) {
             condition.getOredCriteria().get(0).andLike("verificationResult","%"+recordPresentSituationRequest.getVerificationResult()+"%");
         }
-        if (recordPresentSituationRequest.getStatus() != null){
-            condition.getOredCriteria().get(0).andEqualTo("status",recordPresentSituationRequest.getStatus());
-        }*/
+        condition.getOredCriteria().get(0).andEqualTo("status",SysEnum.StatusEnum.STATUS_NORMAL.getCode());
         PageHelper.startPage(recordPresentSituationRequest.getPageNumber(), recordPresentSituationRequest.getPageSize());
         List<RecordPresentSituation> dataList = this.recordPresentSituationMapper.selectByCondition(condition);
         Integer count = this.recordPresentSituationMapper.selectCountByCondition(condition);
@@ -75,7 +73,7 @@ public class RecordPresentSituationServiceImpl extends AbstractService<RecordPre
     }
 
     @Override
-    public RecordPresentSituation addRecordPresentSituation(RecordPresentSituationInputRequest recordPresentSituationInputRequest) {
+    public void addRecordPresentSituation(RecordPresentSituationInputRequest recordPresentSituationInputRequest) {
         RecordPresentSituation recordPresentSituation = new RecordPresentSituation();
         recordPresentSituation.setStatus(SysEnum.StatusEnum.STATUS_NORMAL.getCode());
         this.insertUseGeneratedKeys(recordPresentSituation);
@@ -85,19 +83,17 @@ public class RecordPresentSituationServiceImpl extends AbstractService<RecordPre
                 recordPresentSituationDataList.add(recordPresentSituationData);
         }
         this.recordPresentSituationDataService.insertList(recordPresentSituationDataList);
-        return recordPresentSituation;
     }
 
     @Override
-    public RecordPresentSituation deleteRecordPresentSituation(Long id) {
+    public void deleteRecordPresentSituation(Long id) {
         RecordPresentSituation recordPresentSituation = this.selectByPrimaryKey(id);
         recordPresentSituation.setStatus(SysEnum.StatusEnum.STATUS_DELETE.getCode());
         this.recordPresentSituationMapper.updateByPrimaryKeySelective(recordPresentSituation);
-        return recordPresentSituation;
     }
 
     @Override
-    public RecordPresentSituation updateRecordPresentSituation(RecordPresentSituationInputRequest recordPresentSituationInputRequest) {
+    public void updateRecordPresentSituation(RecordPresentSituationInputRequest recordPresentSituationInputRequest) {
         RecordPresentSituation recordPresentSituation = new RecordPresentSituation();
         recordPresentSituation.setId(recordPresentSituationInputRequest.getRecordPresentSituation().getId());
         recordPresentSituation.setPreEvaluationNo(recordPresentSituationInputRequest.getRecordPresentSituation().getPreEvaluationNo());
@@ -107,7 +103,6 @@ public class RecordPresentSituationServiceImpl extends AbstractService<RecordPre
         for (RecordPresentSituationData  recordPresentSituationData:  recordPresentSituationInputRequest.getRecordPresentSituationDataList()) {
             this.recordPresentSituationDataService.updateByPrimaryKeySelective(recordPresentSituationData);
         }
-        return recordPresentSituation;
     }
 
     @Override

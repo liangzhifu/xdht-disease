@@ -12,6 +12,22 @@
     <result column="protective_equipment" jdbcType="VARCHAR" property="protectiveEquipment" />
     <result column="technical_parameter" jdbcType="VARCHAR" property="technicalParameter" />
     <result column="number" jdbcType="BIGINT" property="number" />
-    <result column="usaged" jdbcType="VARCHAR" property="usaged" />
+    <result column="usage" jdbcType="VARCHAR" property="usage" />
+    <result column="relation_id" jdbcType="BIGINT" property="relationId" />
   </resultMap>
+
+  <select id="selectRecordDataByIndividualProtective" parameterType="java.lang.Long" resultType="java.util.HashMap">
+    SELECT riped.id, riped.relation_id as relationId,
+    riped.company_office_id as companyOfficeId,
+    riped.post_id as postId,
+    riped.hazard_factors as hazardFactors,
+    riped.protective_equipment as protectiveEquipment,
+    riped.technical_parameter as technicalParameter,
+    riped.number as number,
+    riped.usage as usage,
+    sco.`office_name` AS officeName
+    FROM `record_individual_protective_equipment_data` riped, sys_company_office sco
+    WHERE riped.`company_office_id` = sco.`id`
+    AND riped.`relation_id` = #{id, jdbcType=BIGINT}
+  </select>
 </mapper>

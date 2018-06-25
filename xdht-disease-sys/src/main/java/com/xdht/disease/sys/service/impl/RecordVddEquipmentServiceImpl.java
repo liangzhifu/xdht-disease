@@ -19,6 +19,7 @@ import tk.mybatis.mapper.entity.Condition;
 
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 
 
 /**
@@ -34,19 +35,6 @@ public class RecordVddEquipmentServiceImpl extends AbstractService<RecordVddEqui
     @Autowired
     private RecordVddEquipmentDataService recordVddEquipmentDataService;
 
-    @Override
-    public List<RecordVddEquipment> queryList(RecordVddEquipmentRequest recordVddEquipmentRequest) {
-        Condition condition = new Condition(RecordVddEquipment.class);
-        condition.createCriteria() .andEqualTo("id", recordVddEquipmentRequest.getId())
-                .andEqualTo("vddEquipmentNo",recordVddEquipmentRequest.getVddEquipmentNo());
-        if (recordVddEquipmentRequest.getVerificationResult() != null) {
-            condition.getOredCriteria().get(0).andLike("verificationResult","%"+recordVddEquipmentRequest.getVerificationResult()+"%");
-        }
-        if (recordVddEquipmentRequest.getStatus() != null){
-            condition.getOredCriteria().get(0).andEqualTo("status",recordVddEquipmentRequest.getStatus());
-        }
-        return this.recordVddEquipmentMapper.selectByCondition(condition);
-    }
 
     @Override
     public PageResult<RecordVddEquipment> queryListPage(RecordVddEquipmentRequest recordVddEquipmentRequest) {
@@ -69,54 +57,61 @@ public class RecordVddEquipmentServiceImpl extends AbstractService<RecordVddEqui
     }
 
     @Override
-    public RecordVddEquipment add(RecordVddEquipmentInputRequest recordVddEquipmentInputRequest) {
+    public void add(RecordVddEquipmentInputRequest recordVddEquipmentInputRequest) {
         RecordVddEquipment recordVddEquipment = recordVddEquipmentInputRequest.getRecordVddEquipment();
         recordVddEquipment.setStatus(SysEnum.StatusEnum.STATUS_NORMAL.getCode());
         this.insertUseGeneratedKeys(recordVddEquipment);
         List<RecordVddEquipmentData> recordVddEquipmentDataList = new LinkedList<>();
-        for ( RecordVddEquipmentData recordVddEquipmentData : recordVddEquipmentInputRequest.getRecordVddEquipmentDataList()) {
-            recordVddEquipmentData.setRelationId(recordVddEquipment.getId());
-            recordVddEquipmentDataList.add(recordVddEquipmentData);
-        }
-        this.recordVddEquipmentDataService.insertList(recordVddEquipmentDataList);
-        return recordVddEquipment;
-    }
-
-    @Override
-    public RecordVddEquipment delete(Long id) {
-        RecordVddEquipment recordVddEquipment = this.recordVddEquipmentMapper.selectByPrimaryKey(id);
-        recordVddEquipment.setStatus(SysEnum.StatusEnum.STATUS_DELETE.getCode());
-        this.recordVddEquipmentMapper.updateByPrimaryKeySelective(recordVddEquipment);
-        return recordVddEquipment;
-    }
-
-    @Override
-    public RecordVddEquipment update(RecordVddEquipmentInputRequest recordVddEquipmentInputRequest) {
-        RecordVddEquipment recordVddEquipment = recordVddEquipmentInputRequest.getRecordVddEquipment();
-        this.recordVddEquipmentMapper.updateByPrimaryKeySelective(recordVddEquipment);
-        List<RecordVddEquipmentData> recordVddEquipmentDataList = new LinkedList<>();
-        for ( RecordVddEquipmentData recordVddEquipmentData : recordVddEquipmentInputRequest.getRecordVddEquipmentDataList()) {
-            if (recordVddEquipmentData.getId() == null){
+        if (recordVddEquipmentInputRequest.getRecordVddEquipmentDataList() != null ) {
+            for ( RecordVddEquipmentData recordVddEquipmentData : recordVddEquipmentInputRequest.getRecordVddEquipmentDataList()) {
                 recordVddEquipmentData.setRelationId(recordVddEquipment.getId());
                 recordVddEquipmentDataList.add(recordVddEquipmentData);
             }
-            this.recordVddEquipmentDataService.updateByPrimaryKeySelective(recordVddEquipmentData);
-        }
-        if (recordVddEquipmentDataList.size()>0){
             this.recordVddEquipmentDataService.insertList(recordVddEquipmentDataList);
         }
-        return recordVddEquipment;
+    }
+
+    @Override
+    public void delete(Long id) {
+        RecordVddEquipment recordVddEquipment = new RecordVddEquipment();
+        recordVddEquipment.setId(id);
+        recordVddEquipment.setStatus(SysEnum.StatusEnum.STATUS_DELETE.getCode());
+        this.recordVddEquipmentMapper.updateByPrimaryKeySelective(recordVddEquipment);
+    }
+
+    @Override
+    public void update(RecordVddEquipmentInputRequest recordVddEquipmentInputRequest) {
+        RecordVddEquipment recordVddEquipment = recordVddEquipmentInputRequest.getRecordVddEquipment();
+        this.recordVddEquipmentMapper.updateByPrimaryKeySelective(recordVddEquipment);
+
+        Condition condition = new Condition(RecordVddEquipmentData.class);
+        condition.createCriteria().andEqualTo("relationId", recordVddEquipment.getId());
+        List<RecordVddEquipmentData> recordVddEquipmentDataList = this.recordVddEquipmentDataService.selectByCondition(condition);
+        if (recordVddEquipmentDataList != null && recordVddEquipmentDataList.size() > 0) {
+            for ( RecordVddEquipmentData recordVddEquipmentData : recordVddEquipmentDataList) {
+                this.recordVddEquipmentDataService.deleteByPrimaryKey(recordVddEquipmentData.getId());
+            }
+        }
+        recordVddEquipmentDataList = new LinkedList<>();
+        if (recordVddEquipmentInputRequest.getRecordVddEquipmentDataList() != null) {
+            for (RecordVddEquipmentData recordVddEquipmentData : recordVddEquipmentInputRequest.getRecordVddEquipmentDataList()) {
+                 recordVddEquipmentData.setRelationId(recordVddEquipment.getId());
+                 recordVddEquipmentDataList.add(recordVddEquipmentData);
+            }
+        this.recordVddEquipmentDataService.insertList(recordVddEquipmentDataList);
+        }
     }
 
     @Override
     public RecordVddEquipmentDetailResponse queryVddEquipmentDetail(Long id) {
         RecordVddEquipmentDetailResponse response = new RecordVddEquipmentDetailResponse();
-        RecordVddEquipment recordVddEquipment = this.selectByPrimaryKey(id);
-        response.setRecordVddEquipment(recordVddEquipment);
-        Condition condition = new Condition(RecordVddEquipmentData.class);
-        condition.createCriteria() .andEqualTo("relationId", id);
-        List<RecordVddEquipmentData> recordVddEquipmentDataList = this.recordVddEquipmentDataService.selectByCondition(condition);
-        response.setRecordVddEquipmentDataList(recordVddEquipmentDataList);
+        Map<String, Object> map = this.recordVddEquipmentMapper.selectRecordBySceneId(id);
+        if (map != null) {
+            response.setRecordVddEquipment(map);
+            Long recordId = (Long) map.get("id");
+            List<Map<String, Object>> mapList = this.recordVddEquipmentDataService.queryRecordDataByVddEquipment(recordId);
+            response.setRecordVddEquipmentDataList(mapList);
+        }
         return response;
     }
 }

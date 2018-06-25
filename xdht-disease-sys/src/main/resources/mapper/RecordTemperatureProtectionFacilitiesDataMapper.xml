@@ -12,5 +12,19 @@
     <result column="operation_and_maintenance" jdbcType="VARCHAR" property="operationAndMaintenance" />
     <result column="productive_heat_source" jdbcType="VARCHAR" property="productiveHeatSource" />
     <result column="temperature_protection_facilities" jdbcType="VARCHAR" property="temperatureProtectionFacilities" />
+    <result column="relation_id" jdbcType="BIGINT" property="relationId" />
   </resultMap>
+
+  <select id="selectRecordDataByTemperatureProtection" parameterType="java.lang.Long" resultType="java.util.HashMap">
+    SELECT rtpfd.id, rtpfd.relation_id as relationId,
+    rtpfd.company_office_id as companyOfficeId,
+    rtpfd.work_place as workPlace,
+    rtpfd.operation_and_maintenance as operationAndMaintenance,
+    rtpfd.productive_heat_source as productiveHeatSource,
+    rtpfd.temperature_protection_facilities as productiveHeatSource,
+    sco.`office_name` AS officeName
+    FROM `record_temperature_protection_facilities_data` rtpfd, sys_company_office sco
+    WHERE rtpfd.`company_office_id` = sco.`id`
+    AND rtpfd.`relation_id` = #{id, jdbcType=BIGINT}
+  </select>
 </mapper>
