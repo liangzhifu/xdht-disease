@@ -21,8 +21,9 @@
     refd.office_id as officeId,
     refd.work_place as workPlace,
     refd.emergency_facilities as emergencyFacilities,
-    refd.technical_parameter as technicalParameter,
     refd.number as number,
+    refd.operation_and_maintenance as operationAndMaintenance,
+    refd.technical_parameter as technicalParameter,
     refd.hazard_factors as hazardFactors,
     sco.`office_name` AS officeName
     FROM `record_emergency_facilities_data` refd, sys_company_office sco

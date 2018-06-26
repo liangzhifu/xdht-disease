@@ -1,13 +1,12 @@
 package com.xdht.disease.sys.service.impl;
 
 import com.github.pagehelper.PageHelper;
+import com.xdht.disease.common.core.AbstractService;
 import com.xdht.disease.common.core.PageResult;
 import com.xdht.disease.sys.constant.SysEnum;
 import com.xdht.disease.sys.dao.RecordEmployeeSummaryMapper;
-import com.xdht.disease.sys.model.RecordCompanySummary;
 import com.xdht.disease.sys.model.RecordEmployeeSummary;
 import com.xdht.disease.sys.service.RecordEmployeeSummaryService;
-import com.xdht.disease.common.core.AbstractService;
 import com.xdht.disease.sys.vo.request.RecordEmployeeSummaryRequest;
 import com.xdht.disease.sys.vo.response.RecordEmployeeSummaryResponse;
 import org.springframework.beans.factory.annotation.Autowired;

@@ -28,7 +28,7 @@
     rved.operation_and_maintenance as operationAndMaintenance,
     sco.`office_name` AS officeName
     FROM `record_vdd_equipment_data` rved, sys_company_office sco
-    WHERE rved.`company_office_id` = sco.`id`
-    AND rved.`post_personnel_id` = #{id, jdbcType=BIGINT}
+    WHERE rved.`office_id` = sco.`id`
+    AND rved.`relation_id` = #{id, jdbcType=BIGINT}
   </select>
 </mapper>

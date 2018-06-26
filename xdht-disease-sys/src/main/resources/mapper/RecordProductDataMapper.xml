@@ -21,14 +21,14 @@
   <select id="selectRecordDataByProduct" parameterType="java.lang.Long" resultType="java.util.HashMap">
     SELECT rpd.id, rpd.relation_id as relationId,
     rpd.company_office_id as companyOfficeId,
-    rpd.process_name as process_name,
-    rpd.product_type as product_type,
-    rpd.product_name as product_name,
-    rpd.product_shape as product_shape,
-    rpd.chemical_composition as chemical_composition,
-    rpd.storage_mode as storage_mode,
-    rpd.storage_mode as storage_mode,
-    rpd.annual_amount as annual_amount,
+    rpd.process_name as processName,
+    rpd.product_type as productType,
+    rpd.product_name as productName,
+    rpd.product_shape as productShape,
+    rpd.chemical_composition as chemicalComposition,
+    rpd.storage_mode as storageMode,
+    rpd.storage_mode as transportMode,
+    rpd.annual_amount as annualAmount,
     sco.`office_name` AS officeName
     FROM `record_product_data` rpd, sys_company_office sco
     WHERE rpd.`company_office_id` = sco.`id`

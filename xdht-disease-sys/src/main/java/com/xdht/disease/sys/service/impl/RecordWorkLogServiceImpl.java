@@ -7,12 +7,8 @@ import com.xdht.disease.sys.constant.SysEnum;
 import com.xdht.disease.sys.dao.RecordWorkLogMapper;
 import com.xdht.disease.sys.model.RecordWorkLog;
 import com.xdht.disease.sys.model.RecordWorkLogData;
-import com.xdht.disease.sys.model.SysCompanyOffice;
-import com.xdht.disease.sys.model.SysPost;
 import com.xdht.disease.sys.service.RecordWorkLogDataService;
 import com.xdht.disease.sys.service.RecordWorkLogService;
-import com.xdht.disease.sys.service.SysCompanyOfficeService;
-import com.xdht.disease.sys.service.SysPostService;
 import com.xdht.disease.sys.vo.request.RecordWorkLogInputRequest;
 import com.xdht.disease.sys.vo.request.RecordWorkLogRequest;
 import com.xdht.disease.sys.vo.response.RecordWorkLogDetailResponse;
@@ -61,7 +57,7 @@ public class RecordWorkLogServiceImpl extends AbstractService<RecordWorkLog> imp
 
     @Override
     public void add(RecordWorkLogInputRequest recordWorkLogInputRequest) {
-            RecordWorkLog recordWorkLog = new RecordWorkLog();
+            RecordWorkLog recordWorkLog = recordWorkLogInputRequest.getRecordWorkLog();
             recordWorkLog.setStatus(SysEnum.StatusEnum.STATUS_NORMAL.getCode());
             this.insertUseGeneratedKeys(recordWorkLog);
             List<RecordWorkLogData> recordWorkLogDataList = new LinkedList<>();

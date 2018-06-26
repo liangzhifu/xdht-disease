@@ -21,7 +21,7 @@
     red.epuipment_number as epuipmentNumber,
     sco.`office_name` AS officeName
     FROM `record_equipment_data` red, sys_company_office sco
-    WHERE red.`company_office_id` = sco.`id`
+    WHERE red.`officd_id` = sco.`id`
     AND red.`relation_id` = #{id, jdbcType=BIGINT}
   </select>
 </mapper>

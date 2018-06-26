@@ -18,10 +18,11 @@
   <select id="selectRecordDataByTemperatureProtection" parameterType="java.lang.Long" resultType="java.util.HashMap">
     SELECT rtpfd.id, rtpfd.relation_id as relationId,
     rtpfd.company_office_id as companyOfficeId,
+    rtpfd.post_id as postId,
     rtpfd.work_place as workPlace,
     rtpfd.operation_and_maintenance as operationAndMaintenance,
     rtpfd.productive_heat_source as productiveHeatSource,
-    rtpfd.temperature_protection_facilities as productiveHeatSource,
+    rtpfd.temperature_protection_facilities as temperatureProtectionFacilities,
     sco.`office_name` AS officeName
     FROM `record_temperature_protection_facilities_data` rtpfd, sys_company_office sco
     WHERE rtpfd.`company_office_id` = sco.`id`

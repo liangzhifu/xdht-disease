@@ -12,7 +12,7 @@
     <result column="protective_equipment" jdbcType="VARCHAR" property="protectiveEquipment" />
     <result column="technical_parameter" jdbcType="VARCHAR" property="technicalParameter" />
     <result column="number" jdbcType="BIGINT" property="number" />
-    <result column="usage" jdbcType="VARCHAR" property="usage" />
+    <result column="usaged" jdbcType="VARCHAR" property="usaged" />
     <result column="relation_id" jdbcType="BIGINT" property="relationId" />
   </resultMap>
 
@@ -24,7 +24,7 @@
     riped.protective_equipment as protectiveEquipment,
     riped.technical_parameter as technicalParameter,
     riped.number as number,
-    riped.usage as usage,
+    riped.usaged as usaged,
     sco.`office_name` AS officeName
     FROM `record_individual_protective_equipment_data` riped, sys_company_office sco
     WHERE riped.`company_office_id` = sco.`id`

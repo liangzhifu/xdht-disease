@@ -7,7 +7,6 @@ import com.xdht.disease.sys.constant.SysEnum;
 import com.xdht.disease.sys.dao.RecordEquipmentMapper;
 import com.xdht.disease.sys.model.RecordEquipment;
 import com.xdht.disease.sys.model.RecordEquipmentData;
-import com.xdht.disease.sys.model.SysCompanyOffice;
 import com.xdht.disease.sys.service.RecordEquipmentDataService;
 import com.xdht.disease.sys.service.RecordEquipmentService;
 import com.xdht.disease.sys.service.SysCompanyOfficeService;
