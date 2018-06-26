@@ -66,7 +66,7 @@ public class RecordControlEffectServiceImpl extends AbstractService<RecordContro
 
         @Override
         public void addRecordControlEffect(RecordControlEffectInputRequest recordControlEffectInputRequest) {
-            RecordControlEffect recordControlEffect = new RecordControlEffect();
+            RecordControlEffect recordControlEffect = recordControlEffectInputRequest.getRecordControlEffect();
             recordControlEffect.setStatus(SysEnum.StatusEnum.STATUS_NORMAL.getCode());
             this.insertUseGeneratedKeys(recordControlEffect);
             List<RecordControlEffectData> recordControlEffectDataList = new LinkedList<>();

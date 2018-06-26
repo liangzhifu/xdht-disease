@@ -22,6 +22,6 @@
     sd.`dictionary_name` AS projectName
     from record_health_management_data rhmd, sys_dictionary sd
     where rhmd.health_management_project_id = sd.id
-    and rpsd.pre_evaluation_id = #{id, jdbcType=BIGINT}
+    and rhmd.health_management_id = #{id, jdbcType=BIGINT}
   </select>
 </mapper>

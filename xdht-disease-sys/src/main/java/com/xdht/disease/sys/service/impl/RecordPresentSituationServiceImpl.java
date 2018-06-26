@@ -7,9 +7,7 @@ import com.xdht.disease.sys.constant.SysEnum;
 import com.xdht.disease.sys.dao.RecordPresentSituationMapper;
 import com.xdht.disease.sys.model.RecordPresentSituation;
 import com.xdht.disease.sys.model.RecordPresentSituationData;
-import com.xdht.disease.sys.model.RecordPresentSituationProject;
 import com.xdht.disease.sys.service.RecordPresentSituationDataService;
-import com.xdht.disease.sys.service.RecordPresentSituationProjectService;
 import com.xdht.disease.sys.service.RecordPresentSituationService;
 import com.xdht.disease.sys.vo.request.RecordPresentSituationInputRequest;
 import com.xdht.disease.sys.vo.request.RecordPresentSituationRequest;
@@ -37,8 +35,6 @@ public class RecordPresentSituationServiceImpl extends AbstractService<RecordPre
     @Autowired
     private RecordPresentSituationDataService recordPresentSituationDataService;
 
-    @Autowired
-    private RecordPresentSituationProjectService  recordPresentSituationProjectService;
     @Override
     public List<RecordPresentSituation> queryList(RecordPresentSituationRequest recordPresentSituationRequest) {
         Condition condition = new Condition(RecordPresentSituation.class);
@@ -74,7 +70,7 @@ public class RecordPresentSituationServiceImpl extends AbstractService<RecordPre
 
     @Override
     public void addRecordPresentSituation(RecordPresentSituationInputRequest recordPresentSituationInputRequest) {
-        RecordPresentSituation recordPresentSituation = new RecordPresentSituation();
+        RecordPresentSituation recordPresentSituation = recordPresentSituationInputRequest.getRecordPresentSituation();
         recordPresentSituation.setStatus(SysEnum.StatusEnum.STATUS_NORMAL.getCode());
         this.insertUseGeneratedKeys(recordPresentSituation);
         List<RecordPresentSituationData> recordPresentSituationDataList = new LinkedList<>();

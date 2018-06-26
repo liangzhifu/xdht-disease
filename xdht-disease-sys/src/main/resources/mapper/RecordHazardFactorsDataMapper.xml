@@ -11,6 +11,7 @@
     <result column="exposure_mode" jdbcType="VARCHAR" property="exposureMode" />
     <result column="exposure_time" jdbcType="VARCHAR" property="exposureTime" />
     <result column="remarks" jdbcType="VARCHAR" property="remarks" />
+    <result column="process_name" jdbcType="VARCHAR" property="processName" />
     <result column="relation_id" jdbcType="BIGINT" property="relationId" />
   </resultMap>
 
@@ -18,6 +19,7 @@
   <select id="selectRecordDataByHazardFactors" parameterType="java.lang.Long" resultType="java.util.HashMap">
     SELECT rhfd.id, rhfd.relation_id as relationId,
     rhfd.office_id as officeId,
+    rhfd.process_name as processName,
     rhfd.hazard_factors as hazardFactors,
     rhfd.exposure_mode as exposureMode,
     rhfd.exposure_time as exposureTime,
@@ -25,6 +27,6 @@
     sco.`office_name` AS officeName
     FROM `record_hazard_factors_data` rhfd, sys_company_office sco
     WHERE rhfd.`office_id` = sco.`id`
-    AND rppd.`relation_id` = #{id, jdbcType=BIGINT}
+    AND rhfd.`relation_id` = #{id, jdbcType=BIGINT}
   </select>
 </mapper>

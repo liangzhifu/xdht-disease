@@ -17,7 +17,7 @@
   </resultMap>
 
   <select id = "selectRecordBySceneId" resultType="java.util.HashMap" parameterType="java.lang.Long">
-    select rhm.id, rhm.pre_evaluation_no as preEvaluationNo,
+    select rhm.id, rhm.health_management_no as healthManagementNo,
     rhm.verification_result as verificationResult, rhm.scene_id as sceneId
     from record_health_management rhm
     where rhm.status = '0'

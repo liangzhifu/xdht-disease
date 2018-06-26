@@ -1,9 +1,7 @@
 package com.xdht.disease.sys.controller;
 
-import com.xdht.disease.common.authorization.annotation.CurrentUser;
 import com.xdht.disease.common.core.PageResult;
 import com.xdht.disease.common.core.Result;
-import com.xdht.disease.common.model.User;
 import com.xdht.disease.sys.constant.SysEnum;
 import com.xdht.disease.sys.model.RecordControlEffect;
 import com.xdht.disease.sys.service.RecordControlEffectService;
@@ -17,8 +15,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 /**
  * Created by L on 2018/5/30.

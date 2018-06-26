@@ -1,10 +1,8 @@
 package com.xdht.disease.sys.controller;
 
 import com.xdht.disease.common.authorization.annotation.Authorization;
-import com.xdht.disease.common.authorization.annotation.CurrentUser;
 import com.xdht.disease.common.core.PageResult;
 import com.xdht.disease.common.core.Result;
-import com.xdht.disease.common.model.User;
 import com.xdht.disease.sys.constant.SysEnum;
 import com.xdht.disease.sys.model.RecordPresentSituation;
 import com.xdht.disease.sys.service.RecordPresentSituationService;

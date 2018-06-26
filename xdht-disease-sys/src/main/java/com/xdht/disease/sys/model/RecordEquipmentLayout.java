@@ -41,8 +41,8 @@ public class RecordEquipmentLayout {
     /**
      * 更新人
      */
-    @Column(name = "upadte_by")
-    private Long upadteBy;
+    @Column(name = "update_by")
+    private Long updateBy;
 
     /**
      * 更新时间
@@ -180,19 +180,19 @@ public class RecordEquipmentLayout {
     /**
      * 获取更新人
      *
-     * @return upadte_by - 更新人
+     * @return updateBy - 更新人
      */
-    public Long getUpadteBy() {
-        return upadteBy;
+    public Long getUpdateBy() {
+        return updateBy;
     }
 
     /**
      * 设置更新人
      *
-     * @param upadteBy 更新人
+     * @param updateBy 更新人
      */
-    public void setUpadteBy(Long upadteBy) {
-        this.upadteBy = upadteBy;
+    public void setUpdateBy(Long updateBy) {
+        this.updateBy = updateBy;
     }
 
     /**

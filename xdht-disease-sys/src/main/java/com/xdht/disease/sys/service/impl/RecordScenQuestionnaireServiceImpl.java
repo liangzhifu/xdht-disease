@@ -1,8 +1,6 @@
 package com.xdht.disease.sys.service.impl;
 
-import com.github.pagehelper.PageHelper;
 import com.xdht.disease.common.core.AbstractService;
-import com.xdht.disease.common.core.PageResult;
 import com.xdht.disease.sys.dao.RecordScenQuestionnaireMapper;
 import com.xdht.disease.sys.model.RecordScenQuestionnaire;
 import com.xdht.disease.sys.service.RecordScenQuestionnaireService;
