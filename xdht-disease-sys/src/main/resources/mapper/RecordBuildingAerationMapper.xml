@@ -14,4 +14,12 @@
     <result column="upadte_by" jdbcType="BIGINT" property="upadteBy" />
     <result column="update_date" jdbcType="TIMESTAMP" property="updateDate" />
   </resultMap>
+
+  <select id="selectRecordBuildingAerationBySceneId" resultType="java.util.HashMap" parameterType="java.lang.Long">
+    SELECT rba.`id`, rba.building_aeration_no as buildingAerationNo,
+    rba.verification_result as verificationResult, rba.scene_id as sceneId
+    FROM record_building_aeration rba
+    WHERE rba.status = '0'
+    AND rba.`scene_id` = #{id, jdbcType=BIGINT}
+  </select>
 </mapper>

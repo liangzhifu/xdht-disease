@@ -33,6 +33,12 @@ public class RecordAuxiliaryHealthData {
     private String livingRoom;
 
     /**
+     * 卫生室调查表ID
+     */
+    @Column(name = "auxiliary_health_id")
+    private Long auxiliaryHealthId;
+
+    /**
      * @return id
      */
     public Long getId() {
@@ -117,4 +123,14 @@ public class RecordAuxiliaryHealthData {
     public void setLivingRoom(String livingRoom) {
         this.livingRoom = livingRoom;
     }
+
+    public Long getAuxiliaryHealthId() {
+        return auxiliaryHealthId;
+    }
+
+    public void setAuxiliaryHealthId(Long auxiliaryHealthId) {
+        this.auxiliaryHealthId = auxiliaryHealthId;
+    }
+
+
 }

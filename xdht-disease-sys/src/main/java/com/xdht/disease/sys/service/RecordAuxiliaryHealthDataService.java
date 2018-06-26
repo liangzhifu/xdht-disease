@@ -5,6 +5,7 @@ import com.xdht.disease.common.core.Service;
 import com.xdht.disease.sys.vo.request.RecordAuxiliaryHealthDataRequest;
 
 import java.util.List;
+import java.util.Map;
 
 
 /**
@@ -48,4 +49,6 @@ public interface RecordAuxiliaryHealthDataService extends Service<RecordAuxiliar
      * @return 返回结果
      */
     public RecordAuxiliaryHealthData update(RecordAuxiliaryHealthData recordAuxiliaryHealthData);
+
+    List<Map<String,Object>> queryRecordAuxiliaryHealthDataByAuxiliaryHealth(Long recordId);
 }
