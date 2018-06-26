@@ -1,10 +1,8 @@
 package com.xdht.disease.sys.controller;
 
 import com.xdht.disease.common.authorization.annotation.Authorization;
-import com.xdht.disease.common.authorization.annotation.CurrentUser;
 import com.xdht.disease.common.core.PageResult;
 import com.xdht.disease.common.core.Result;
-import com.xdht.disease.common.model.User;
 import com.xdht.disease.sys.constant.SysEnum;
 import com.xdht.disease.sys.model.RecordWorkLog;
 import com.xdht.disease.sys.service.RecordWorkLogService;
@@ -20,8 +18,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 /**
  * Created by L on 2018/5/30.
@@ -46,8 +42,8 @@ public class RecordWorkLogController {
     @ApiImplicitParams({
             @ApiImplicitParam(name = "authorization", value = "authorization", required = true, dataType = "string", paramType = "header"),
     })
-    public ResponseEntity<Result<String>> add(@RequestBody RecordWorkLogInputRequest recordWorkLogInputRequest) {
-        recordWorkLogService.add(recordWorkLogInputRequest);
+    public ResponseEntity<Result<String>> add(@RequestBody RecordWorkLogInputRequest recordData) {
+        recordWorkLogService.add(recordData);
         return new ResponseEntity<>(Result.ok(SysEnum.ResultEnum.RESULT_SUCCESS.getCode()), HttpStatus.OK);
     }
 
@@ -68,8 +64,8 @@ public class RecordWorkLogController {
     @ApiImplicitParams({
             @ApiImplicitParam(name = "authorization", value = "authorization", required = true, dataType = "string", paramType = "header"),
     })
-    public ResponseEntity<Result<String>> update(@RequestBody RecordWorkLogInputRequest recordWorkLogInputRequest) {
-        recordWorkLogService.update(recordWorkLogInputRequest);
+    public ResponseEntity<Result<String>> update(@RequestBody RecordWorkLogInputRequest recordData) {
+        recordWorkLogService.update(recordData);
         return new ResponseEntity<>(Result.ok(SysEnum.ResultEnum.RESULT_SUCCESS.getCode()), HttpStatus.OK);
     }
 

@@ -11,8 +11,8 @@ public class RecordEquipmentLayoutData {
     /**
      * 部门id
      */
-    @Column(name = "officd_id")
-    private Long officdId;
+    @Column(name = "office_id")
+    private Long officeId;
 
     /**
      * 工艺过程及设备
@@ -60,19 +60,19 @@ public class RecordEquipmentLayoutData {
     /**
      * 获取部门id
      *
-     * @return officd_id - 部门id
+     * @return officeId - 部门id
      */
-    public Long getOfficdId() {
-        return officdId;
+    public Long getOfficeId() {
+        return officeId;
     }
 
     /**
      * 设置部门id
      *
-     * @param officdId 部门id
+     * @param officeId 部门id
      */
-    public void setOfficdId(Long officdId) {
-        this.officdId = officdId;
+    public void setOfficeId(Long officeId) {
+        this.officeId = officeId;
     }
 
     /**

@@ -58,7 +58,7 @@ public class RecordProductServiceImpl extends AbstractService<RecordProduct> imp
 
     @Override
     public void add(RecordProductInputRequest recordProductInputRequest) {
-        RecordProduct recordProduct = new RecordProduct();
+        RecordProduct recordProduct = recordProductInputRequest.getRecordProduct();
         recordProduct.setStatus(SysEnum.StatusEnum.STATUS_NORMAL.getCode());
         this.insertUseGeneratedKeys(recordProduct);
         List<RecordProductData> recordProductDataList = new LinkedList<>();

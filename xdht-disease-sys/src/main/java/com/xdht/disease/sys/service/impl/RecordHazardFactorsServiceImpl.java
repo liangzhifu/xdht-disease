@@ -59,7 +59,7 @@ public class RecordHazardFactorsServiceImpl extends AbstractService<RecordHazard
 
     @Override
     public void add(RecordHazardFactorsInputRequest recordHazardFactorsInputRequest) {
-        RecordHazardFactors  recordHazardFactors =  new RecordHazardFactors();
+        RecordHazardFactors  recordHazardFactors =  recordHazardFactorsInputRequest.getRecordHazardFactors();
         recordHazardFactors.setStatus(SysEnum.StatusEnum.STATUS_NORMAL.getCode());
         this.insertUseGeneratedKeys(recordHazardFactors);
         List<RecordHazardFactorsData> recordHazardFactorsDataList = new LinkedList<>();

@@ -5,15 +5,12 @@ import com.xdht.disease.common.core.AbstractService;
 import com.xdht.disease.common.core.PageResult;
 import com.xdht.disease.sys.constant.SysEnum;
 import com.xdht.disease.sys.dao.RecordInformingFacilitiesMapper;
-import com.xdht.disease.sys.model.RecordIndividualProtectiveEquipment;
-import com.xdht.disease.sys.model.RecordIndividualProtectiveEquipmentData;
 import com.xdht.disease.sys.model.RecordInformingFacilities;
 import com.xdht.disease.sys.model.RecordInformingFacilitiesData;
 import com.xdht.disease.sys.service.RecordInformingFacilitiesDataService;
 import com.xdht.disease.sys.service.RecordInformingFacilitiesService;
 import com.xdht.disease.sys.vo.request.RecordInformingFacilitiesInputRequest;
 import com.xdht.disease.sys.vo.request.RecordInformingFacilitiesRequest;
-import com.xdht.disease.sys.vo.response.RecordIndividualProtectiveDetailResponse;
 import com.xdht.disease.sys.vo.response.RecordInformingFacilitiesDetailResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -90,10 +87,11 @@ public class RecordInformingFacilitiesServiceImpl extends AbstractService<Record
         condition.createCriteria().andEqualTo("relationId", recordInformingFacilities.getId());
         List<RecordInformingFacilitiesData> recordInformingFacilitiesDataList = this.recordInformingFacilitiesDataService.selectByCondition(condition);
         if (recordInformingFacilitiesDataList != null & recordInformingFacilitiesDataList.size() > 0 ) {
-            for ( RecordInformingFacilitiesData recordInformingFacilitiesData: recordInformingFacilitiesInputRequest.getRecordInformingFacilitiesDataList() ) {
+            for ( RecordInformingFacilitiesData recordInformingFacilitiesData: recordInformingFacilitiesDataList ) {
                 this.recordInformingFacilitiesDataService.deleteByPrimaryKey(recordInformingFacilitiesData.getId());
             }
         }
+        recordInformingFacilitiesDataList = new LinkedList<>();
         if (recordInformingFacilitiesInputRequest.getRecordInformingFacilitiesDataList() != null ) {
             for (RecordInformingFacilitiesData recordInformingFacilitiesData : recordInformingFacilitiesInputRequest.getRecordInformingFacilitiesDataList()) {
                 recordInformingFacilitiesData.setRelationId(recordInformingFacilities.getId());

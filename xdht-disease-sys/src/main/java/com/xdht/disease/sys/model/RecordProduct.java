@@ -41,14 +41,38 @@ public class RecordProduct {
     /**
      * 更新人
      */
-    @Column(name = "upadte_by")
-    private Long upadteBy;
+    @Column(name = "update_by")
+    private Long updateBy;
 
     /**
      * 更新时间
      */
     @Column(name = "update_date")
     private Date updateDate;
+
+    /**
+     * 现场调查id
+     */
+    @Column(name = "scene_id")
+    private Long sceneId;
+
+    /**
+     * 获取现场调查id
+     *
+     * @return scene_id - 现场调查id
+     */
+    public Long getSceneId() {
+        return sceneId;
+    }
+
+    /**
+     * 设置现场调查id
+     *
+     * @param sceneId 现场调查id
+     */
+    public void setSceneId(Long sceneId) {
+        this.sceneId = sceneId;
+    }
 
     /**
      * @return id
@@ -157,19 +181,19 @@ public class RecordProduct {
     /**
      * 获取更新人
      *
-     * @return upadte_by - 更新人
+     * @return updateBy - 更新人
      */
-    public Long getUpadteBy() {
-        return upadteBy;
+    public Long getUpdateBy() {
+        return updateBy;
     }
 
     /**
      * 设置更新人
      *
-     * @param upadteBy 更新人
+     * @param updateBy 更新人
      */
-    public void setUpadteBy(Long upadteBy) {
-        this.upadteBy = upadteBy;
+    public void setUpdateBy(Long updateBy) {
+        this.updateBy = updateBy;
     }
 
     /**
