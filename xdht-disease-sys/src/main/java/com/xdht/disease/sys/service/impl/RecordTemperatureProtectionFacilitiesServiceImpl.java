@@ -19,6 +19,7 @@ import tk.mybatis.mapper.entity.Condition;
 
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 
 
 /**
@@ -34,19 +35,6 @@ public class RecordTemperatureProtectionFacilitiesServiceImpl extends AbstractSe
     @Autowired
     private RecordTemperatureProtectionFacilitiesDataService recordTemperatureDataService;
 
-    @Override
-    public List<RecordTemperatureProtectionFacilities> queryList(RecordTemperatureProtectionFacilitiesRequest recordRequest) {
-        Condition condition = new Condition(RecordTemperatureProtectionFacilities.class);
-        condition.createCriteria() .andEqualTo("id", recordRequest.getId())
-                .andEqualTo("temperatureProtectionFacilitiesNo",recordRequest.getTemperatureProtectionFacilitiesNo());
-        if (recordRequest.getVerificationResult() != null) {
-            condition.getOredCriteria().get(0).andLike("verificationResult","%"+recordRequest.getVerificationResult()+"%");
-        }
-        if (recordRequest.getStatus() != null){
-            condition.getOredCriteria().get(0).andEqualTo("status",recordRequest.getStatus());
-        }
-        return this.recordMapper.selectByCondition(condition);
-    }
 
     @Override
     public PageResult<RecordTemperatureProtectionFacilities> queryListPage(RecordTemperatureProtectionFacilitiesRequest recordRequest) {
@@ -59,9 +47,7 @@ public class RecordTemperatureProtectionFacilitiesServiceImpl extends AbstractSe
         if (recordRequest.getVerificationResult() != null) {
             condition.getOredCriteria().get(0).andLike("verificationResult","%"+recordRequest.getVerificationResult()+"%");
         }
-        if (recordRequest.getStatus() != null){
-            condition.getOredCriteria().get(0).andEqualTo("status",recordRequest.getStatus());
-        }
+        condition.getOredCriteria().get(0).andEqualTo("status",SysEnum.StatusEnum.STATUS_NORMAL.getCode());
         PageHelper.startPage(recordRequest.getPageNumber(), recordRequest.getPageSize());
         List<RecordTemperatureProtectionFacilities> dataList = this.recordMapper.selectByCondition(condition);
         Integer count = this.recordMapper.selectCountByCondition(condition);
@@ -72,58 +58,62 @@ public class RecordTemperatureProtectionFacilitiesServiceImpl extends AbstractSe
     }
 
     @Override
-    public RecordTemperatureProtectionFacilities add(RecordTemperatureInputRequest recordTemperatureInputRequest) {
+    public void add(RecordTemperatureInputRequest recordTemperatureInputRequest) {
         RecordTemperatureProtectionFacilities recordTemperature = recordTemperatureInputRequest.getRecordTemperature();
         recordTemperature.setStatus(SysEnum.StatusEnum.STATUS_NORMAL.getCode());
         this.recordMapper.insertUseGeneratedKeys(recordTemperature);
         List<RecordTemperatureProtectionFacilitiesData> recordTemperatureDataList = new LinkedList<>();
-        for ( RecordTemperatureProtectionFacilitiesData recordTemperatureData : recordTemperatureInputRequest.getRecordTemperatureDataList()) {
-            recordTemperatureData.setRelationId(recordTemperature.getId());
-            recordTemperatureDataList.add(recordTemperatureData);
-        }
-        if (recordTemperatureDataList.size()>0){
-            this.recordTemperatureDataService.insertList(recordTemperatureDataList);
-        }
-        return recordTemperature;
+       if (recordTemperatureInputRequest.getRecordTemperatureDataList() != null) {
+           for ( RecordTemperatureProtectionFacilitiesData recordTemperatureData : recordTemperatureInputRequest.getRecordTemperatureDataList()) {
+               recordTemperatureData.setRelationId(recordTemperature.getId());
+               recordTemperatureDataList.add(recordTemperatureData);
+           }
+           this.recordTemperatureDataService.insertList(recordTemperatureDataList);
+       }
     }
 
     @Override
-    public RecordTemperatureProtectionFacilities delete(Long id) {
-        RecordTemperatureProtectionFacilities record = this.recordMapper.selectByPrimaryKey(id);
+    public void delete(Long id) {
+        RecordTemperatureProtectionFacilities record = new RecordTemperatureProtectionFacilities();
+        record.setId(id);
         record.setStatus(SysEnum.StatusEnum.STATUS_DELETE.getCode());
         this.recordMapper.updateByPrimaryKeySelective(record);
-        return  record;
     }
 
     @Override
-    public RecordTemperatureProtectionFacilities update(RecordTemperatureInputRequest recordTemperatureInputRequest) {
+    public void update(RecordTemperatureInputRequest recordTemperatureInputRequest) {
 
         RecordTemperatureProtectionFacilities recordTemperature = recordTemperatureInputRequest.getRecordTemperature();
         this.recordMapper.updateByPrimaryKeySelective(recordTemperature);
-        List<RecordTemperatureProtectionFacilitiesData> recordTemperatureDataList = new LinkedList<>();
-        for ( RecordTemperatureProtectionFacilitiesData recordTemperatureData: recordTemperatureInputRequest.getRecordTemperatureDataList() ) {
-            if (recordTemperatureData.getId() == null){
-                recordTemperatureData.setRelationId(recordTemperature.getId());
-                recordTemperatureDataList.add(recordTemperatureData);
+
+        Condition condition = new Condition(RecordTemperatureProtectionFacilitiesData.class);
+        condition.createCriteria().andEqualTo("relationId", recordTemperature.getId());
+        List<RecordTemperatureProtectionFacilitiesData> recordTemperatureDataList = this.recordTemperatureDataService.selectByCondition(condition);
+        if (recordTemperatureDataList != null && recordTemperatureDataList.size() > 0 ) {
+            for ( RecordTemperatureProtectionFacilitiesData recordTemperatureData: recordTemperatureDataList) {
+                this.recordTemperatureDataService.deleteByPrimaryKey(recordTemperatureData.getId());
             }
-            this.recordTemperatureDataService.updateByPrimaryKeySelective(recordTemperatureData);
         }
-        if (recordTemperatureDataList.size()>0){
+        recordTemperatureDataList = new LinkedList<>();
+        if (recordTemperatureInputRequest.getRecordTemperatureDataList() != null){
+            for (RecordTemperatureProtectionFacilitiesData recordTemperatureProtectionFacilitiesData : recordTemperatureInputRequest.getRecordTemperatureDataList()) {
+                recordTemperatureProtectionFacilitiesData.setRelationId(recordTemperature.getId());
+                recordTemperatureDataList.add(recordTemperatureProtectionFacilitiesData);
+            }
             this.recordTemperatureDataService.insertList(recordTemperatureDataList);
         }
-        return recordTemperature;
-
     }
 
     @Override
     public RecordTemperatureDetailResponse queryTemperatureDetail(Long id) {
         RecordTemperatureDetailResponse response = new RecordTemperatureDetailResponse();
-        RecordTemperatureProtectionFacilities recordTemperature = this.selectByPrimaryKey(id);
-        response.setRecordTemperature(recordTemperature);
-        Condition condition = new Condition(RecordTemperatureProtectionFacilitiesData.class);
-        condition.createCriteria() .andEqualTo("relationId", id);
-        List<RecordTemperatureProtectionFacilitiesData> recordTemperatureDataList = this.recordTemperatureDataService.selectByCondition(condition);
-        response.setRecordTemperatureDataList(recordTemperatureDataList);
+        Map<String, Object> map = this.recordMapper.selectRecordBySceneId(id);
+        if (map != null) {
+            response.setRecordTemperature(map);
+            Long recordId = (Long) map.get("id");
+            List<Map<String, Object>> mapList = this.recordTemperatureDataService.queryRecordDataByTemperatureProtection(recordId);
+            response.setRecordTemperatureDataList(mapList);
+        }
         return response;
     }
 }

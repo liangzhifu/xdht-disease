@@ -7,6 +7,7 @@ import com.xdht.disease.sys.constant.SysEnum;
 import com.xdht.disease.sys.dao.RecordEmergencyFacilitiesMapper;
 import com.xdht.disease.sys.model.RecordEmergencyFacilities;
 import com.xdht.disease.sys.model.RecordEmergencyFacilitiesData;
+import com.xdht.disease.sys.model.RecordIndividualProtectiveEquipmentData;
 import com.xdht.disease.sys.service.RecordEmergencyFacilitiesDataService;
 import com.xdht.disease.sys.service.RecordEmergencyFacilitiesService;
 import com.xdht.disease.sys.vo.request.RecordEmergencyFacilitiesInputRequest;
@@ -19,6 +20,7 @@ import tk.mybatis.mapper.entity.Condition;
 
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 
 
 /**
@@ -32,19 +34,6 @@ public class RecordEmergencyFacilitiesServiceImpl extends AbstractService<Record
     private RecordEmergencyFacilitiesMapper recordEmergencyFacilitiesMapper;
     @Autowired
     private RecordEmergencyFacilitiesDataService recordEmergencyFacilitiesDataService;
-    @Override
-    public List<RecordEmergencyFacilities> queryList(RecordEmergencyFacilitiesRequest recordEmergencyFacilitiesRequest) {
-        Condition condition = new Condition(RecordEmergencyFacilities.class);
-        condition.createCriteria() .andEqualTo("id", recordEmergencyFacilitiesRequest.getId())
-                .andEqualTo("emergencyFacilitiesNo",recordEmergencyFacilitiesRequest.getEmergencyFacilitiesNo());
-        if (recordEmergencyFacilitiesRequest.getVerificationResult() != null) {
-            condition.getOredCriteria().get(0).andLike("verificationResult","%"+recordEmergencyFacilitiesRequest.getVerificationResult()+"%");
-        }
-        if (recordEmergencyFacilitiesRequest.getStatus() != null){
-            condition.getOredCriteria().get(0).andEqualTo("status",recordEmergencyFacilitiesRequest.getStatus());
-        }
-        return this.recordEmergencyFacilitiesMapper.selectByCondition(condition);
-    }
 
     @Override
     public PageResult<RecordEmergencyFacilities> queryListPage(RecordEmergencyFacilitiesRequest recordEmergencyFacilitiesRequest) {
@@ -56,9 +45,7 @@ public class RecordEmergencyFacilitiesServiceImpl extends AbstractService<Record
         if (recordEmergencyFacilitiesRequest.getVerificationResult() != null) {
             condition.getOredCriteria().get(0).andLike("verificationResult","%"+recordEmergencyFacilitiesRequest.getVerificationResult()+"%");
         }
-        if (recordEmergencyFacilitiesRequest.getStatus() != null){
-            condition.getOredCriteria().get(0).andEqualTo("status",recordEmergencyFacilitiesRequest.getStatus());
-        }
+       condition.getOredCriteria().get(0).andEqualTo("status",SysEnum.StatusEnum.STATUS_NORMAL.getCode());
         PageHelper.startPage(recordEmergencyFacilitiesRequest.getPageNumber(), recordEmergencyFacilitiesRequest.getPageSize());
         List<RecordEmergencyFacilities> dataList = this.recordEmergencyFacilitiesMapper.selectByCondition(condition);
         Integer count = this.recordEmergencyFacilitiesMapper.selectCountByCondition(condition);
@@ -69,60 +56,60 @@ public class RecordEmergencyFacilitiesServiceImpl extends AbstractService<Record
     }
 
     @Override
-    public RecordEmergencyFacilities add(RecordEmergencyFacilitiesInputRequest recordEmergencyFacilitiesInputRequest) {
+    public void add(RecordEmergencyFacilitiesInputRequest recordEmergencyFacilitiesInputRequest) {
         RecordEmergencyFacilities recordEmergencyFacilities = recordEmergencyFacilitiesInputRequest.getRecordEmergencyFacilities();
         recordEmergencyFacilities.setStatus(SysEnum.StatusEnum.STATUS_NORMAL.getCode());
         this.insertUseGeneratedKeys(recordEmergencyFacilities);
         List<RecordEmergencyFacilitiesData> recordEmergencyFacilitiesDataList = new LinkedList<>();
-        for ( RecordEmergencyFacilitiesData recordEmergencyFacilitiesData : recordEmergencyFacilitiesInputRequest.getRecordEmergencyFacilitiesDataList()) {
-            recordEmergencyFacilitiesData.setRelationId(recordEmergencyFacilities.getId());
-            recordEmergencyFacilitiesDataList.add(recordEmergencyFacilitiesData);
-        }
-        if (recordEmergencyFacilitiesDataList.size()>0){
-            this.recordEmergencyFacilitiesDataService.insertList(recordEmergencyFacilitiesDataList);
-        }
-        return recordEmergencyFacilities;
-    }
-
-    @Override
-    public RecordEmergencyFacilities delete(Long id) {
-        RecordEmergencyFacilities recordEmergencyFacilities = this.recordEmergencyFacilitiesMapper.selectByPrimaryKey(id);
-        recordEmergencyFacilities.setStatus(SysEnum.StatusEnum.STATUS_DELETE.getCode());
-        this.recordEmergencyFacilitiesMapper.updateByPrimaryKeySelective(recordEmergencyFacilities);
-        return  recordEmergencyFacilities;
-    }
-
-    @Override
-    public RecordEmergencyFacilities update(RecordEmergencyFacilitiesInputRequest recordEmergencyFacilitiesInputRequest) {
-        RecordEmergencyFacilities recordEmergencyFacilities = recordEmergencyFacilitiesInputRequest.getRecordEmergencyFacilities();
-        this.recordEmergencyFacilitiesMapper.updateByPrimaryKeySelective(recordEmergencyFacilities);
-        List<RecordEmergencyFacilitiesData> recordEmergencyFacilitiesDataList = new LinkedList<>();
-        for ( RecordEmergencyFacilitiesData recordEmergencyFacilitiesData: recordEmergencyFacilitiesInputRequest.getRecordEmergencyFacilitiesDataList() ) {
-            if (recordEmergencyFacilitiesData.getId() == null){
+        if (recordEmergencyFacilitiesInputRequest.getRecordEmergencyFacilitiesDataList() != null) {
+            for ( RecordEmergencyFacilitiesData recordEmergencyFacilitiesData : recordEmergencyFacilitiesInputRequest.getRecordEmergencyFacilitiesDataList()) {
                 recordEmergencyFacilitiesData.setRelationId(recordEmergencyFacilities.getId());
                 recordEmergencyFacilitiesDataList.add(recordEmergencyFacilitiesData);
             }
-            this.recordEmergencyFacilitiesDataService.updateByPrimaryKeySelective(recordEmergencyFacilitiesData);
-        }
-        if (recordEmergencyFacilitiesDataList.size()>0){
             this.recordEmergencyFacilitiesDataService.insertList(recordEmergencyFacilitiesDataList);
         }
-        return recordEmergencyFacilities;
+    }
+
+    @Override
+    public void delete(Long id) {
+        RecordEmergencyFacilities recordEmergencyFacilities = new RecordEmergencyFacilities();
+        recordEmergencyFacilities.setId(id);
+        recordEmergencyFacilities.setStatus(SysEnum.StatusEnum.STATUS_DELETE.getCode());
+        this.recordEmergencyFacilitiesMapper.updateByPrimaryKeySelective(recordEmergencyFacilities);
+    }
+
+    @Override
+    public void update(RecordEmergencyFacilitiesInputRequest recordEmergencyFacilitiesInputRequest) {
+        RecordEmergencyFacilities recordEmergencyFacilities = recordEmergencyFacilitiesInputRequest.getRecordEmergencyFacilities();
+        this.recordEmergencyFacilitiesMapper.updateByPrimaryKeySelective(recordEmergencyFacilities);
+
+        Condition condition = new Condition(RecordIndividualProtectiveEquipmentData.class);
+        condition.createCriteria().andEqualTo("relationId", recordEmergencyFacilities.getId());
+        List<RecordEmergencyFacilitiesData> recordEmergencyFacilitiesDataList = this.recordEmergencyFacilitiesDataService.selectByCondition(condition);
+        if (recordEmergencyFacilitiesDataList != null && recordEmergencyFacilitiesDataList.size() > 0 ) {
+            for ( RecordEmergencyFacilitiesData recordEmergencyFacilitiesData: recordEmergencyFacilitiesInputRequest.getRecordEmergencyFacilitiesDataList() ) {
+                this.recordEmergencyFacilitiesDataService.deleteByPrimaryKey(recordEmergencyFacilitiesData.getId());
+            }
+        }
+        recordEmergencyFacilitiesDataList = new LinkedList<>();
+        if (recordEmergencyFacilitiesInputRequest.getRecordEmergencyFacilitiesDataList() != null){
+            for (RecordEmergencyFacilitiesData recordEmergencyFacilitiesData : recordEmergencyFacilitiesInputRequest.getRecordEmergencyFacilitiesDataList()) {
+                recordEmergencyFacilitiesData.setRelationId(recordEmergencyFacilities.getId());
+                recordEmergencyFacilitiesDataList.add(recordEmergencyFacilitiesData);
+            }
+            this.recordEmergencyFacilitiesDataService.insertList(recordEmergencyFacilitiesDataList);
+        }
     }
 
     @Override
     public RecordEmergencyFacilitiesDetailResponse queryEmergencyFacilitiesDetail(Long id) {
         RecordEmergencyFacilitiesDetailResponse response = new RecordEmergencyFacilitiesDetailResponse();
-        RecordEmergencyFacilities recordEmergencyFacilities = new RecordEmergencyFacilities();
-        recordEmergencyFacilities.setSceneId(id);
-        recordEmergencyFacilities = this.recordEmergencyFacilitiesMapper.selectOne(recordEmergencyFacilities);
-        if (recordEmergencyFacilities != null) {
-            Long recordId = recordEmergencyFacilities.getId();
-            response.setRecordEmergencyFacilities(recordEmergencyFacilities);
-            Condition condition = new Condition(RecordEmergencyFacilitiesData.class);
-            condition.createCriteria() .andEqualTo("relationId", recordId);
-            List<RecordEmergencyFacilitiesData> recordEmergencyFacilitiesDataList = this.recordEmergencyFacilitiesDataService.selectByCondition(condition);
-            response.setRecordEmergencyFacilitiesDataList(recordEmergencyFacilitiesDataList);
+        Map<String, Object> map = this.recordEmergencyFacilitiesMapper.selectRecordBySceneId(id);
+        if (map != null) {
+            response.setRecordEmergencyFacilities(map);
+            Long recordId = (Long) map.get("id");
+            List<Map<String, Object>> mapList = this.recordEmergencyFacilitiesDataService.queryRecordDataByEmergency(recordId);
+            response.setRecordEmergencyFacilitiesDataList(mapList);
         }
         return response;
     }

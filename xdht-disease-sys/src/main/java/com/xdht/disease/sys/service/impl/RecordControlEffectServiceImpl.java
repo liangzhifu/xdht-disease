@@ -44,9 +44,7 @@ public class RecordControlEffectServiceImpl extends AbstractService<RecordContro
             if (recordControlEffectRequest.getVerificationResult() != null) {
                 condition.getOredCriteria().get(0).andLike("verificationResult","%"+recordControlEffectRequest.getVerificationResult()+"%");
             }
-            if (recordControlEffectRequest.getStatus() != null){
-                condition.getOredCriteria().get(0).andEqualTo("status",recordControlEffectRequest.getStatus());
-            }
+            condition.getOredCriteria().get(0).andEqualTo("status",SysEnum.StatusEnum.STATUS_NORMAL.getCode());
             return this.recordControlEffectMapper.selectByCondition(condition);
         }
 
@@ -56,6 +54,7 @@ public class RecordControlEffectServiceImpl extends AbstractService<RecordContro
             if (recordControlEffectRequest.getPreEvaluationNo() != null) {
                 condition.createCriteria().andLike("preEvaluationNo","%"+recordControlEffectRequest.getPreEvaluationNo()+"%");
             }
+            condition.getOredCriteria().get(0).andEqualTo("status",SysEnum.StatusEnum.STATUS_NORMAL.getCode());
             Integer count = this.selectCountByCondition(condition);
             PageHelper.startPage(recordControlEffectRequest.getPageNumber(), recordControlEffectRequest.getPageSize());
             List<RecordControlEffect> dataList = this.recordControlEffectMapper.selectByCondition(condition);
@@ -80,7 +79,7 @@ public class RecordControlEffectServiceImpl extends AbstractService<RecordContro
 
         @Override
         public void deleteRecordControlEffect(Long id) {
-            RecordControlEffect recordControlEffect = this.recordControlEffectMapper.selectByPrimaryKey(id);
+            RecordControlEffect recordControlEffect = new RecordControlEffect();
             recordControlEffect.setId(id);
             recordControlEffect.setStatus(SysEnum.StatusEnum.STATUS_DELETE.getCode());
             this.recordControlEffectMapper.updateByPrimaryKeySelective(recordControlEffect);

@@ -14,12 +14,6 @@ import java.util.List;
  */
 public interface RecordAntiNoiseFacilitiesService extends Service<RecordAntiNoiseFacilities> {
 
-    /**
-     * 查询列表
-     * @param recordAntiNoiseFacilitiesRequest 查询条件
-     * @return 返回结果
-     */
-    public List<RecordAntiNoiseFacilities> queryList(RecordAntiNoiseFacilitiesRequest recordAntiNoiseFacilitiesRequest);
 
     /**
      * 分页查询
@@ -31,23 +25,20 @@ public interface RecordAntiNoiseFacilitiesService extends Service<RecordAntiNois
     /**
      * 添加
      * @param recordAntiNoiseInputRequest 实体
-     * @return 返回结果
      */
-    public RecordAntiNoiseFacilities addRecordAntiNoiseFacilities(RecordAntiNoiseInputRequest recordAntiNoiseInputRequest);
+    public void addRecordAntiNoiseFacilities(RecordAntiNoiseInputRequest recordAntiNoiseInputRequest);
 
     /**
      * 删除
      * @param id 主键id
-     * @return 返回结果
      */
-    public RecordAntiNoiseFacilities deleteRecordAntiNoiseFacilities(Long id);
+    public void deleteRecordAntiNoiseFacilities(Long id);
 
     /**
      * 修改
      * @param recordAntiNoiseInputRequest 实体
-     * @return 返回结果
      */
-    public RecordAntiNoiseFacilities updateRecordAntiNoiseFacilities(RecordAntiNoiseInputRequest recordAntiNoiseInputRequest);
+    public void updateRecordAntiNoiseFacilities(RecordAntiNoiseInputRequest recordAntiNoiseInputRequest);
 
     /**
      * 获取 防噪声设施调查表 信息

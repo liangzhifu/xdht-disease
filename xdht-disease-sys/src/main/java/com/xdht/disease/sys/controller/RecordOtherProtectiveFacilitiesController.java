@@ -5,6 +5,7 @@ import com.xdht.disease.common.authorization.annotation.CurrentUser;
 import com.xdht.disease.common.core.PageResult;
 import com.xdht.disease.common.core.Result;
 import com.xdht.disease.common.model.User;
+import com.xdht.disease.sys.constant.SysEnum;
 import com.xdht.disease.sys.model.RecordOtherProtectiveFacilities;
 import com.xdht.disease.sys.service.RecordOtherProtectiveFacilitiesService;
 import com.xdht.disease.sys.vo.request.RecordOtherProtectiveFacilitiesRequest;
@@ -33,11 +34,6 @@ public class RecordOtherProtectiveFacilitiesController {
     @Autowired
     private RecordOtherProtectiveFacilitiesService recordService;
 
-    @RequestMapping(value = "/recordList", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
-    @ApiOperation(value = "查询列表")
-    public  ResponseEntity<Result<List<RecordOtherProtectiveFacilities>>> recordList( @RequestBody RecordOtherProtectiveFacilitiesRequest recordRequest) {
-        return new ResponseEntity<>(Result.ok(recordService.queryList(recordRequest)), HttpStatus.OK);
-    }
     @RequestMapping(value = "/pageList", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     @ApiOperation(value = "分页查询")
     public ResponseEntity<Result<PageResult<RecordOtherProtectiveFacilities>>> recordPage( @RequestBody RecordOtherProtectiveFacilitiesRequest recordRequest) {
@@ -50,8 +46,9 @@ public class RecordOtherProtectiveFacilitiesController {
     @ApiImplicitParams({
             @ApiImplicitParam(name = "authorization", value = "authorization", required = true, dataType = "string", paramType = "header"),
     })
-    public ResponseEntity<Result<RecordOtherProtectiveFacilities>> add( @RequestBody RecordOtherProtectiveInputRequest recordOtherProtectiveInputRequest) {
-        return new ResponseEntity<>(Result.ok(recordService.add(recordOtherProtectiveInputRequest)), HttpStatus.OK);
+    public ResponseEntity<Result<String>> add( @RequestBody RecordOtherProtectiveInputRequest recordData) {
+        recordService.add(recordData);
+        return new ResponseEntity<>(Result.ok(SysEnum.ResultEnum.RESULT_SUCCESS.getCode()), HttpStatus.OK);
     }
 
     @RequestMapping(value = "/delete/{id}", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
@@ -60,8 +57,9 @@ public class RecordOtherProtectiveFacilitiesController {
     @ApiImplicitParams({
             @ApiImplicitParam(name = "authorization", value = "authorization", required = true, dataType = "string", paramType = "header"),
     })
-    public ResponseEntity<Result<RecordOtherProtectiveFacilities>> delete( @PathVariable Long id) {
-        return new ResponseEntity<>(Result.ok(recordService.delete(id)), HttpStatus.OK);
+    public ResponseEntity<Result<String>> delete( @PathVariable Long id) {
+        recordService.delete(id);
+        return new ResponseEntity<>(Result.ok(SysEnum.ResultEnum.RESULT_SUCCESS.getCode()), HttpStatus.OK);
     }
 
     @RequestMapping(value = "/update", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
@@ -70,8 +68,9 @@ public class RecordOtherProtectiveFacilitiesController {
     @ApiImplicitParams({
             @ApiImplicitParam(name = "authorization", value = "authorization", required = true, dataType = "string", paramType = "header"),
     })
-    public ResponseEntity<Result<RecordOtherProtectiveFacilities>> update( @RequestBody RecordOtherProtectiveInputRequest recordOtherProtectiveInputRequest) {
-        return new ResponseEntity<>(Result.ok(recordService.update(recordOtherProtectiveInputRequest)), HttpStatus.OK);
+    public ResponseEntity<Result<String>> update( @RequestBody RecordOtherProtectiveInputRequest recordData) {
+        recordService.update(recordData);
+        return new ResponseEntity<>(Result.ok(SysEnum.ResultEnum.RESULT_SUCCESS.getCode()), HttpStatus.OK);
     }
 
     @RequestMapping(value = "/detail/{id}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)

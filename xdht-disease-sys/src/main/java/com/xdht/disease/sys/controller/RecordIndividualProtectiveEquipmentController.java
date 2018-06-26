@@ -5,6 +5,7 @@ import com.xdht.disease.common.authorization.annotation.CurrentUser;
 import com.xdht.disease.common.core.PageResult;
 import com.xdht.disease.common.core.Result;
 import com.xdht.disease.common.model.User;
+import com.xdht.disease.sys.constant.SysEnum;
 import com.xdht.disease.sys.model.RecordIndividualProtectiveEquipment;
 import com.xdht.disease.sys.service.RecordIndividualProtectiveEquipmentService;
 import com.xdht.disease.sys.vo.request.RecordIndividualProtectiveEquipmentRequest;
@@ -33,11 +34,6 @@ public class RecordIndividualProtectiveEquipmentController {
     @Autowired
     private RecordIndividualProtectiveEquipmentService recordService;
 
-    @RequestMapping(value = "/recordList", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
-    @ApiOperation(value = "查询列表")
-    public  ResponseEntity<Result<List<RecordIndividualProtectiveEquipment>>> recordList(@RequestBody RecordIndividualProtectiveEquipmentRequest recordRequest) {
-        return new ResponseEntity<>(Result.ok(recordService.queryList(recordRequest)), HttpStatus.OK);
-    }
     @RequestMapping(value = "/pageList", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     @ApiOperation(value = "分页查询")
     public ResponseEntity<Result<PageResult<RecordIndividualProtectiveEquipment>>> recordPage(@RequestBody RecordIndividualProtectiveEquipmentRequest recordRequest) {
@@ -50,8 +46,9 @@ public class RecordIndividualProtectiveEquipmentController {
     @ApiImplicitParams({
             @ApiImplicitParam(name = "authorization", value = "authorization", required = true, dataType = "string", paramType = "header"),
     })
-    public ResponseEntity<Result<RecordIndividualProtectiveEquipment>> add(@RequestBody RecordIndividualProtectiveInputRequest recordIndividualProtectiveInputRequest) {
-        return new ResponseEntity<>(Result.ok(recordService.add(recordIndividualProtectiveInputRequest)), HttpStatus.OK);
+    public ResponseEntity<Result<String>> add(@RequestBody RecordIndividualProtectiveInputRequest recordData) {
+        recordService.add(recordData);
+        return new ResponseEntity<>(Result.ok(SysEnum.ResultEnum.RESULT_SUCCESS.getCode()), HttpStatus.OK);
     }
 
     @RequestMapping(value = "/delete/{id}", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
@@ -60,8 +57,9 @@ public class RecordIndividualProtectiveEquipmentController {
     @ApiImplicitParams({
             @ApiImplicitParam(name = "authorization", value = "authorization", required = true, dataType = "string", paramType = "header"),
     })
-    public ResponseEntity<Result<RecordIndividualProtectiveEquipment>> delete(@PathVariable Long id) {
-        return new ResponseEntity<>(Result.ok(recordService.delete(id)), HttpStatus.OK);
+    public ResponseEntity<Result<String>> delete(@PathVariable Long id) {
+        recordService.delete(id);
+        return new ResponseEntity<>(Result.ok(SysEnum.ResultEnum.RESULT_SUCCESS.getCode()), HttpStatus.OK);
     }
 
     @RequestMapping(value = "/update", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
@@ -70,8 +68,9 @@ public class RecordIndividualProtectiveEquipmentController {
     @ApiImplicitParams({
             @ApiImplicitParam(name = "authorization", value = "authorization", required = true, dataType = "string", paramType = "header"),
     })
-    public ResponseEntity<Result<RecordIndividualProtectiveEquipment>> update(@RequestBody RecordIndividualProtectiveInputRequest recordIndividualProtectiveInputRequest) {
-        return new ResponseEntity<>(Result.ok(recordService.update(recordIndividualProtectiveInputRequest)), HttpStatus.OK);
+    public ResponseEntity<Result<String>> update(@RequestBody RecordIndividualProtectiveInputRequest recordData) {
+        recordService.update(recordData);
+        return new ResponseEntity<>(Result.ok(SysEnum.ResultEnum.RESULT_SUCCESS.getCode()), HttpStatus.OK);
     }
 
     @RequestMapping(value = "/detail/{id}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)

@@ -1,25 +1,34 @@
 package com.xdht.disease.sys.model;
 
+import com.alibaba.fastjson.annotation.JSONField;
+
 import java.util.Date;
 import javax.persistence.*;
 
-@Table(name = "record_informing_facilities")
-public class RecordInformingFacilities {
+@Table(name = "sys_notice")
+public class SysNotice {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     /**
-     * 编号
+     * 通知标题
      */
-    @Column(name = "informing_facilities_no")
-    private String informingFacilitiesNo;
+    @Column(name = "notice_title")
+    private String noticeTitle;
 
     /**
-     * 核实情况
+     * 通知内容
      */
-    @Column(name = "verification_result")
-    private String verificationResult;
+    @Column(name = "notice_content")
+    private String noticeContent;
+
+    /**
+     * 通知发布时间
+     */
+    @JSONField(format = "yyyy-MM-dd")
+    @Column(name = "notice_release_date")
+    private Date noticeReleaseDate;
 
     /**
      * 状态（0正常 1删除）
@@ -51,29 +60,6 @@ public class RecordInformingFacilities {
     private Date updateDate;
 
     /**
-     * 现场调查id
-     */
-    @Column(name = "scene_id")
-    private Long sceneId;
-
-    /**
-     * 获取现场调查id
-     *
-     * @return scene_id - 现场调查id
-     */
-    public Long getSceneId() {
-        return sceneId;
-    }
-
-    /**
-     * 设置现场调查id
-     *
-     * @param sceneId 现场调查id
-     */
-    public void setSceneId(Long sceneId) {
-        this.sceneId = sceneId;
-    }
-    /**
      * @return id
      */
     public Long getId() {
@@ -88,39 +74,57 @@ public class RecordInformingFacilities {
     }
 
     /**
-     * 获取编号
+     * 获取通知标题
      *
-     * @return informing_facilities_no - 编号
+     * @return notice_title - 通知标题
      */
-    public String getInformingFacilitiesNo() {
-        return informingFacilitiesNo;
+    public String getNoticeTitle() {
+        return noticeTitle;
     }
 
     /**
-     * 设置编号
+     * 设置通知标题
      *
-     * @param informingFacilitiesNo 编号
+     * @param noticeTitle 通知标题
      */
-    public void setInformingFacilitiesNo(String informingFacilitiesNo) {
-        this.informingFacilitiesNo = informingFacilitiesNo;
+    public void setNoticeTitle(String noticeTitle) {
+        this.noticeTitle = noticeTitle;
     }
 
     /**
-     * 获取核实情况
+     * 获取通知内容
      *
-     * @return verification_result - 核实情况
+     * @return notice_content - 通知内容
      */
-    public String getVerificationResult() {
-        return verificationResult;
+    public String getNoticeContent() {
+        return noticeContent;
     }
 
     /**
-     * 设置核实情况
+     * 设置通知内容
      *
-     * @param verificationResult 核实情况
+     * @param noticeContent 通知内容
      */
-    public void setVerificationResult(String verificationResult) {
-        this.verificationResult = verificationResult;
+    public void setNoticeContent(String noticeContent) {
+        this.noticeContent = noticeContent;
+    }
+
+    /**
+     * 获取通知发布时间
+     *
+     * @return notice_release_date - 通知发布时间
+     */
+    public Date getNoticeReleaseDate() {
+        return noticeReleaseDate;
+    }
+
+    /**
+     * 设置通知发布时间
+     *
+     * @param noticeReleaseDate 通知发布时间
+     */
+    public void setNoticeReleaseDate(Date noticeReleaseDate) {
+        this.noticeReleaseDate = noticeReleaseDate;
     }
 
     /**
@@ -180,7 +184,7 @@ public class RecordInformingFacilities {
     /**
      * 获取更新人
      *
-     * @return upadte_by - 更新人
+     * @return update_by - 更新人
      */
     public Long getUpdateBy() {
         return updateBy;

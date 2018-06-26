@@ -19,6 +19,7 @@ import tk.mybatis.mapper.entity.Condition;
 
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 
 
 /**
@@ -34,19 +35,6 @@ public class RecordOtherProtectiveFacilitiesServiceImpl extends AbstractService<
     @Autowired
     private RecordOtherProtectiveFacilitiesDataService recordOtherProtectiveFacilitiesDataService;
 
-    @Override
-    public List<RecordOtherProtectiveFacilities> queryList(RecordOtherProtectiveFacilitiesRequest recordRequest) {
-        Condition condition = new Condition(RecordOtherProtectiveFacilities.class);
-        condition.createCriteria() .andEqualTo("id", recordRequest.getId())
-                .andEqualTo("otherProtectiveFacilitiesNo",recordRequest.getOtherProtectiveFacilitiesNo());
-        if (recordRequest.getVerificationResult() != null) {
-            condition.getOredCriteria().get(0).andLike("verificationResult","%"+recordRequest.getVerificationResult()+"%");
-        }
-        if (recordRequest.getStatus() != null){
-            condition.getOredCriteria().get(0).andEqualTo("status",recordRequest.getStatus());
-        }
-        return this.recordMapper.selectByCondition(condition);
-    }
 
     @Override
     public PageResult<RecordOtherProtectiveFacilities> queryListPage(RecordOtherProtectiveFacilitiesRequest recordRequest) {
@@ -58,9 +46,7 @@ public class RecordOtherProtectiveFacilitiesServiceImpl extends AbstractService<
         if (recordRequest.getVerificationResult() != null) {
             condition.getOredCriteria().get(0).andLike("verificationResult","%"+recordRequest.getVerificationResult()+"%");
         }
-        if (recordRequest.getStatus() != null){
-            condition.getOredCriteria().get(0).andEqualTo("status",recordRequest.getStatus());
-        }
+        condition.getOredCriteria().get(0).andEqualTo("status",SysEnum.StatusEnum.STATUS_NORMAL.getCode());
         PageHelper.startPage(recordRequest.getPageNumber(), recordRequest.getPageSize());
         List<RecordOtherProtectiveFacilities> dataList = this.recordMapper.selectByCondition(condition);
         Integer count = this.recordMapper.selectCountByCondition(condition);
@@ -71,62 +57,62 @@ public class RecordOtherProtectiveFacilitiesServiceImpl extends AbstractService<
     }
 
     @Override
-    public RecordOtherProtectiveFacilities add(RecordOtherProtectiveInputRequest recordOtherProtectiveInputRequest) {
+    public void add(RecordOtherProtectiveInputRequest recordOtherProtectiveInputRequest) {
 
         RecordOtherProtectiveFacilities recordOtherProtective = recordOtherProtectiveInputRequest.getRecordOtherProtective();
         recordOtherProtective.setStatus(SysEnum.StatusEnum.STATUS_NORMAL.getCode());
         this.recordMapper.insertUseGeneratedKeys(recordOtherProtective);
         List<RecordOtherProtectiveFacilitiesData> recordOtherProtectiveDataList = new LinkedList<>();
-        for ( RecordOtherProtectiveFacilitiesData recordOtherProtectiveData : recordOtherProtectiveInputRequest.getRecordOtherProtectiveDataList()) {
-            recordOtherProtectiveData.setRelationId(recordOtherProtective.getId());
-            recordOtherProtectiveDataList.add(recordOtherProtectiveData);
-        }
-        if (recordOtherProtectiveDataList.size()>0){
-            this.recordOtherProtectiveFacilitiesDataService.insertList(recordOtherProtectiveDataList);
-        }
-        return recordOtherProtective;
-    }
-
-    @Override
-    public RecordOtherProtectiveFacilities delete(Long id) {
-        RecordOtherProtectiveFacilities recordOtherProtectiveFacilities = this.recordMapper.selectByPrimaryKey(id);
-        recordOtherProtectiveFacilities.setStatus(SysEnum.StatusEnum.STATUS_DELETE.getCode());
-        this.recordMapper.updateByPrimaryKeySelective(recordOtherProtectiveFacilities);
-        return  recordOtherProtectiveFacilities;
-    }
-
-    @Override
-    public RecordOtherProtectiveFacilities update(RecordOtherProtectiveInputRequest recordOtherProtectiveInputRequest) {
-
-        RecordOtherProtectiveFacilities recordOtherProtective = recordOtherProtectiveInputRequest.getRecordOtherProtective();
-        this.recordMapper.updateByPrimaryKeySelective(recordOtherProtective);
-        List<RecordOtherProtectiveFacilitiesData> recordOtherProtectiveDataList = new LinkedList<>();
-        for ( RecordOtherProtectiveFacilitiesData recordOtherProtectiveData: recordOtherProtectiveInputRequest.getRecordOtherProtectiveDataList() ) {
-            if (recordOtherProtectiveData.getId() == null){
+        if (recordOtherProtectiveInputRequest.getRecordOtherProtectiveDataList() != null ) {
+            for ( RecordOtherProtectiveFacilitiesData recordOtherProtectiveData : recordOtherProtectiveInputRequest.getRecordOtherProtectiveDataList()) {
                 recordOtherProtectiveData.setRelationId(recordOtherProtective.getId());
                 recordOtherProtectiveDataList.add(recordOtherProtectiveData);
             }
-            this.recordOtherProtectiveFacilitiesDataService.updateByPrimaryKeySelective(recordOtherProtectiveData);
-        }
-        if (recordOtherProtectiveDataList.size()>0){
             this.recordOtherProtectiveFacilitiesDataService.insertList(recordOtherProtectiveDataList);
         }
-        return recordOtherProtective;
+    }
+
+    @Override
+    public void delete(Long id) {
+        RecordOtherProtectiveFacilities recordOtherProtectiveFacilities = new RecordOtherProtectiveFacilities();
+        recordOtherProtectiveFacilities.setId(id);
+        recordOtherProtectiveFacilities.setStatus(SysEnum.StatusEnum.STATUS_DELETE.getCode());
+        this.recordMapper.updateByPrimaryKeySelective(recordOtherProtectiveFacilities);
+    }
+
+    @Override
+    public void update(RecordOtherProtectiveInputRequest recordOtherProtectiveInputRequest) {
+
+        RecordOtherProtectiveFacilities recordOtherProtective = recordOtherProtectiveInputRequest.getRecordOtherProtective();
+        this.recordMapper.updateByPrimaryKeySelective(recordOtherProtective);
+
+        Condition condition = new Condition(RecordOtherProtectiveFacilitiesData.class);
+        condition.createCriteria().andEqualTo("relationId", recordOtherProtective.getId());
+        List<RecordOtherProtectiveFacilitiesData> recordOtherProtectiveDataList = this.recordOtherProtectiveFacilitiesDataService.selectByCondition(condition);
+        if (recordOtherProtectiveDataList != null && recordOtherProtectiveDataList.size() > 0 ) {
+            for ( RecordOtherProtectiveFacilitiesData recordOtherProtectiveData: recordOtherProtectiveDataList) {
+                this.recordOtherProtectiveFacilitiesDataService.deleteByPrimaryKey(recordOtherProtectiveData.getId());
+            }
+        }
+        recordOtherProtectiveDataList = new LinkedList<>();
+        if (recordOtherProtectiveInputRequest.getRecordOtherProtectiveDataList() != null){
+            for (RecordOtherProtectiveFacilitiesData recordOtherProtectiveFacilitiesData : recordOtherProtectiveInputRequest.getRecordOtherProtectiveDataList()) {
+                recordOtherProtectiveFacilitiesData.setRelationId(recordOtherProtective.getId());
+                recordOtherProtectiveDataList.add(recordOtherProtectiveFacilitiesData);
+            }
+            this.recordOtherProtectiveFacilitiesDataService.insertList(recordOtherProtectiveDataList);
+        }
     }
 
     @Override
     public RecordOtherProtectiveDetailResponse queryOtherProtetiveDetail(Long id) {
         RecordOtherProtectiveDetailResponse response = new RecordOtherProtectiveDetailResponse();
-        RecordOtherProtectiveFacilities recordOtherProtective = new RecordOtherProtectiveFacilities();
-        recordOtherProtective.setSceneId(id);
-        recordOtherProtective =  this.recordMapper.selectOne(recordOtherProtective);
-        if (recordOtherProtective != null) {
-            Long recordId = recordOtherProtective.getId();
-            response.setRecordOtherProtective(recordOtherProtective);
-            Condition condition = new Condition(RecordOtherProtectiveFacilitiesData.class);
-            condition.createCriteria() .andEqualTo("relationId", recordId);
-            List<RecordOtherProtectiveFacilitiesData> recordOtherProtectiveDataList = this.recordOtherProtectiveFacilitiesDataService.selectByCondition(condition);
-            response.setRecordOtherProtectiveDataList(recordOtherProtectiveDataList);
+        Map<String, Object> map = this.recordMapper.selectRecordBySceneId(id);
+        if (map != null) {
+            response.setRecordOtherProtective(map);
+            Long recordId = (Long) map.get("id");
+            List<Map<String, Object>> mapList = this.recordOtherProtectiveFacilitiesDataService.queryRecordDataByOtherProtective(recordId);
+            response.setRecordOtherProtectiveDataList(mapList);
         }
         return response;
     }

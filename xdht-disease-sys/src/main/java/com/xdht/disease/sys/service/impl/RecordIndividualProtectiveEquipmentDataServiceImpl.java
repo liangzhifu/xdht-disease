@@ -13,6 +13,7 @@ import org.springframework.transaction.annotation.Transactional;
 import tk.mybatis.mapper.entity.Condition;
 
 import java.util.List;
+import java.util.Map;
 
 
 /**
@@ -26,57 +27,7 @@ public class RecordIndividualProtectiveEquipmentDataServiceImpl extends Abstract
     private RecordIndividualProtectiveEquipmentDataMapper recordDataMapper;
 
     @Override
-    public List<RecordIndividualProtectiveEquipmentData> queryList(RecordIndividualProtectiveEquipmentDataRequest recordDataRequest) {
-        Condition condition = new Condition(RecordIndividualProtectiveEquipmentData.class);
-        condition.createCriteria() .andEqualTo("id", recordDataRequest.getId())
-                .andEqualTo("companyOfficeId",recordDataRequest.getCompanyOfficeId())
-                .andEqualTo("postId",recordDataRequest.getPostId());
-        if (recordDataRequest.getHazardFactors() != null) {
-            condition.getOredCriteria().get(0).andLike("hazardFactors","%"+recordDataRequest.getHazardFactors()+"%");
-        }
-        if (recordDataRequest.getProtectiveEquipment() != null) {
-            condition.getOredCriteria().get(0).andLike("protectiveEquipment","%"+recordDataRequest.getProtectiveEquipment()+"%");
-        }
-        return this.recordDataMapper.selectByCondition(condition);
-    }
-
-    @Override
-    public PageResult<RecordIndividualProtectiveEquipmentData> queryListPage(RecordIndividualProtectiveEquipmentDataRequest recordDataRequest, Integer pageNum, Integer pageSize) {
-        Condition condition = new Condition(RecordIndividualProtectiveEquipmentData.class);
-        condition.createCriteria() .andEqualTo("id", recordDataRequest.getId())
-                .andEqualTo("companyOfficeId",recordDataRequest.getCompanyOfficeId())
-                .andEqualTo("postId",recordDataRequest.getPostId());
-        if (recordDataRequest.getHazardFactors() != null) {
-            condition.getOredCriteria().get(0).andLike("hazardFactors","%"+recordDataRequest.getHazardFactors()+"%");
-        }
-        if (recordDataRequest.getProtectiveEquipment() != null) {
-            condition.getOredCriteria().get(0).andLike("protectiveEquipment","%"+recordDataRequest.getProtectiveEquipment()+"%");
-        }
-        PageHelper.startPage(pageNum, pageSize);
-        List<RecordIndividualProtectiveEquipmentData> dataList = this.recordDataMapper.selectByCondition(condition);
-        PageResult<RecordIndividualProtectiveEquipmentData> pageList = new  PageResult<RecordIndividualProtectiveEquipmentData>();
-        pageList.setTotal(dataList.size());
-        pageList.setDataList(dataList);
-        return pageList;
-    }
-
-    @Override
-    public RecordIndividualProtectiveEquipmentData add(RecordIndividualProtectiveEquipmentData recordData) {
-            this.recordDataMapper.insertUseGeneratedKeys(recordData);
-            return  recordData;
-    }
-
-    @Override
-    public RecordIndividualProtectiveEquipmentData delete(Long id) {
-            this.recordDataMapper.deleteByPrimaryKey(id);
-            RecordIndividualProtectiveEquipmentData recordData = new RecordIndividualProtectiveEquipmentData();
-            recordData.setId(id);
-            return recordData;
-    }
-
-    @Override
-    public RecordIndividualProtectiveEquipmentData update(RecordIndividualProtectiveEquipmentData recordData) {
-            this.recordDataMapper.updateByPrimaryKeySelective(recordData);
-            return  recordData;
+    public List<Map<String, Object>> queryRecordDataByIndividualProtective(Long id) {
+        return this.recordDataMapper.selectRecordDataByIndividualProtective(id);
     }
 }

@@ -1,16 +1,12 @@
 package com.xdht.disease.sys.controller;
 
 import com.xdht.disease.common.authorization.annotation.Authorization;
-import com.xdht.disease.common.authorization.annotation.CurrentUser;
 import com.xdht.disease.common.core.PageResult;
 import com.xdht.disease.common.core.Result;
-import com.xdht.disease.common.model.User;
 import com.xdht.disease.sys.constant.SysEnum;
-import com.xdht.disease.sys.model.RecordEquipment;
-import com.xdht.disease.sys.service.RecordEquipmentService;
-import com.xdht.disease.sys.vo.request.RecordEquipmentInputRequest;
-import com.xdht.disease.sys.vo.request.RecordEquipmentRequest;
-import com.xdht.disease.sys.vo.response.RecordEquipmentDetailResponse;
+import com.xdht.disease.sys.model.SysNotice;
+import com.xdht.disease.sys.service.SysNoticeService;
+import com.xdht.disease.sys.vo.request.SysNoticeRequest;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
@@ -21,63 +17,61 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
-
 /**
- * Created by L on 2018/5/30.
+ * Created by L on 2018/6/25.
  */
 @Log4j
 @RestController
-@RequestMapping(value = "/api/v1/recordEquipment")
-public class RecordEquipmentController {
+@RequestMapping(value = "/api/v1/sysNotice")
+public class SysNoticeController {
 
     @Autowired
-    private RecordEquipmentService recordEquipmentService;
+    private SysNoticeService sysNoticeService;
 
     @RequestMapping(value = "/pageList", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
-    @ApiOperation(value = "分页查询")
-    public ResponseEntity<Result<PageResult<RecordEquipment>>> recordPage(@RequestBody RecordEquipmentRequest recordEquipmentRequest) {
-        return new ResponseEntity<>(Result.ok(recordEquipmentService.queryListPage(recordEquipmentRequest)), HttpStatus.OK);
+    @ApiOperation(value = "分页查询公告列表")
+    public ResponseEntity<Result<PageResult<SysNotice>>> rolePage(@RequestBody SysNoticeRequest sysNoticeRequest) {
+        return new ResponseEntity<>(Result.ok(sysNoticeService.querySysNoticePage(sysNoticeRequest)), HttpStatus.OK);
     }
 
     @RequestMapping(value = "/add", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
-    @ApiOperation(value = "添加")
+    @ApiOperation(value = "添加公告")
     @Authorization
     @ApiImplicitParams({
             @ApiImplicitParam(name = "authorization", value = "authorization", required = true, dataType = "string", paramType = "header"),
     })
-    public ResponseEntity<Result<String>> add(@RequestBody RecordEquipmentInputRequest recordData) {
-        recordEquipmentService.add(recordData);
+    public ResponseEntity<Result<String>> addNotice(@RequestBody SysNotice sysNotice) {
+        this.sysNoticeService.addNotice(sysNotice);
         return new ResponseEntity<>(Result.ok(SysEnum.ResultEnum.RESULT_SUCCESS.getCode()), HttpStatus.OK);
     }
 
-    @RequestMapping(value = "/delete/{id}", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
-    @ApiOperation(value = "删除")
+    @RequestMapping(value = "/delete", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    @ApiOperation(value = "删除公告")
     @Authorization
     @ApiImplicitParams({
             @ApiImplicitParam(name = "authorization", value = "authorization", required = true, dataType = "string", paramType = "header"),
     })
-    public ResponseEntity<Result<String>> delete(@PathVariable Long id) {
-        recordEquipmentService.delete(id);
+    public ResponseEntity<Result<String>> deleteNotice(@RequestParam Long id) {
+        this.sysNoticeService.deleteNotice(id);
         return new ResponseEntity<>(Result.ok(SysEnum.ResultEnum.RESULT_SUCCESS.getCode()), HttpStatus.OK);
     }
 
     @RequestMapping(value = "/update", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
-    @ApiOperation(value = "修改")
+    @ApiOperation(value = "修改公告")
     @Authorization
     @ApiImplicitParams({
             @ApiImplicitParam(name = "authorization", value = "authorization", required = true, dataType = "string", paramType = "header"),
     })
-    public ResponseEntity<Result<String>> update(@RequestBody RecordEquipmentInputRequest recordData) {
-        recordEquipmentService.update(recordData);
+    public ResponseEntity<Result<String>> updateNotice(@RequestBody SysNotice sysNotice) {
+        this.sysNoticeService.updateNotice(sysNotice);
         return new ResponseEntity<>(Result.ok(SysEnum.ResultEnum.RESULT_SUCCESS.getCode()), HttpStatus.OK);
     }
 
     @RequestMapping(value = "/detail/{id}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
-    @ApiOperation(value = "获取 --详细内容")
-    public ResponseEntity<Result<RecordEquipmentDetailResponse>> getRecordPresentSituationDetail(@PathVariable Long id) {
-        RecordEquipmentDetailResponse recordEquipmentDetailResponse = this.recordEquipmentService.queryEquipmentDetail(id);
-        return new ResponseEntity<>(Result.ok(recordEquipmentDetailResponse), HttpStatus.OK);
+    @ApiOperation(value = "获取公告信息")
+    @Authorization
+    public ResponseEntity<Result<SysNotice>> getNoticeDetail(@PathVariable Long id) {
+        return new ResponseEntity<>(Result.ok(sysNoticeService.selectByPrimaryKey(id)), HttpStatus.OK);
     }
-
+    
 }

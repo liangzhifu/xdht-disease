@@ -19,6 +19,7 @@ import tk.mybatis.mapper.entity.Condition;
 
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 
 
 /**
@@ -34,20 +35,6 @@ public class RecordIndividualProtectiveEquipmentServiceImpl extends AbstractServ
     private RecordIndividualProtectiveEquipmentDataService recordIndividualProtectiveEquipmentDataService;
 
     @Override
-    public List<RecordIndividualProtectiveEquipment> queryList(RecordIndividualProtectiveEquipmentRequest recordRequest) {
-        Condition condition = new Condition(RecordIndividualProtectiveEquipment.class);
-        condition.createCriteria() .andEqualTo("id", recordRequest.getId())
-                .andEqualTo("individualProtectiveEquipmentNo",recordRequest.getIndividualProtectiveEquipmentNo());
-        if (recordRequest.getVerificationResult() != null) {
-            condition.getOredCriteria().get(0).andLike("verificationResult","%"+recordRequest.getVerificationResult()+"%");
-        }
-        if (recordRequest.getStatus() != null){
-            condition.getOredCriteria().get(0).andEqualTo("status",recordRequest.getStatus());
-        }
-        return this.recordMapper.selectByCondition(condition);
-    }
-
-    @Override
     public PageResult<RecordIndividualProtectiveEquipment> queryListPage(RecordIndividualProtectiveEquipmentRequest recordRequest) {
 
         Condition condition = new Condition(RecordIndividualProtectiveEquipment.class);
@@ -58,9 +45,7 @@ public class RecordIndividualProtectiveEquipmentServiceImpl extends AbstractServ
         if (recordRequest.getVerificationResult() != null) {
             condition.getOredCriteria().get(0).andLike("verificationResult","%"+recordRequest.getVerificationResult()+"%");
         }
-        if (recordRequest.getStatus() != null){
-            condition.getOredCriteria().get(0).andEqualTo("status",recordRequest.getStatus());
-        }
+        condition.getOredCriteria().get(0).andEqualTo("status",SysEnum.StatusEnum.STATUS_NORMAL.getCode());
         PageHelper.startPage(recordRequest.getPageNumber(), recordRequest.getPageSize());
         List<RecordIndividualProtectiveEquipment> dataList = this.recordMapper.selectByCondition(condition);
         Integer count = this.recordMapper.selectCountByCondition(condition);
@@ -71,59 +56,60 @@ public class RecordIndividualProtectiveEquipmentServiceImpl extends AbstractServ
     }
 
     @Override
-    public RecordIndividualProtectiveEquipment add(RecordIndividualProtectiveInputRequest recordIndividualProtectiveInputRequest) {
+    public void add(RecordIndividualProtectiveInputRequest recordIndividualProtectiveInputRequest) {
         RecordIndividualProtectiveEquipment recordIndividualProtective = recordIndividualProtectiveInputRequest.getRecordIndividualProtective();
         recordIndividualProtective.setStatus(SysEnum.StatusEnum.STATUS_NORMAL.getCode());
         this.insertUseGeneratedKeys(recordIndividualProtective);
         List<RecordIndividualProtectiveEquipmentData> recordIndividualProtectiveDataList = new LinkedList<>();
-        for ( RecordIndividualProtectiveEquipmentData recordIndividualProtectiveData :  recordIndividualProtectiveInputRequest.getRecordIndividualProtectiveDataList()) {
-            recordIndividualProtectiveData.setRelationId(recordIndividualProtective.getId());
-            recordIndividualProtectiveDataList.add(recordIndividualProtectiveData);
-        }
-        if (recordIndividualProtectiveDataList.size()>0){
-            this.recordIndividualProtectiveEquipmentDataService.insertList(recordIndividualProtectiveDataList);
-        }
-        return  recordIndividualProtective;
-    }
-
-    @Override
-    public RecordIndividualProtectiveEquipment delete(Long id) {
-        RecordIndividualProtectiveEquipment recordIndividualProtectiveEquipment = this.recordMapper.selectByPrimaryKey(id);
-        recordIndividualProtectiveEquipment.setStatus(SysEnum.StatusEnum.STATUS_DELETE.getCode());
-        return recordIndividualProtectiveEquipment;
-    }
-
-    @Override
-    public RecordIndividualProtectiveEquipment update(RecordIndividualProtectiveInputRequest recordIndividualProtectiveInputRequest) {
-        RecordIndividualProtectiveEquipment recordIndividualProtective = recordIndividualProtectiveInputRequest.getRecordIndividualProtective();
-        this.recordMapper.updateByPrimaryKeySelective(recordIndividualProtective);
-        List<RecordIndividualProtectiveEquipmentData> recordIndividualProtectiveDataList = new LinkedList<>();
-        for ( RecordIndividualProtectiveEquipmentData recordIndividualProtectiveData: recordIndividualProtectiveInputRequest.getRecordIndividualProtectiveDataList() ) {
-            if (recordIndividualProtectiveData.getId() == null){
+        if (recordIndividualProtectiveInputRequest.getRecordIndividualProtectiveDataList() != null) {
+            for ( RecordIndividualProtectiveEquipmentData recordIndividualProtectiveData :  recordIndividualProtectiveInputRequest.getRecordIndividualProtectiveDataList()) {
                 recordIndividualProtectiveData.setRelationId(recordIndividualProtective.getId());
                 recordIndividualProtectiveDataList.add(recordIndividualProtectiveData);
             }
-            this.recordIndividualProtectiveEquipmentDataService.updateByPrimaryKeySelective(recordIndividualProtectiveData);
+                this.recordIndividualProtectiveEquipmentDataService.insertList(recordIndividualProtectiveDataList);
         }
-        if (recordIndividualProtectiveDataList.size()>0){
+    }
+
+    @Override
+    public void delete(Long id) {
+        RecordIndividualProtectiveEquipment recordIndividualProtectiveEquipment = new RecordIndividualProtectiveEquipment();
+        recordIndividualProtectiveEquipment.setId(id);
+        recordIndividualProtectiveEquipment.setStatus(SysEnum.StatusEnum.STATUS_DELETE.getCode());
+        this.recordMapper.updateByPrimaryKeySelective(recordIndividualProtectiveEquipment);
+    }
+
+    @Override
+    public void update(RecordIndividualProtectiveInputRequest recordIndividualProtectiveInputRequest) {
+        RecordIndividualProtectiveEquipment recordIndividualProtective = recordIndividualProtectiveInputRequest.getRecordIndividualProtective();
+        this.recordMapper.updateByPrimaryKeySelective(recordIndividualProtective);
+
+        Condition condition = new Condition(RecordIndividualProtectiveEquipmentData.class);
+        condition.createCriteria().andEqualTo("relationId", recordIndividualProtective.getId());
+        List<RecordIndividualProtectiveEquipmentData> recordIndividualProtectiveDataList = this.recordIndividualProtectiveEquipmentDataService.selectByCondition(condition);
+        if (recordIndividualProtectiveDataList != null && recordIndividualProtectiveDataList.size() > 0 ) {
+            for ( RecordIndividualProtectiveEquipmentData recordIndividualProtectiveData: recordIndividualProtectiveInputRequest.getRecordIndividualProtectiveDataList() ) {
+                this.recordIndividualProtectiveEquipmentDataService.deleteByPrimaryKey(recordIndividualProtectiveData.getId());
+            }
+        }
+        recordIndividualProtectiveDataList = new LinkedList<>();
+        if (recordIndividualProtectiveInputRequest.getRecordIndividualProtectiveDataList() != null){
+            for (RecordIndividualProtectiveEquipmentData recordIndividualProtectiveEquipmentData : recordIndividualProtectiveInputRequest.getRecordIndividualProtectiveDataList()) {
+                recordIndividualProtectiveEquipmentData.setRelationId(recordIndividualProtective.getId());
+                recordIndividualProtectiveDataList.add(recordIndividualProtectiveEquipmentData);
+            }
             this.recordIndividualProtectiveEquipmentDataService.insertList(recordIndividualProtectiveDataList);
         }
-        return recordIndividualProtective;
     }
 
     @Override
     public RecordIndividualProtectiveDetailResponse queryIndividualProtetiveDetail(Long id) {
         RecordIndividualProtectiveDetailResponse response = new RecordIndividualProtectiveDetailResponse();
-        RecordIndividualProtectiveEquipment recordIndividualProtective = new RecordIndividualProtectiveEquipment();
-        recordIndividualProtective.setSceneId(id);
-        recordIndividualProtective = this.recordMapper.selectOne(recordIndividualProtective);
-        if (recordIndividualProtective != null){
-            Long recordId = recordIndividualProtective.getId();
-            response.setRecordIndividualProtective(recordIndividualProtective);
-            Condition condition = new Condition(RecordIndividualProtectiveEquipmentData.class);
-            condition.createCriteria() .andEqualTo("relationId", recordId);
-            List<RecordIndividualProtectiveEquipmentData> recordIndividualProtectiveDataList = this.recordIndividualProtectiveEquipmentDataService.selectByCondition(condition);
-            response.setRecordIndividualProtectiveDataList(recordIndividualProtectiveDataList);
+        Map<String, Object> map = this.recordMapper.selectRecordBySceneId(id);
+        if (map != null) {
+            response.setRecordIndividualProtective(map);
+            Long recordId = (Long) map.get("id");
+            List<Map<String, Object>> mapList = this.recordIndividualProtectiveEquipmentDataService.queryRecordDataByIndividualProtective(recordId);
+            response.setRecordIndividualProtectiveDataList(mapList);
         }
         return response;
     }

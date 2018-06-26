@@ -8,6 +8,7 @@ import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by L on 2018/6/14.
@@ -16,10 +17,10 @@ import java.util.List;
 public class RecordEmergencyFacilitiesDetailResponse {
 
     @ApiModelProperty(value = "应急设施调查表")
-    private RecordEmergencyFacilities recordEmergencyFacilities;
+    private Map<String, Object> recordEmergencyFacilities;
 
     @ApiModelProperty(value = "应急设施调查表--调查内容")
-    private List<RecordEmergencyFacilitiesData> recordEmergencyFacilitiesDataList;
+    private List<Map<String, Object>> recordEmergencyFacilitiesDataList;
 
 
 

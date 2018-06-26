@@ -46,7 +46,7 @@ public class RecordIndividualProtectiveEquipmentData {
     /**
      * 使用情况
      */
-    private String usaged;
+    private String usage;
 
     /**
      * 关联id
@@ -179,19 +179,19 @@ public class RecordIndividualProtectiveEquipmentData {
     /**
      * 获取使用情况
      *
-     * @return usaged - 使用情况
+     * @return usage- 使用情况
      */
-    public String getUsaged() {
-        return usaged;
+    public String getUsage() {
+        return usage;
     }
 
     /**
      * 设置使用情况
      *
-     * @param usaged 使用情况
+     * @param usage 使用情况
      */
-    public void setUsaged(String usaged) {
-        this.usaged = usaged;
+    public void setUsage(String usage) {
+        this.usage = usage;
     }
 
     /**

@@ -41,8 +41,8 @@ public class RecordHazardFactors {
     /**
      * 更新人
      */
-    @Column(name = "upadte_by")
-    private Long upadteBy;
+    @Column(name = "update_by")
+    private Long updateBy;
 
     /**
      * 更新时间
@@ -183,8 +183,8 @@ public class RecordHazardFactors {
      *
      * @return upadte_by - 更新人
      */
-    public Long getUpadteBy() {
-        return upadteBy;
+    public Long getUpdateBy() {
+        return updateBy;
     }
 
     /**
@@ -192,8 +192,8 @@ public class RecordHazardFactors {
      *
      * @param upadteBy 更新人
      */
-    public void setUpadteBy(Long upadteBy) {
-        this.upadteBy = upadteBy;
+    public void setUpdateBy(Long upadteBy) {
+        this.updateBy = updateBy;
     }
 
     /**

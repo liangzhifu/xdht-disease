@@ -3,6 +3,7 @@ package com.xdht.disease.sys.service.impl;
 import com.github.pagehelper.PageHelper;
 import com.xdht.disease.common.core.AbstractService;
 import com.xdht.disease.common.core.PageResult;
+import com.xdht.disease.sys.constant.SysEnum;
 import com.xdht.disease.sys.dao.SysPostMapper;
 import com.xdht.disease.sys.model.SysPost;
 import com.xdht.disease.sys.service.SysPostService;
@@ -32,9 +33,7 @@ public class SysPostServiceImpl extends AbstractService<SysPost> implements SysP
         if (sysPostRequest.getPostName() != null) {
             condition.getOredCriteria().get(0).andLike("postName","%"+sysPostRequest.getPostName()+"%");
         }
-        if (sysPostRequest.getStatus() != null){
-            condition.getOredCriteria().get(0).andEqualTo("status",sysPostRequest.getStatus());
-        }
+        condition.getOredCriteria().get(0).andEqualTo("status", SysEnum.StatusEnum.STATUS_NORMAL.getCode());
         return this.sysPostMapper.selectByCondition(condition);
     }
 

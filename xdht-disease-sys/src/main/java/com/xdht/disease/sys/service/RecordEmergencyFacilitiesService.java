@@ -15,12 +15,6 @@ import java.util.List;
  */
 public interface RecordEmergencyFacilitiesService extends Service<RecordEmergencyFacilities> {
 
-    /**
-     * 查询
-     * @param recordEmergencyFacilitiesRequest 查询条件
-     * @return 返回结果
-     */
-    public List<RecordEmergencyFacilities> queryList(RecordEmergencyFacilitiesRequest recordEmergencyFacilitiesRequest);
 
     /**
      * 分页查询
@@ -32,23 +26,20 @@ public interface RecordEmergencyFacilitiesService extends Service<RecordEmergenc
     /**
      * 添加
      * @param recordEmergencyFacilitiesInputRequest 实体
-     * @return 返回结果
      */
-    public RecordEmergencyFacilities add(RecordEmergencyFacilitiesInputRequest recordEmergencyFacilitiesInputRequest);
+    public void add(RecordEmergencyFacilitiesInputRequest recordEmergencyFacilitiesInputRequest);
 
     /**
      * 删除
      * @param id 主键id
-     * @return 返回结果
      */
-    public RecordEmergencyFacilities delete(Long id);
+    public void delete(Long id);
 
     /**
      * 修改
      * @param recordEmergencyFacilitiesInputRequest 实体
-     * @return 返回结果
      */
-    public RecordEmergencyFacilities update(RecordEmergencyFacilitiesInputRequest recordEmergencyFacilitiesInputRequest);
+    public void update(RecordEmergencyFacilitiesInputRequest recordEmergencyFacilitiesInputRequest);
 
     /**
      * 获取 应急设施调查表 信息
