@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.xdht.disease.sys.dao.SysKnowledgeMapper">
+  <resultMap id="BaseResultMap" type="com.xdht.disease.sys.model.SysKnowledge">
+    <!--
+      WARNING - @mbg.generated
+    -->
+    <id column="id" jdbcType="BIGINT" property="id" />
+    <result column="knowledge_title" jdbcType="VARCHAR" property="knowledgeTitle" />
+    <result column="knowledge_version" jdbcType="BIGINT" property="knowledgeVersion" />
+    <result column="knowledge_content" jdbcType="VARCHAR" property="knowledgeContent" />
+    <result column="catalog_id" jdbcType="BIGINT" property="catalogId" />
+    <result column="knowledge_id" jdbcType="BIGINT" property="knowledgeId" />
+    <result column="status" jdbcType="CHAR" property="status" />
+    <result column="create_by" jdbcType="BIGINT" property="createBy" />
+    <result column="create_date" jdbcType="TIMESTAMP" property="createDate" />
+    <result column="update_by" jdbcType="BIGINT" property="updateBy" />
+    <result column="update_date" jdbcType="TIMESTAMP" property="updateDate" />
+  </resultMap>
+</mapper>

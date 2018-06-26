@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.xdht.disease.sys.dao.SysKnowledgeCatalogMapper">
+  <resultMap id="BaseResultMap" type="com.xdht.disease.sys.model.SysKnowledgeCatalog">
+    <!--
+      WARNING - @mbg.generated
+    -->
+    <id column="id" jdbcType="BIGINT" property="id" />
+    <result column="parent_id" jdbcType="BIGINT" property="parentId" />
+    <result column="parent_ids" jdbcType="VARCHAR" property="parentIds" />
+    <result column="catalog_name" jdbcType="VARCHAR" property="catalogName" />
+    <result column="status" jdbcType="CHAR" property="status" />
+    <result column="create_by" jdbcType="BIGINT" property="createBy" />
+    <result column="create_date" jdbcType="TIMESTAMP" property="createDate" />
+    <result column="update_by" jdbcType="BIGINT" property="updateBy" />
+    <result column="update_date" jdbcType="TIMESTAMP" property="updateDate" />
+  </resultMap>
+
+  <update id="deleteChild" parameterType="java.util.HashMap">
+    UPDATE sys_knowledge_catalog
+    SET `status` = '1',
+    update_by = #{userId, jdbcType=BIGINT},
+    update_date = SYSDATE()
+    WHERE `status` = '0'
+    AND parent_ids LIKE CONCAT('%,', #{id, jdbcType=BIGINT},',%')
+  </update>
+
+</mapper>
