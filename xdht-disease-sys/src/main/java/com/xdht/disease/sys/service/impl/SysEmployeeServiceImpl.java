@@ -30,9 +30,10 @@ public class SysEmployeeServiceImpl extends AbstractService<SysEmployee> impleme
     private SysEmployeeDiseaseService sysEmployeeDiseaseService;
     @Autowired
     private SysEmployeeJobService sysEmployeeJobService;
-
     @Autowired
     private SysCompanyOfficeService sysCompanyOfficeService;
+    @Autowired
+    private SysUserService sysUserService;
 
     @Override
     public PageResult<SysEmployee> querySysEmpPage(SysEmployeeRequest sysEmployeeRequest) {
@@ -84,6 +85,16 @@ public class SysEmployeeServiceImpl extends AbstractService<SysEmployee> impleme
         SysEmployee sysEmployee = sysEmployeeResponse.getSysEmployee();
         sysEmployee.setStatus(SysEnum.StatusEnum.STATUS_NORMAL.getCode());
         this.insertUseGeneratedKeys(sysEmployee);
+        // 同时添加数据到用户表中
+        SysUser sysUser = new SysUser();
+        sysUser.setUserName(sysEmployee.getEmpName());
+        sysUser.setSex(sysEmployee.getEmpSex());
+        sysUser.setMgrType(SysEnum.MgrTypeEnum.MGR_TYPE_NOT.getCode());
+        sysUser.setLoginCode(sysEmployee.getEmpIdentityNumber());
+        sysUser.setPassword(sysEmployee.getEmpIdentityNumber());
+        sysUser.setStatus(SysEnum.StatusEnum.STATUS_NORMAL.getCode());
+        sysUser.setEmpId(sysEmployee.getId());
+        this.sysUserService.insertUseGeneratedKeys(sysUser);
         List<SysEmployeeCase> sysEmployeeCaseList = sysEmployeeResponse.getSysEmployeeCaseList();
         if (sysEmployeeCaseList != null && sysEmployeeCaseList.size() > 0) {
             for (SysEmployeeCase sysEmployeeCase : sysEmployeeCaseList) {
@@ -118,6 +129,13 @@ public class SysEmployeeServiceImpl extends AbstractService<SysEmployee> impleme
         SysEmployee sysEmployee = employeeDetail.getSysEmployee();
         sysEmployee.setStatus(SysEnum.StatusEnum.STATUS_DELETE.getCode());
         this.updateByPrimaryKeySelective(sysEmployee);
+        // 删除用户中关联的职工信息
+        Long empId = sysEmployee.getId();
+        SysUser sysUser = new SysUser();
+        sysUser.setEmpId(empId);
+        sysUser = this.sysUserService.selectOne(sysUser);
+        sysUser.setStatus(SysEnum.StatusEnum.STATUS_DELETE.getCode());
+        this.sysUserService.updateByPrimaryKeySelective(sysUser);
 
         List<SysEmployeeCase> sysEmployeeCases = employeeDetail.getSysEmployeeCaseList();
         if (sysEmployeeCases != null && sysEmployeeCases.size() > 0) {
@@ -142,6 +160,8 @@ public class SysEmployeeServiceImpl extends AbstractService<SysEmployee> impleme
                 this.sysEmployeeJobService.updateByPrimaryKeySelective(sysEmployeeJob);
             }
         }
+
+
     }
 
     /**
@@ -154,6 +174,14 @@ public class SysEmployeeServiceImpl extends AbstractService<SysEmployee> impleme
         SysEmployee sysEmployee = sysEmployeeResponse.getSysEmployee();
         Long sysEmployeeId = sysEmployee.getId();
         this.updateByPrimaryKeySelective(sysEmployee);
+        // sysEmployeeId是user表中对应的职工关联id
+        // 修改user表对应的职工信息
+        SysUser sysUser = new SysUser();
+        sysUser.setEmpId(sysEmployeeId);
+        sysUser = this.sysUserService.selectOne(sysUser);
+        sysUser.setUserName(sysEmployee.getEmpName());
+        sysUser.setSex(sysEmployee.getEmpSex());
+        this.sysUserService.updateByPrimaryKeySelective(sysUser);
 
         Condition condition = new Condition(SysEmployeeCase.class);
         condition.createCriteria().andEqualTo("employeeId", sysEmployeeId).andEqualTo("status",SysEnum.StatusEnum.STATUS_NORMAL.getCode());
@@ -215,10 +243,12 @@ public class SysEmployeeServiceImpl extends AbstractService<SysEmployee> impleme
         SysEmployeeResponse sysEmployeeResponse = new SysEmployeeResponse();
         SysEmployee sysEmployee = this.selectByPrimaryKey(id);
         Long officeId = sysEmployee.getOfficeId();
+        SysCompanyOffice sysCompanyOffice = new SysCompanyOffice();
         if (officeId != null) {
-            SysCompanyOffice sysCompanyOffice = this.sysCompanyOfficeService.selectByPrimaryKey(officeId);
+            sysCompanyOffice = this.sysCompanyOfficeService.selectByPrimaryKey(officeId);
             sysEmployeeResponse.setSysCompanyOffice(sysCompanyOffice);
         }
+        sysEmployeeResponse.setSysCompanyOffice(sysCompanyOffice);
         sysEmployeeResponse.setSysEmployee(sysEmployee);
 
         Condition condition = new Condition(SysEmployeeCase.class);

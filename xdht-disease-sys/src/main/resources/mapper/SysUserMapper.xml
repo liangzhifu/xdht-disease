@@ -25,5 +25,6 @@
     <result column="update_by" jdbcType="BIGINT" property="updateBy" />
     <result column="update_date" jdbcType="TIMESTAMP" property="updateDate" />
     <result column="remarks" jdbcType="VARCHAR" property="remarks" />
+    <result column="emp_id" jdbcType="BIGINT" property="empId" />
   </resultMap>
 </mapper>

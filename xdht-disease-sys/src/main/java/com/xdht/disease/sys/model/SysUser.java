@@ -117,6 +117,29 @@ public class SysUser {
      */
     private String remarks;
 
+
+    /**
+     * 关联职工id
+     */
+    @Column(name = "emp_id")
+    private Long empId;
+
+    /**
+     * 获取员工关联id
+     * @return 员工关联id
+     */
+    public Long getEmpId() {
+        return empId;
+    }
+
+    /**
+     * 设置员工关联id
+     * @param empId 员工关联id
+     */
+    public void setEmpId(Long empId) {
+        this.empId = empId;
+    }
+
     /**
      * 获取用户ID
      *
