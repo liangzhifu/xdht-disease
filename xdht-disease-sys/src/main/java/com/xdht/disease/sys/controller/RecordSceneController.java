@@ -43,8 +43,8 @@ public class RecordSceneController {
     @ApiImplicitParams({
             @ApiImplicitParam(name = "authorization", value = "authorization", required = true, dataType = "string", paramType = "header"),
     })
-    public ResponseEntity<Result<String>> addAll(@RequestBody RecordSceneInputRequest recordSceneInputRequest) {
-        this.recordSceneService.add(recordSceneInputRequest);
+    public ResponseEntity<Result<String>> addRecordScene(@RequestBody RecordSceneInputRequest recordSceneInputRequest) {
+        recordSceneService.addRecordScene(recordSceneInputRequest);
         return new ResponseEntity<>(Result.ok(SysEnum.ResultEnum.RESULT_SUCCESS.getCode()), HttpStatus.OK);
     }
 
@@ -65,8 +65,8 @@ public class RecordSceneController {
     @ApiImplicitParams({
             @ApiImplicitParam(name = "authorization", value = "authorization", required = true, dataType = "string", paramType = "header"),
     })
-    public ResponseEntity<Result<String>> updateRecordScene(@RequestBody RecordScene recordScene) {
-        recordSceneService.updateRecordScene(recordScene);
+    public ResponseEntity<Result<String>> updateRecordScene(@RequestBody RecordSceneInputRequest recordSceneInputRequest) {
+        recordSceneService.updateRecordScene(recordSceneInputRequest);
         return new ResponseEntity<>(Result.ok(SysEnum.ResultEnum.RESULT_SUCCESS.getCode()), HttpStatus.OK);
     }
 

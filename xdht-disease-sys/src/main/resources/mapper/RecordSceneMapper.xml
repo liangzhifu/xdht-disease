@@ -21,7 +21,9 @@
   </resultMap>
 
   <select id="selectRecordSceneMapByPrimaryKey" resultType="java.util.HashMap" parameterType="java.lang.Long">
-    SELECT rs.`project_name` AS projectName,
+    SELECT
+    rs.`id` AS id,
+    rs.`project_name` AS projectName,
     rs.`record_no` AS recordNo,
     rs.inquiry_type AS inquiryType,
     rs.inquiry_person AS inquiryPerson,

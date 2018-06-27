@@ -18,7 +18,9 @@
 
   <select id="selectRecordScenQuestionnaireMapListByRecordScen" parameterType="java.lang.Long" resultType="java.util.HashMap">
     SELECT
+    rsq.`id` AS id,
     rsq.`questionnaire_id` AS questionnaireId,
+    rsq.`scene_id` AS sceneId,
     sq.`questionnaire_name` AS questionnaireName,
     rsq.generator_record AS generatorRecord,
     sq.questionnaire_alias AS questionnaireAlias
