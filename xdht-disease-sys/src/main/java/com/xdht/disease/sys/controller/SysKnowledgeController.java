@@ -33,7 +33,7 @@ public class SysKnowledgeController {
 
     @RequestMapping(value = "/pageList", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     @ApiOperation(value = "分页查询公告列表")
-    public ResponseEntity<Result<PageResult<SysNotice>>> rolePage(@RequestBody SysKnowledgeRequest sysKnowledgeRequest) {
+    public ResponseEntity<Result<PageResult<SysKnowledge>>> rolePage(@RequestBody SysKnowledgeRequest sysKnowledgeRequest) {
         return new ResponseEntity<>(Result.ok(sysKnowledgeService.querySysKnowledgePage(sysKnowledgeRequest)), HttpStatus.OK);
     }
 
@@ -76,7 +76,7 @@ public class SysKnowledgeController {
         return new ResponseEntity<>(Result.ok(SysEnum.ResultEnum.RESULT_SUCCESS.getCode()), HttpStatus.OK);
     }
 
-    @RequestMapping(value = "/detail/{id}", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    @RequestMapping(value = "/detail/{id}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     @ApiOperation(value = "单位部门详情")
     public ResponseEntity<Result<SysKnowledge>> getDetail(@PathVariable Long id) {
         return new ResponseEntity<>(Result.ok(sysKnowledgeService.selectByPrimaryKey(id)), HttpStatus.OK);

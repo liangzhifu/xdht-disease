@@ -50,6 +50,7 @@ public class SysKnowledgeServiceImpl extends AbstractService<SysKnowledge> imple
 
     @Override
     public void addKnowledge(SysKnowledge sysKnowledge) {
+        sysKnowledge.setKnowledgeVersion(1L);
         sysKnowledge.setStatus(SysEnum.StatusEnum.STATUS_NORMAL.getCode());
         this.insertUseGeneratedKeys(sysKnowledge);
         sysKnowledge.setCatalogId(sysKnowledge.getId());
