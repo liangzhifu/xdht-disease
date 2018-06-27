@@ -29,15 +29,15 @@ public interface RecordSceneService extends Service<RecordScene> {
 
     /**
      * 修改
-     * @param recordScene 实体
+     * @param recordSceneInputRequest 实体
      */
-    void updateRecordScene(RecordScene recordScene);
+    void updateRecordScene(RecordSceneInputRequest recordSceneInputRequest);
 
     /**
      * 添加调查表和调查表是否填写的状态
      * @param recordSceneInputRequest 实体
      */
-    void add(RecordSceneInputRequest recordSceneInputRequest);
+    void addRecordScene(RecordSceneInputRequest recordSceneInputRequest);
 
     /**
      * 获取职业卫生现场调查记录表--详细内容
