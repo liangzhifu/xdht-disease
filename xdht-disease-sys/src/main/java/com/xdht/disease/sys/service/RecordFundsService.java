@@ -3,6 +3,7 @@ import com.xdht.disease.common.core.PageResult;
 import com.xdht.disease.sys.model.RecordFunds;
 import com.xdht.disease.common.core.Service;
 import com.xdht.disease.sys.vo.request.RecordFundsRequest;
+import com.xdht.disease.sys.vo.response.RecordFundsDetailResponse;
 
 import java.util.List;
 
@@ -30,10 +31,10 @@ public interface RecordFundsService extends Service<RecordFunds> {
 
     /**
      * 添加
-     * @param recordFunds 实体
+     * @param recordFundsRequest 实体
      * @return 返回结果
      */
-    public RecordFunds add(RecordFunds recordFunds);
+    public void add(RecordFundsRequest recordFundsRequest);
 
     /**
      * 删除
@@ -44,8 +45,10 @@ public interface RecordFundsService extends Service<RecordFunds> {
 
     /**
      * 修改
-     * @param recordFunds 实体
+     * @param recordFundsRequest 实体
      * @return 返回结果
      */
-    public RecordFunds update(RecordFunds recordFunds);
+    public void update(RecordFundsRequest recordFundsRequest);
+
+    RecordFundsDetailResponse queryRecordFundsDetail(Long id);
 }

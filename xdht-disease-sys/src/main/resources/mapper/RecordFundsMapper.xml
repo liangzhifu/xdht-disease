@@ -14,4 +14,12 @@
     <result column="upadte_by" jdbcType="BIGINT" property="upadteBy" />
     <result column="update_date" jdbcType="TIMESTAMP" property="updateDate" />
   </resultMap>
+
+  <select id = "selectRecordFundsBySceneId" resultType="java.util.HashMap" parameterType="java.lang.Long">
+    select rf.id, rf.funds_no as fundsNo,
+    rf.verification_result as verificationResult, rf.scene_id as sceneId
+    from record_funds rf
+    where rf.status = '0'
+    and rf.scene_id = #{sceneId, jdbcType=BIGINT}
+  </select>
 </mapper>

@@ -1,12 +1,19 @@
 package com.xdht.disease.sys.model;
 
 import javax.persistence.*;
+import java.util.Date;
 
 @Table(name = "record_building_base_data")
 public class RecordBuildingBaseData {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
+    /**
+     * 建筑物基本情况id
+     */
+    @Column(name = "building_base_id")
+    private Long buildingBaseId;
 
     /**
      * 建筑物名称
@@ -47,6 +54,11 @@ public class RecordBuildingBaseData {
      */
     @Column(name = "lighting_lamps")
     private String lightingLamps;
+
+    /**
+     * 状态（0正常 1删除）
+     */
+    private String status;
 
     /**
      * @return id
@@ -187,4 +199,21 @@ public class RecordBuildingBaseData {
     public void setLightingLamps(String lightingLamps) {
         this.lightingLamps = lightingLamps;
     }
+
+    public Long getBuildingBaseId() {
+        return buildingBaseId;
+    }
+
+    public void setBuildingBaseId(Long buildingBaseId) {
+        this.buildingBaseId = buildingBaseId;
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
+    }
+
 }

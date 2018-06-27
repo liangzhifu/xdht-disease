@@ -3,6 +3,7 @@ import com.xdht.disease.common.core.PageResult;
 import com.xdht.disease.sys.model.RecordBuildingBase;
 import com.xdht.disease.common.core.Service;
 import com.xdht.disease.sys.vo.request.RecordBuildingBaseRequest;
+import com.xdht.disease.sys.vo.response.RecordBuildingBaseDetailResponse;
 
 import java.util.List;
 
@@ -33,7 +34,7 @@ public interface RecordBuildingBaseService extends Service<RecordBuildingBase> {
      * @param recordBuildingBase 实体
      * @return 返回结果
      */
-    public RecordBuildingBase add(RecordBuildingBase recordBuildingBase);
+    public void add(RecordBuildingBaseRequest recordBuildingBaseRequest);
 
     /**
      * 删除
@@ -47,5 +48,7 @@ public interface RecordBuildingBaseService extends Service<RecordBuildingBase> {
      * @param recordBuildingBase 实体
      * @return 返回结果
      */
-    public RecordBuildingBase update(RecordBuildingBase recordBuildingBase);
+    public void update(RecordBuildingBaseRequest recordBuildingBaseRequest);
+
+    RecordBuildingBaseDetailResponse queryPostPersonnelDetail(Long id);
 }

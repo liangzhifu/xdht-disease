@@ -12,4 +12,15 @@
     <result column="number" jdbcType="BIGINT" property="number" />
     <result column="heating_mode" jdbcType="VARCHAR" property="heatingMode" />
   </resultMap>
+
+  <select id="queryRecordBuildingAerationDataByPostPersonnel" parameterType="java.lang.Long" resultType="java.util.HashMap">
+    SELECT rbad.id, rbad.building_aeration_id as buildingAerationId,
+    rbad.building_name as buildingName,
+    rbad.regulation_mode as regulationMode,
+    rbad.adjustment_facilities as adjustmentFacilities,
+    rbad.number as number,
+    rbad.heating_mode as heatingMode
+    FROM `record_building_aeration_data` rbad
+    WHERE rbad.`building_aeration_id` = #{id, jdbcType=BIGINT}
+  </select>
 </mapper>
