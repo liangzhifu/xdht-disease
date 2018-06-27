@@ -51,6 +51,12 @@ public class RecordBuildingBase {
     private Date updateDate;
 
     /**
+     * 现场调查表的id
+     */
+    @Column(name = "scene_id")
+    private Long sceneId;
+
+    /**
      * @return id
      */
     public Long getId() {
@@ -188,5 +194,13 @@ public class RecordBuildingBase {
      */
     public void setUpdateDate(Date updateDate) {
         this.updateDate = updateDate;
+    }
+
+    public Long getSceneId() {
+        return sceneId;
+    }
+
+    public void setSceneId(Long sceneId) {
+        this.sceneId = sceneId;
     }
 }

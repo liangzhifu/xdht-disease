@@ -6,6 +6,7 @@ import com.xdht.disease.sys.model.RecordBuildingBaseData;
 import com.xdht.disease.sys.vo.request.RecordBuildingBaseDataRequest;
 
 import java.util.List;
+import java.util.Map;
 
 
 /**
@@ -49,4 +50,6 @@ public interface RecordBuildingBaseDataService extends Service<RecordBuildingBas
      * @return 返回结果
      */
     public RecordBuildingBaseData update(RecordBuildingBaseData recordBuildingBaseData);
+
+    List<Map<String,Object>> queryRecordBuildingBaseDataByPostPersonnel(Long recordId);
 }

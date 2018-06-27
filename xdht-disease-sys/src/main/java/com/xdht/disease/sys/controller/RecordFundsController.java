@@ -4,9 +4,12 @@ import com.xdht.disease.common.authorization.annotation.CurrentUser;
 import com.xdht.disease.common.core.PageResult;
 import com.xdht.disease.common.core.Result;
 import com.xdht.disease.common.model.User;
+import com.xdht.disease.sys.constant.SysEnum;
 import com.xdht.disease.sys.model.RecordFunds;
 import com.xdht.disease.sys.service.RecordFundsService;
 import com.xdht.disease.sys.vo.request.RecordFundsRequest;
+import com.xdht.disease.sys.vo.response.RecordFundsDetailResponse;
+import com.xdht.disease.sys.vo.response.RecordPreEvaluationDetailResponse;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.log4j.Log4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -41,22 +44,30 @@ public class RecordFundsController {
 
     @RequestMapping(value = "/add", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     @ApiOperation(value = "添加")
-    public ResponseEntity<Result<RecordFunds>> add(@CurrentUser User user, @RequestBody RecordFunds recordFunds) {
-        return new ResponseEntity<>(Result.ok(recordFundsService.add(recordFunds)), HttpStatus.OK);
+    public ResponseEntity<Result<RecordFunds>> add(@RequestBody RecordFundsRequest recordFundsRequest) {
+        this.recordFundsService.add(recordFundsRequest);
+        return new ResponseEntity<>(Result.ok(SysEnum.ResultEnum.RESULT_SUCCESS.getCode()), HttpStatus.OK);
     }
 
     @RequestMapping(value = "/delete", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     @ApiOperation(value = "删除")
-    public ResponseEntity<Result<RecordFunds>> delete(@CurrentUser User user, @RequestParam Long id) {
+    public ResponseEntity<Result<RecordFunds>> delete(@RequestParam Long id) {
         return new ResponseEntity<>(Result.ok(recordFundsService.delete(id)), HttpStatus.OK);
     }
 
     @RequestMapping(value = "/update", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     @ApiOperation(value = "修改")
-    public ResponseEntity<Result<RecordFunds>> update(@CurrentUser User user, @RequestBody RecordFunds recordFunds) {
-        return new ResponseEntity<>(Result.ok(recordFundsService.update(recordFunds)), HttpStatus.OK);
+    public ResponseEntity<Result<RecordFunds>> update(@RequestBody RecordFundsRequest recordFundsRequest) {
+        this.recordFundsService.update(recordFundsRequest);
+        return new ResponseEntity<>(Result.ok(SysEnum.ResultEnum.RESULT_SUCCESS.getCode()), HttpStatus.OK);
     }
 
+    @RequestMapping(value = "/detail/{id}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    @ApiOperation(value = "获取建设项目概况调查表(预评价)--详细内容")
+    public ResponseEntity<Result<RecordFundsDetailResponse>> getRecordFundsDetail(@PathVariable Long id) {
+        RecordFundsDetailResponse recordFundsDetailResponse = this.recordFundsService.queryRecordFundsDetail(id);
+        return new ResponseEntity<>(Result.ok(recordFundsDetailResponse), HttpStatus.OK);
+    }
 
 
 }

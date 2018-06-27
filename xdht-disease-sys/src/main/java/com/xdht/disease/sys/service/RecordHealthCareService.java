@@ -3,6 +3,7 @@ import com.xdht.disease.common.core.PageResult;
 import com.xdht.disease.sys.model.RecordHealthCare;
 import com.xdht.disease.common.core.Service;
 import com.xdht.disease.sys.vo.request.RecordHealthCareRequest;
+import com.xdht.disease.sys.vo.response.RecordHealthCareResponse;
 
 import java.util.List;
 
@@ -33,7 +34,7 @@ public interface RecordHealthCareService extends Service<RecordHealthCare> {
      * @param recordHealthCare 实体
      * @return 返回结果
      */
-    public RecordHealthCare add(RecordHealthCare recordHealthCare);
+    public void add(RecordHealthCareRequest recordHealthCareRequest);
 
     /**
      * 删除
@@ -47,5 +48,7 @@ public interface RecordHealthCareService extends Service<RecordHealthCare> {
      * @param recordHealthCare 实体
      * @return 返回结果
      */
-    public RecordHealthCare update(RecordHealthCare recordHealthCare);
+    public void update(RecordHealthCareRequest recordHealthCareRequest);
+
+    RecordHealthCareResponse queryRecordHealthCareDetail(Long id);
 }

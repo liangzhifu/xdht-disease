@@ -11,4 +11,15 @@
     <result column="survey_results" jdbcType="VARCHAR" property="surveyResults" />
     <result column="remarks" jdbcType="VARCHAR" property="remarks" />
   </resultMap>
+
+  <select id="queryRecordHealthCareDataByRecordHealthCareId" parameterType="java.lang.Long" resultType="java.util.HashMap">
+    select rhcd.id, rhcd.health_care_id as healthCareId,
+    rhcd.health_care_project_id as healthCareProjectId,
+    rhcd.survey_results as surveyResults,
+    rhcd.remarks as remarks,
+    sd.`dictionary_name` AS projectName
+    from record_health_care_data rhcd, sys_dictionary sd
+    where rhcd.health_care_project_id = sd.id
+    and rhcd.health_care_id = #{id, jdbcType=BIGINT}
+  </select>
 </mapper>

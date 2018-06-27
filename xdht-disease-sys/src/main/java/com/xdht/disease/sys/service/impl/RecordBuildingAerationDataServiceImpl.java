@@ -13,6 +13,7 @@ import org.springframework.transaction.annotation.Transactional;
 import tk.mybatis.mapper.entity.Condition;
 
 import java.util.List;
+import java.util.Map;
 
 
 /**
@@ -88,5 +89,10 @@ public class RecordBuildingAerationDataServiceImpl extends AbstractService<Recor
     public RecordBuildingAerationData update(RecordBuildingAerationData recordBuildingAerationData) {
         this.recordBuildingAerationDataMapper.updateByPrimaryKeySelective(recordBuildingAerationData);
         return  recordBuildingAerationData;
+    }
+
+    @Override
+    public List<Map<String, Object>> queryRecordBuildingAerationDataByPostPersonnel(Long id) {
+        return this.recordBuildingAerationDataMapper.queryRecordBuildingAerationDataByPostPersonnel(id);
     }
 }

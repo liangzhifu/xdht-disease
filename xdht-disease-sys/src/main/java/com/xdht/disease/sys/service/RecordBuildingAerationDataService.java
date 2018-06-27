@@ -5,6 +5,7 @@ import com.xdht.disease.common.core.Service;
 import com.xdht.disease.sys.vo.request.RecordBuildingAerationDataRequest;
 
 import java.util.List;
+import java.util.Map;
 
 
 /**
@@ -47,4 +48,6 @@ public interface RecordBuildingAerationDataService extends Service<RecordBuildin
      * @return 返回结果
      */
     public RecordBuildingAerationData update(RecordBuildingAerationData recordBuildingAerationData);
+
+    List<Map<String,Object>> queryRecordBuildingAerationDataByPostPersonnel(Long recordId);
 }

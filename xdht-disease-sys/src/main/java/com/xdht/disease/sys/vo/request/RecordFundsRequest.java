@@ -1,7 +1,11 @@
 package com.xdht.disease.sys.vo.request;
 
+import com.xdht.disease.sys.model.RecordFunds;
+import com.xdht.disease.sys.model.RecordFundsData;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
+
+import java.util.List;
 
 /**
  * Created by L on 2018/5/30.
@@ -9,16 +13,10 @@ import lombok.Data;
 @Data
 public class RecordFundsRequest {
 
-    @ApiModelProperty(value = "主键id")
-    private Long id;
+    @ApiModelProperty(value = "职业病防治经费投入情况调查表")
+    private RecordFunds recordFunds;
 
-    @ApiModelProperty(value = "编号")
-    private String fundsNo;
-
-    @ApiModelProperty(value = "核实情况")
-    private String verificationResult;
-
-    @ApiModelProperty(value = "状态（0正常 1删除）")
-    private String status;
+    @ApiModelProperty(value = "职业病防治经费投入情况调查表--调查内容")
+    private List<RecordFundsData> recordFundsDataList;
 
 }

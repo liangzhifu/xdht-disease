@@ -5,6 +5,7 @@ import com.xdht.disease.common.core.Service;
 import com.xdht.disease.sys.vo.request.RecordHealthCareDataRequest;
 
 import java.util.List;
+import java.util.Map;
 
 
 /**
@@ -48,4 +49,6 @@ public interface RecordHealthCareDataService extends Service<RecordHealthCareDat
      * @return 返回结果
      */
     public  RecordHealthCareData update(RecordHealthCareData recordHealthCareData);
+
+    List<Map<String,Object>> queryRecordHealthCareDataByRecordHealthCareId(Long recordId);
 }
