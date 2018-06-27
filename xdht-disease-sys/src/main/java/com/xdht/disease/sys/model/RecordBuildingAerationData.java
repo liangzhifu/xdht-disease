@@ -38,6 +38,12 @@ public class RecordBuildingAerationData {
     private String heatingMode;
 
     /**
+     * 建筑物采暖通风及空调调查表id
+     */
+    @Column(name = "building_aeration_id")
+    private Long buildingAerationId;
+
+    /**
      * @return id
      */
     public Long getId() {
@@ -139,5 +145,13 @@ public class RecordBuildingAerationData {
      */
     public void setHeatingMode(String heatingMode) {
         this.heatingMode = heatingMode;
+    }
+
+    public Long getBuildingAerationId() {
+        return buildingAerationId;
+    }
+
+    public void setBuildingAerationId(Long buildingAerationId) {
+        this.buildingAerationId = buildingAerationId;
     }
 }

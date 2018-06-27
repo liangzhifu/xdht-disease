@@ -4,9 +4,12 @@ import com.xdht.disease.common.authorization.annotation.CurrentUser;
 import com.xdht.disease.common.core.PageResult;
 import com.xdht.disease.common.core.Result;
 import com.xdht.disease.common.model.User;
+import com.xdht.disease.sys.constant.SysEnum;
 import com.xdht.disease.sys.model.RecordBuildingAeration;
 import com.xdht.disease.sys.service.RecordBuildingAerationService;
 import com.xdht.disease.sys.vo.request.RecordBuildingAerationRequest;
+import com.xdht.disease.sys.vo.response.RecordBuildingAerationResponse;
+import com.xdht.disease.sys.vo.response.RecordBuildingBaseDetailResponse;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.log4j.Log4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -41,8 +44,9 @@ public class RecordBuildingAerationController {
 
     @RequestMapping(value = "/add", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     @ApiOperation(value = "添加")
-    public ResponseEntity<Result<RecordBuildingAeration>> add(@CurrentUser User user, @RequestBody RecordBuildingAeration recordBuildingAeration) {
-        return new ResponseEntity<>(Result.ok(recordBuildingAerationService.add(recordBuildingAeration)), HttpStatus.OK);
+    public ResponseEntity<Result<RecordBuildingAeration>> add( @RequestBody RecordBuildingAerationRequest recordBuildingAerationRequest) {
+        this.recordBuildingAerationService.add(recordBuildingAerationRequest);
+        return new ResponseEntity<>(Result.ok(SysEnum.ResultEnum.RESULT_SUCCESS.getCode()), HttpStatus.OK);
     }
 
     @RequestMapping(value = "/delete", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
@@ -53,10 +57,17 @@ public class RecordBuildingAerationController {
 
     @RequestMapping(value = "/update", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     @ApiOperation(value = "修改")
-    public ResponseEntity<Result<RecordBuildingAeration>> update(@CurrentUser User user, @RequestBody RecordBuildingAeration recordBuildingAeration) {
-        return new ResponseEntity<>(Result.ok(recordBuildingAerationService.update(recordBuildingAeration)), HttpStatus.OK);
+    public ResponseEntity<Result<RecordBuildingAeration>> update(@RequestBody RecordBuildingAerationRequest recordBuildingAerationRequest) {
+        this.recordBuildingAerationService.update(recordBuildingAerationRequest);
+        return new ResponseEntity<>(Result.ok(SysEnum.ResultEnum.RESULT_SUCCESS.getCode()), HttpStatus.OK);
     }
 
+    @RequestMapping(value = "/detail/{id}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    @ApiOperation(value = "获取 --详细内容")
+    public ResponseEntity<Result<RecordBuildingAerationResponse>> getRecordBuildingAerationDetail(@PathVariable Long id) {
+        RecordBuildingAerationResponse recordBuildingAerationResponse = this.recordBuildingAerationService.queryBuildingAerationDetail(id);
+        return new ResponseEntity<>(Result.ok(recordBuildingAerationResponse), HttpStatus.OK);
+    }
 
 
 }

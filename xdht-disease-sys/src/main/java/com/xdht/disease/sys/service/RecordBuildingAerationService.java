@@ -3,6 +3,8 @@ import com.xdht.disease.common.core.PageResult;
 import com.xdht.disease.sys.model.RecordBuildingAeration;
 import com.xdht.disease.common.core.Service;
 import com.xdht.disease.sys.vo.request.RecordBuildingAerationRequest;
+import com.xdht.disease.sys.vo.response.RecordBuildingAerationResponse;
+import com.xdht.disease.sys.vo.response.RecordBuildingBaseDetailResponse;
 
 import java.util.List;
 
@@ -33,7 +35,7 @@ public interface RecordBuildingAerationService extends Service<RecordBuildingAer
      * @param recordBuildingAeration 实体
      * @return 返回结果
      */
-    public RecordBuildingAeration add(RecordBuildingAeration recordBuildingAeration);
+    public void add(RecordBuildingAerationRequest recordBuildingAerationRequest);
 
     /**
      * 删除
@@ -44,8 +46,11 @@ public interface RecordBuildingAerationService extends Service<RecordBuildingAer
 
     /**
      * 修改
-     * @param recordBuildingAeration 实体
+     * @param recordBuildingAerationRequest 实体
      * @return 返回结果
      */
-    public RecordBuildingAeration update(RecordBuildingAeration recordBuildingAeration);
+    public void update(RecordBuildingAerationRequest recordBuildingAerationRequest);
+
+    RecordBuildingAerationResponse queryBuildingAerationDetail(Long id);
+
 }

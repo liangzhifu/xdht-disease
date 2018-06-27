@@ -11,4 +11,15 @@
     <result column="hygienic_room" jdbcType="VARCHAR" property="hygienicRoom" />
     <result column="living_room" jdbcType="VARCHAR" property="livingRoom" />
   </resultMap>
+  <select id="queryAuxiliaryHealthDataByAuxiliary" parameterType="java.lang.Long" resultType="java.util.HashMap">
+    SELECT rahd.id, rahd.auxiliary_health_id as auxiliaryHealthId,
+    rahd.office_id as officeId,
+    rahd.work_place as workPlace,
+    rahd.hygienic_room as hygienicRoom,
+    rahd.living_room as livingRoom,
+    sco.`office_name` AS officeName
+    FROM `record_auxiliary_health_data` rahd, sys_company_office sco
+    WHERE rahd.`office_id` = sco.`id`
+    AND rahd.`auxiliary_health_id` = #{id, jdbcType=BIGINT}
+  </select>
 </mapper>

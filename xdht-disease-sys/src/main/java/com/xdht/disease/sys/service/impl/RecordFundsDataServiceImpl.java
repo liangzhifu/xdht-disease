@@ -13,6 +13,7 @@ import org.springframework.transaction.annotation.Transactional;
 import tk.mybatis.mapper.entity.Condition;
 
 import java.util.List;
+import java.util.Map;
 
 
 /**
@@ -68,5 +69,10 @@ public class RecordFundsDataServiceImpl extends AbstractService<RecordFundsData>
 
         this.recordFundsDataMapper.updateByPrimaryKeySelective(recordFundsData);
         return recordFundsData;
+    }
+
+    @Override
+    public List<Map<String, Object>> queryRecordFundsDataByFundsId(Long id) {
+        return this.recordFundsDataMapper.queryRecordFundsDataByFundsId(id);
     }
 }

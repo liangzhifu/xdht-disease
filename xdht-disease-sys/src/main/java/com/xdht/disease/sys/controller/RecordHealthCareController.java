@@ -4,9 +4,12 @@ import com.xdht.disease.common.authorization.annotation.CurrentUser;
 import com.xdht.disease.common.core.PageResult;
 import com.xdht.disease.common.core.Result;
 import com.xdht.disease.common.model.User;
+import com.xdht.disease.sys.constant.SysEnum;
 import com.xdht.disease.sys.model.RecordHealthCare;
 import com.xdht.disease.sys.service.RecordHealthCareService;
 import com.xdht.disease.sys.vo.request.RecordHealthCareRequest;
+import com.xdht.disease.sys.vo.response.RecordHealthCareResponse;
+import com.xdht.disease.sys.vo.response.RecordPreEvaluationDetailResponse;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.log4j.Log4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -41,8 +44,9 @@ public class RecordHealthCareController {
 
     @RequestMapping(value = "/add", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     @ApiOperation(value = "添加")
-    public ResponseEntity<Result<RecordHealthCare>> add(@CurrentUser User user, @RequestBody RecordHealthCare recordHealthCare) {
-        return new ResponseEntity<>(Result.ok(recordHealthCareService.add(recordHealthCare)), HttpStatus.OK);
+    public ResponseEntity<Result<String>> add(@RequestBody RecordHealthCareRequest recordHealthCareRequest) {
+        this.recordHealthCareService.add(recordHealthCareRequest);
+        return new ResponseEntity<>(Result.ok(SysEnum.ResultEnum.RESULT_SUCCESS.getCode()), HttpStatus.OK);
     }
 
     @RequestMapping(value = "/delete", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
@@ -53,10 +57,16 @@ public class RecordHealthCareController {
 
     @RequestMapping(value = "/update", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     @ApiOperation(value = "修改")
-    public ResponseEntity<Result<RecordHealthCare>> update(@CurrentUser User user, @RequestBody RecordHealthCare recordHealthCare) {
-        return new ResponseEntity<>(Result.ok(recordHealthCareService.update(recordHealthCare)), HttpStatus.OK);
+    public ResponseEntity<Result<RecordHealthCare>> update(@RequestBody RecordHealthCareRequest recordHealthCareRequest) {
+        recordHealthCareService.update(recordHealthCareRequest);
+        return new ResponseEntity<>(Result.ok(SysEnum.ResultEnum.RESULT_SUCCESS.getCode()), HttpStatus.OK);
     }
 
-
+    @RequestMapping(value = "/detail/{id}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    @ApiOperation(value = "职业健康监护情况调查表--详细内容")
+    public ResponseEntity<Result<RecordHealthCareResponse>> getRecordHealthCareDetail(@PathVariable Long id) {
+        RecordHealthCareResponse recordHealthCareResponse = this.recordHealthCareService.queryRecordHealthCareDetail(id);
+        return new ResponseEntity<>(Result.ok(recordHealthCareResponse), HttpStatus.OK);
+    }
 
 }

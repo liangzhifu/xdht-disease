@@ -14,4 +14,17 @@
     <result column="lighting_system" jdbcType="VARCHAR" property="lightingSystem" />
     <result column="lighting_lamps" jdbcType="VARCHAR" property="lightingLamps" />
   </resultMap>
+
+  <select id="queryRecordBuildingBaseDataByPostPersonnel" parameterType="java.lang.Long" resultType="java.util.HashMap">
+    SELECT rbbd.id, rbbd.building_base_id as buildingBaseId,
+    rbbd.building_name as buildingName,
+    rbbd.structure as structure,
+    rbbd.layers as layers,
+    rbbd.built_up_area as builtUpArea,
+    rbbd.lighting_mode as lightingMode,
+    rbbd.lighting_system as lightingSystem,
+    rbbd.lighting_lamps as lightingLamps
+    FROM `record_building_base_data` rbbd
+    WHERE rbbd.`building_base_id` = #{id, jdbcType=BIGINT}
+  </select>
 </mapper>

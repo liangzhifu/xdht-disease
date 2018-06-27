@@ -54,7 +54,7 @@ public class RecordEmployeeSummary {
     /**
      * 0：初检  1：复检
      */
-    private Integer inspect;
+    private String inspect;
 
     /**
      * 接噪工龄
@@ -1007,11 +1007,11 @@ public class RecordEmployeeSummary {
         this.inspectDate = inspectDate;
     }
 
-    public Integer getInspect() {
+    public String getInspect() {
         return inspect;
     }
 
-    public void setInspect(Integer inspect) {
+    public void setInspect(String inspect) {
         this.inspect = inspect;
     }
 }

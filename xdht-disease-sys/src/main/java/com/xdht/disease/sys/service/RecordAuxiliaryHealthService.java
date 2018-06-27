@@ -3,6 +3,7 @@ import com.xdht.disease.common.core.PageResult;
 import com.xdht.disease.sys.model.RecordAuxiliaryHealth;
 import com.xdht.disease.common.core.Service;
 import com.xdht.disease.sys.vo.request.RecordAuxiliaryHealthRequest;
+import com.xdht.disease.sys.vo.response.RecordAuxiliaryHealthResponse;
 
 import java.util.List;
 
@@ -30,10 +31,10 @@ public interface RecordAuxiliaryHealthService extends Service<RecordAuxiliaryHea
 
     /**
      * 添加
-     * @param recordAuxiliaryHealth 实体
+     * @param recordAuxiliaryHealthRequest 实体
      * @return 返回结果
      */
-    public RecordAuxiliaryHealth add(RecordAuxiliaryHealth recordAuxiliaryHealth);
+    public void add(RecordAuxiliaryHealthRequest recordAuxiliaryHealthRequest);
 
     /**
      * 删除
@@ -44,8 +45,10 @@ public interface RecordAuxiliaryHealthService extends Service<RecordAuxiliaryHea
 
     /**
      * 修改
-     * @param recordAuxiliaryHealth 实体
+     * @param recordAuxiliaryHealthRequest 实体
      * @return 返回结果
      */
-    public RecordAuxiliaryHealth update(RecordAuxiliaryHealth recordAuxiliaryHealth);
+    public void update(RecordAuxiliaryHealthRequest recordAuxiliaryHealthRequest);
+
+    RecordAuxiliaryHealthResponse queryAuxiliaryHealthDetail(Long id);
 }

@@ -14,4 +14,12 @@
     <result column="update_by" jdbcType="BIGINT" property="updateBy" />
     <result column="update_date" jdbcType="TIMESTAMP" property="updateDate" />
   </resultMap>
+
+  <select id="selectRecordBuildingBaseBySceneId" resultType="java.util.HashMap" parameterType="java.lang.Long">
+    SELECT rbb.`id`, rbb.building_base_no as buildingBaseNo,
+    rbb.verification_result as verificationResult, rbb.scene_id as sceneId
+    FROM record_building_base rbb
+    WHERE rbb.status = '0'
+    AND rbb.`scene_id` = #{id, jdbcType=BIGINT}
+  </select>
 </mapper>

@@ -14,4 +14,13 @@
     <result column="upadte_by" jdbcType="BIGINT" property="upadteBy" />
     <result column="update_date" jdbcType="TIMESTAMP" property="updateDate" />
   </resultMap>
+
+  <select id = "selectRecordHealthCareBySceneId" resultType="java.util.HashMap" parameterType="java.lang.Long">
+    select rhc.id, rhc.health_care_no as healthCareNo,
+    rhc.verification_result as verificationResult,
+    rhc.scene_id as sceneId
+    from record_health_care rhc
+    where rhc.status = '0'
+    and rhc.scene_id = #{sceneId, jdbcType=BIGINT}
+  </select>
 </mapper>
