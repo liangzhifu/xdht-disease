@@ -53,7 +53,7 @@ public class SysKnowledgeServiceImpl extends AbstractService<SysKnowledge> imple
         sysKnowledge.setKnowledgeVersion(1L);
         sysKnowledge.setStatus(SysEnum.StatusEnum.STATUS_NORMAL.getCode());
         this.insertUseGeneratedKeys(sysKnowledge);
-        sysKnowledge.setCatalogId(sysKnowledge.getId());
+        sysKnowledge.setKnowledgeId(sysKnowledge.getId());
         this.updateByPrimaryKeySelective(sysKnowledge);
     }
 
