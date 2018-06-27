@@ -5,6 +5,7 @@ import com.xdht.disease.common.core.Service;
 import com.xdht.disease.sys.vo.request.RecordFundsDataRequest;
 
 import java.util.List;
+import java.util.Map;
 
 
 /**
@@ -48,4 +49,6 @@ public interface RecordFundsDataService extends Service<RecordFundsData> {
      * @return  返回结果
      */
     public RecordFundsData update(RecordFundsData recordFundsData);
+
+    List<Map<String,Object>> queryRecordFundsDataByFundsId(Long recordId);
 }

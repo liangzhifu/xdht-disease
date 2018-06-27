@@ -10,4 +10,14 @@
     <result column="funds_project_id" jdbcType="BIGINT" property="fundsProjectId" />
     <result column="expact_or_pay" jdbcType="BIGINT" property="expactOrPay" />
   </resultMap>
+
+  <select id="queryRecordFundsDataByFundsId" parameterType="java.lang.Long" resultType="java.util.HashMap">
+    select rfd.id, rfd.funds_id as fundsId,
+    rfd.funds_project_id as fundsProjectId,
+    rfd.expact_or_pay as expactOrPay,
+    sd.`dictionary_name` AS projectName
+    from record_funds_data rfd, sys_dictionary sd
+    where rfd.funds_project_id = sd.id
+    and rfd.funds_id = #{id, jdbcType=BIGINT}
+  </select>
 </mapper>

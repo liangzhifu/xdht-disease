@@ -13,6 +13,7 @@ import org.springframework.transaction.annotation.Transactional;
 import tk.mybatis.mapper.entity.Condition;
 
 import java.util.List;
+import java.util.Map;
 
 
 /**
@@ -67,4 +68,10 @@ public class RecordHealthCareDataServiceImpl extends AbstractService<RecordHealt
         this.recordHealthCareDataMapper.updateByPrimaryKeySelective(recordHealthCareData);
         return recordHealthCareData;
     }
+
+    @Override
+    public List<Map<String, Object>> queryRecordHealthCareDataByRecordHealthCareId(Long id) {
+        return  this.recordHealthCareDataMapper.queryRecordHealthCareDataByRecordHealthCareId(id);
+    }
+
 }
