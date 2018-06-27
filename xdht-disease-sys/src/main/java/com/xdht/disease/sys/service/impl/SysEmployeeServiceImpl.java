@@ -247,8 +247,9 @@ public class SysEmployeeServiceImpl extends AbstractService<SysEmployee> impleme
         if (officeId != null) {
             sysCompanyOffice = this.sysCompanyOfficeService.selectByPrimaryKey(officeId);
             sysEmployeeResponse.setSysCompanyOffice(sysCompanyOffice);
+        }else{
+            sysEmployeeResponse.setSysCompanyOffice(sysCompanyOffice);
         }
-        sysEmployeeResponse.setSysCompanyOffice(sysCompanyOffice);
         sysEmployeeResponse.setSysEmployee(sysEmployee);
 
         Condition condition = new Condition(SysEmployeeCase.class);
