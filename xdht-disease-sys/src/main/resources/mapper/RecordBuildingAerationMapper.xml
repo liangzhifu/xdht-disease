@@ -13,6 +13,7 @@
     <result column="create_date" jdbcType="TIMESTAMP" property="createDate" />
     <result column="update_by" jdbcType="BIGINT" property="updateBy" />
     <result column="update_date" jdbcType="TIMESTAMP" property="updateDate" />
+    <result column="scene_id" jdbcType="BIGINT" property="sceneId" />
   </resultMap>
 
   <select id="selectRecordBuildingAerationBySceneId" resultType="java.util.HashMap" parameterType="java.lang.Long">

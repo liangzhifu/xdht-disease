@@ -56,11 +56,6 @@ public class RecordBuildingBaseData {
     private String lightingLamps;
 
     /**
-     * 状态（0正常 1删除）
-     */
-    private String status;
-
-    /**
      * @return id
      */
     public Long getId() {
@@ -208,12 +203,5 @@ public class RecordBuildingBaseData {
         this.buildingBaseId = buildingBaseId;
     }
 
-    public String getStatus() {
-        return status;
-    }
-
-    public void setStatus(String status) {
-        this.status = status;
-    }
 
 }
