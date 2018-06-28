@@ -59,36 +59,38 @@ public class RecordSceneServiceImpl extends AbstractService<RecordScene> impleme
     }
 
     @Override
-    public void updateRecordScene(RecordScene recordScene) {
+    public void updateRecordScene(RecordSceneInputRequest recordSceneInputRequest) {
+        RecordScene recordScene = recordSceneInputRequest.getRecordScene();
         this.updateByPrimaryKeySelective(recordScene);
+        List<RecordScenQuestionnaire> recordScenQuestionnaireList = recordSceneInputRequest.getRecordScenQuestionnaireList();
+        if (recordScenQuestionnaireList != null && recordScenQuestionnaireList.size() > 0) {
+            for (RecordScenQuestionnaire recordScenQuestionnaire : recordScenQuestionnaireList) {
+                this.recordScenQuestionnaireService.updateByPrimaryKeySelective(recordScenQuestionnaire);
+            }
+        }
     }
 
     @Override
-    public void add(RecordSceneInputRequest recordSceneInputRequest) {
-        RecordScene recordScene = new RecordScene();
+    public void addRecordScene(RecordSceneInputRequest recordSceneInputRequest) {
+        RecordScene recordScene = recordSceneInputRequest.getRecordScene();
         recordScene.setStatus(SysEnum.StatusEnum.STATUS_NORMAL.getCode());
-        recordScene.setInquiryDate(recordSceneInputRequest.getRecordScene().getInquiryDate());
-        recordScene.setInquiryPerson(recordSceneInputRequest.getRecordScene().getInquiryPerson());
-        recordScene.setInquiryCompanyEmployee(recordSceneInputRequest.getRecordScene().getInquiryCompanyEmployee());
-        recordScene.setProjectName(recordSceneInputRequest.getRecordScene().getProjectName());
-        recordScene.setInquiryType(recordSceneInputRequest.getRecordScene().getInquiryType());
-        recordScene.setRecordNo(recordSceneInputRequest.getRecordScene().getRecordNo());
-        recordScene.setInquiryCompany(recordSceneInputRequest.getRecordScene().getInquiryCompany());
         this.insertUseGeneratedKeys(recordScene);
 
         List<RecordScenQuestionnaire> recordScenQuestionnaireList = new LinkedList<>();
-        for (RecordScenQuestionnaire recordScenQuestionnaire : recordSceneInputRequest.getRecordScenQuestionnaireList()) {
-            recordScenQuestionnaire.setSceneId(recordScene.getId());
-            recordScenQuestionnaire.setStatus(SysEnum.StatusEnum.STATUS_NORMAL.getCode());
-            recordScenQuestionnaireList.add(recordScenQuestionnaire);
+        if (recordSceneInputRequest.getRecordScenQuestionnaireList() != null && recordSceneInputRequest.getRecordScenQuestionnaireList().size() > 0 ) {
+            for (RecordScenQuestionnaire recordScenQuestionnaire : recordSceneInputRequest.getRecordScenQuestionnaireList()) {
+                recordScenQuestionnaire.setSceneId(recordScene.getId());
+                recordScenQuestionnaire.setStatus(SysEnum.StatusEnum.STATUS_NORMAL.getCode());
+                recordScenQuestionnaireList.add(recordScenQuestionnaire);
+            }
+            this.recordScenQuestionnaireService.insertList(recordScenQuestionnaireList);
         }
     }
 
     @Override
     public RecordSceneDetailResponse queryRecordSceneDetail(Long id) {
         RecordSceneDetailResponse recordSceneDetailResponse = new RecordSceneDetailResponse();
-//        recordSceneDetailResponse.setRecordScene(this.recordSceneMapper.selectRecordSceneMapByPrimaryKey(id));
-        recordSceneDetailResponse.setRecordScene(this.recordSceneMapper.selectByPrimaryKey(id));
+        recordSceneDetailResponse.setRecordScene(this.recordSceneMapper.selectRecordSceneMapByPrimaryKey(id));
         recordSceneDetailResponse.setRecordScenQuestionnaireList(this.recordScenQuestionnaireService.queryRecordScenQuestionnaireMapListByRecordScen(id));
         return recordSceneDetailResponse;
     }
