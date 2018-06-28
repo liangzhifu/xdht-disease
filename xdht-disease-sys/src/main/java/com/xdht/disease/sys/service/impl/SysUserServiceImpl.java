@@ -9,6 +9,7 @@ import com.xdht.disease.common.core.ThreadLocalUserService;
 import com.xdht.disease.common.exception.ServiceException;
 import com.xdht.disease.common.model.TokenModel;
 import com.xdht.disease.common.model.User;
+import com.xdht.disease.common.util.Md5Utils;
 import com.xdht.disease.sys.constant.SysEnum;
 import com.xdht.disease.sys.model.SysEmployee;
 import com.xdht.disease.sys.model.SysUser;
@@ -50,7 +51,9 @@ public class SysUserServiceImpl extends AbstractService<SysUser> implements SysU
         LoginResponse loginResponse = new LoginResponse();
         SysUser sysUser = new SysUser();
         sysUser.setLoginCode(loginRequest.getLoginCode());
-        sysUser.setPassword(loginRequest.getPassword());
+        String password = loginRequest.getPassword();
+        String newPassword = Md5Utils.md5(password);
+        sysUser.setPassword(newPassword);
         sysUser.setStatus(SysEnum.StatusEnum.STATUS_NORMAL.getCode());
         sysUser = this.selectOne(sysUser);
         if (sysUser == null) {
@@ -106,13 +109,10 @@ public class SysUserServiceImpl extends AbstractService<SysUser> implements SysU
             throw new ServiceException("已存在相同登录名的用户，不能添加！");
         }
         sysUser.setStatus(SysEnum.StatusEnum.STATUS_NORMAL.getCode());
-        // 在职工表中添加信息
-        SysEmployee sysEmployee = new SysEmployee();
-        sysEmployee.setEmpName(sysUser.getUserName());
-        sysEmployee.setEmpSex(sysUser.getSex());
-        sysEmployee.setStatus(SysEnum.StatusEnum.STATUS_NORMAL.getCode());
-        this.sysEmployeeService.insertUseGeneratedKeys(sysEmployee);
-        sysUser.setEmpId(sysEmployee.getId());
+        // 密码加密
+        String password = sysUser.getPassword();
+        String newPassword = Md5Utils.md5(password);
+        sysUser.setPassword(newPassword);
         this.insertUseGeneratedKeys(sysUser);
     }
 
@@ -131,26 +131,30 @@ public class SysUserServiceImpl extends AbstractService<SysUser> implements SysU
 
     @Override
     public void updateUser(SysUser sysUser) {
-
         this.updateByPrimaryKeySelective(sysUser);
-        SysEmployee sysEmployee = new SysEmployee();
-        sysEmployee.setId(sysUser.getEmpId());
-        sysEmployee = this.sysEmployeeService.selectOne(sysEmployee);
-        sysEmployee.setEmpName(sysUser.getUserName());
-        sysEmployee.setEmpSex(sysUser.getSex());
-        this.sysEmployeeService.updateByPrimaryKeySelective(sysEmployee);
+        Long empId = sysUser.getEmpId();
+        if (empId != null) {
+            SysEmployee sysEmployee = new SysEmployee();
+            sysEmployee.setId(sysUser.getEmpId());
+            sysEmployee = this.sysEmployeeService.selectOne(sysEmployee);
+            sysEmployee.setEmpName(sysUser.getUserName());
+            sysEmployee.setEmpSex(sysUser.getSex());
+            this.sysEmployeeService.updateByPrimaryKeySelective(sysEmployee);
+        }
     }
 
     @Override
     public ResponseEntity<Result<String>> editPassword(SysUserRequest sysUserRequest) {
         String oldPassword = sysUserRequest.getOldPassword();
+        String encryptOldPassword = Md5Utils.md5(oldPassword);
         String newPassword = sysUserRequest.getNewPassword();
         String newPasswordAgain = sysUserRequest.getNewPasswordAgain();
         User user = threadLocalUserService.getUser();
         SysUser sysUser = this.selectByPrimaryKey(user.getId());
         ResponseEntity<Result<String>> resultResponseEntity = null;
-        if (sysUser.getPassword().equals(oldPassword) && newPassword.equals(newPasswordAgain)){
-            sysUser.setPassword(newPassword);
+        if (sysUser.getPassword().equals(encryptOldPassword) && newPassword.equals(newPasswordAgain)){
+            String encryptNewPassword = Md5Utils.md5(newPassword);
+            sysUser.setPassword(encryptNewPassword);
             this.updateByPrimaryKeySelective(sysUser);
             resultResponseEntity =  new ResponseEntity<>(Result.ok(SysEnum.ResultEnum.RESULT_SUCCESS.getCode()), HttpStatus.OK);
         }else {
