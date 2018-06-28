@@ -20,4 +20,13 @@ public class SysUserRequest {
     @ApiModelProperty(value = "每页数量")
     private Integer pageSize;
 
+    @ApiModelProperty(value = "密码")
+    private String oldPassword;
+
+    @ApiModelProperty(value = "新密码")
+    private String newPassword;
+
+    @ApiModelProperty(value = "确认密码")
+    private String newPasswordAgain;
+
 }

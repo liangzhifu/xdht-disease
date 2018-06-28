@@ -2,7 +2,10 @@ package com.xdht.disease.sys.service.impl;
 
 import com.github.pagehelper.PageHelper;
 import com.xdht.disease.common.authorization.manager.TokenManager;
+import com.xdht.disease.common.constant.ResultCode;
 import com.xdht.disease.common.core.PageResult;
+import com.xdht.disease.common.core.Result;
+import com.xdht.disease.common.core.ThreadLocalUserService;
 import com.xdht.disease.common.exception.ServiceException;
 import com.xdht.disease.common.model.TokenModel;
 import com.xdht.disease.common.model.User;
@@ -11,6 +14,9 @@ import com.xdht.disease.sys.model.SysUser;
 import com.xdht.disease.sys.service.SysUserService;
 import com.xdht.disease.sys.vo.request.LoginRequest;
 import com.xdht.disease.sys.vo.response.LoginResponse;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import com.xdht.disease.common.core.AbstractService;
@@ -30,6 +36,8 @@ public class SysUserServiceImpl extends AbstractService<SysUser> implements SysU
 
     @Resource(name = "ehcacheTokenManager")
     private TokenManager tokenManager;
+    @Autowired
+    private ThreadLocalUserService threadLocalUserService;
 
     @Override
     public LoginResponse createToken(LoginRequest loginRequest) {
@@ -106,6 +114,28 @@ public class SysUserServiceImpl extends AbstractService<SysUser> implements SysU
     @Override
     public void updateUser(SysUser sysUser) {
         this.updateByPrimaryKeySelective(sysUser);
+    }
+
+    @Override
+    public ResponseEntity<Result<String>> editPassword(SysUserRequest sysUserRequest) {
+        String oldPassword = sysUserRequest.getOldPassword();
+        String newPassword = sysUserRequest.getNewPassword();
+        String newPasswordAgain = sysUserRequest.getNewPasswordAgain();
+        User user = threadLocalUserService.getUser();
+        SysUser sysUser = this.selectByPrimaryKey(user.getId());
+        ResponseEntity<Result<String>> resultResponseEntity = null;
+        if (sysUser.getPassword().equals(oldPassword) && newPassword.equals(newPasswordAgain)){
+            sysUser.setPassword(newPassword);
+            this.updateByPrimaryKeySelective(sysUser);
+            resultResponseEntity =  new ResponseEntity<>(Result.ok(SysEnum.ResultEnum.RESULT_SUCCESS.getCode()), HttpStatus.OK);
+        }else {
+            if (!sysUser.getPassword().equals(oldPassword)){
+                resultResponseEntity = new ResponseEntity<>(Result.error(ResultCode.VALID_FAIL, "密码错误！"), HttpStatus.MULTIPLE_CHOICES);
+            }else{
+                resultResponseEntity = new ResponseEntity<>(Result.error(ResultCode.FAIL, "未知错误！"), HttpStatus.INTERNAL_SERVER_ERROR);
+            }
+        }
+        return resultResponseEntity;
     }
 
 }

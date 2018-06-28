@@ -1,11 +1,13 @@
 package com.xdht.disease.sys.service;
 import com.xdht.disease.common.core.PageResult;
+import com.xdht.disease.common.core.Result;
 import com.xdht.disease.common.exception.ServiceException;
 import com.xdht.disease.sys.model.SysUser;
 import com.xdht.disease.common.core.Service;
 import com.xdht.disease.sys.vo.request.LoginRequest;
 import com.xdht.disease.sys.vo.request.SysUserRequest;
 import com.xdht.disease.sys.vo.response.LoginResponse;
+import org.springframework.http.ResponseEntity;
 
 import java.util.List;
 
@@ -54,4 +56,6 @@ public interface SysUserService extends Service<SysUser> {
      */
     void updateUser(SysUser sysUser);
 
+
+    ResponseEntity<Result<String>> editPassword(SysUserRequest sysUserRequest);
 }

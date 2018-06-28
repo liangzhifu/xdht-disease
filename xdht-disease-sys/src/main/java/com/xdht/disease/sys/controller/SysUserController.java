@@ -86,4 +86,15 @@ public class SysUserController {
         return new ResponseEntity<>(Result.ok(sysUserService.selectByPrimaryKey(id)), HttpStatus.OK);
     }
 
+    @RequestMapping(value = "/editPassword", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    @ApiOperation(value = "修改密码")
+    @Authorization
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "authorization", value = "authorization", required = true, dataType = "string", paramType = "header"),
+    })
+    public ResponseEntity<Result<String>> editPassword(@RequestBody SysUserRequest sysUserRequest) {
+        ResponseEntity<Result<String>> result = sysUserService.editPassword(sysUserRequest);
+        return result;
+    }
+
 }
