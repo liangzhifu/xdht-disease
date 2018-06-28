@@ -25,6 +25,26 @@ public class SysEnum {
         }
 
     }
+    public enum MgrTypeEnum{
+        MGR_TYPE_NOT("0", "非管理员"),
+        MGR_TYPE_IS("1", "系统管理员");
+
+        private String code;
+        private String msg;
+
+        public String getCode() {
+            return code;
+        }
+        public String getMsg() {
+            return msg;
+        }
+
+        MgrTypeEnum(String code, String msg) {
+            this.code = code;
+            this.msg = msg;
+        }
+
+    }
 
     public enum IsShowEnum{
         IS_SHOW_NO("0", "不显示"),
