@@ -10,10 +10,13 @@ import com.xdht.disease.common.exception.ServiceException;
 import com.xdht.disease.common.model.TokenModel;
 import com.xdht.disease.common.model.User;
 import com.xdht.disease.sys.constant.SysEnum;
+import com.xdht.disease.sys.model.SysEmployee;
 import com.xdht.disease.sys.model.SysUser;
+import com.xdht.disease.sys.service.SysEmployeeService;
 import com.xdht.disease.sys.service.SysUserService;
 import com.xdht.disease.sys.vo.request.LoginRequest;
 import com.xdht.disease.sys.vo.response.LoginResponse;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -38,6 +41,9 @@ public class SysUserServiceImpl extends AbstractService<SysUser> implements SysU
     private TokenManager tokenManager;
     @Autowired
     private ThreadLocalUserService threadLocalUserService;
+
+    @Autowired
+    private SysEmployeeService sysEmployeeService;
 
     @Override
     public LoginResponse createToken(LoginRequest loginRequest) {
@@ -100,20 +106,39 @@ public class SysUserServiceImpl extends AbstractService<SysUser> implements SysU
             throw new ServiceException("已存在相同登录名的用户，不能添加！");
         }
         sysUser.setStatus(SysEnum.StatusEnum.STATUS_NORMAL.getCode());
+        // 在职工表中添加信息
+        SysEmployee sysEmployee = new SysEmployee();
+        sysEmployee.setEmpName(sysUser.getUserName());
+        sysEmployee.setEmpSex(sysUser.getSex());
+        sysEmployee.setStatus(SysEnum.StatusEnum.STATUS_NORMAL.getCode());
+        this.sysEmployeeService.insertUseGeneratedKeys(sysEmployee);
+        sysUser.setEmpId(sysEmployee.getId());
         this.insertUseGeneratedKeys(sysUser);
     }
 
     @Override
     public void deleteUser(Long id) {
-        SysUser sysUser = new SysUser();
-        sysUser.setId(id);
+        SysUser sysUser = this.selectByPrimaryKey(id);
         sysUser.setStatus(SysEnum.StatusEnum.STATUS_DELETE.getCode());
         this.updateByPrimaryKeySelective(sysUser);
+        // 更改职工表中对应员工的状态
+        SysEmployee sysEmployee = new SysEmployee();
+        sysEmployee.setId(sysUser.getEmpId());
+        sysEmployee = this.sysEmployeeService.selectOne(sysEmployee);
+        sysEmployee.setStatus(SysEnum.StatusEnum.STATUS_DELETE.getCode());
+        this.sysEmployeeService.updateByPrimaryKeySelective(sysEmployee);
     }
 
     @Override
     public void updateUser(SysUser sysUser) {
+
         this.updateByPrimaryKeySelective(sysUser);
+        SysEmployee sysEmployee = new SysEmployee();
+        sysEmployee.setId(sysUser.getEmpId());
+        sysEmployee = this.sysEmployeeService.selectOne(sysEmployee);
+        sysEmployee.setEmpName(sysUser.getUserName());
+        sysEmployee.setEmpSex(sysUser.getSex());
+        this.sysEmployeeService.updateByPrimaryKeySelective(sysEmployee);
     }
 
     @Override
