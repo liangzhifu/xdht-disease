@@ -37,8 +37,9 @@ public class RecordSceneServiceImpl extends AbstractService<RecordScene> impleme
     @Override
     public PageResult<RecordScene> queryListPage(RecordSceneRequest recordSceneRequest) {
         Condition condition = new Condition(RecordScene.class);
+        condition.createCriteria().andEqualTo("status", SysEnum.StatusEnum.STATUS_NORMAL.getCode());
         if (recordSceneRequest.getProjectName() != null && !"".equals(recordSceneRequest.getProjectName())) {
-            condition.createCriteria().andLike("projectName","%"+recordSceneRequest.getProjectName()+"%");
+            condition.getOredCriteria().get(0).andLike("projectName","%"+recordSceneRequest.getProjectName()+"%");
         }
         condition.setOrderByClause("id desc");
         PageHelper.startPage(recordSceneRequest.getPageNumber(), recordSceneRequest.getPageSize());
@@ -54,7 +55,7 @@ public class RecordSceneServiceImpl extends AbstractService<RecordScene> impleme
     public void deleteRecordScene(Long id) {
         RecordScene recordScene = new RecordScene();
         recordScene.setId(id);
-        recordScene.setStatus(SysEnum.StatusEnum.STATUS_NORMAL.getCode());
+        recordScene.setStatus(SysEnum.StatusEnum.STATUS_DELETE.getCode());
         this.updateByPrimaryKeySelective(recordScene);
     }
 

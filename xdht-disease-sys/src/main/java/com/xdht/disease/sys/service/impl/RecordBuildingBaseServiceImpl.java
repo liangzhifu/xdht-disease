@@ -109,7 +109,6 @@ public class RecordBuildingBaseServiceImpl extends AbstractService<RecordBuildin
         if (recordBuildingBaseRequest.getRecordBuildingBaseDataList() != null) {
             for (RecordBuildingBaseData recordBuildingBaseData : recordBuildingBaseRequest.getRecordBuildingBaseDataList()) {
                 recordBuildingBaseData.setBuildingBaseId(recordBuildingBase.getId());
-                recordBuildingBaseData.setStatus(SysEnum.StatusEnum.STATUS_NORMAL.getCode());
                 recordBuildingBaseDatas.add(recordBuildingBaseData);
             }
             this.recordBuildingBaseDataService.insertList(recordBuildingBaseDatas);
