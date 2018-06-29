@@ -78,7 +78,7 @@ public class RecordBuildingAerationServiceImpl extends AbstractService<RecordBui
         if (recordBuildingAerationRequest.getRecordBuildingAerationDataList() != null) {
             for (RecordBuildingAerationData recordBuildingAerationData : recordBuildingAerationRequest.getRecordBuildingAerationDataList()) {
                 recordBuildingAerationData.setBuildingAerationId(recordBuildingAeration.getId());
-                /*recordBuildingAerationDataList.add(recordBuildingAerationData);*/
+                recordBuildingAerationDataList.add(recordBuildingAerationData);
             }
             this.recordBuildingAerationDataService.insertList(recordBuildingAerationDataList);
         }
