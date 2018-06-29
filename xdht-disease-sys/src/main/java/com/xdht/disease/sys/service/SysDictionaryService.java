@@ -3,6 +3,7 @@ import com.xdht.disease.common.core.PageResult;
 import com.xdht.disease.sys.model.SysDictionary;
 import com.xdht.disease.common.core.Service;
 import com.xdht.disease.sys.vo.request.SysDictionaryRequest;
+import com.xdht.disease.sys.vo.response.SysDictionaryResponse;
 
 import java.util.List;
 
@@ -24,7 +25,7 @@ public interface SysDictionaryService extends Service<SysDictionary> {
      * @param sysDictionaryRequest 查询条件
      * @return 返回结果
      */
-    PageResult<SysDictionary> querySysDictionaryPage(SysDictionaryRequest sysDictionaryRequest);
+    PageResult<SysDictionaryResponse> querySysDictionaryPage(SysDictionaryRequest sysDictionaryRequest);
 
     /**
      * 添加字典
