@@ -122,11 +122,13 @@ public class SysUserServiceImpl extends AbstractService<SysUser> implements SysU
         sysUser.setStatus(SysEnum.StatusEnum.STATUS_DELETE.getCode());
         this.updateByPrimaryKeySelective(sysUser);
         // 更改职工表中对应员工的状态
-        SysEmployee sysEmployee = new SysEmployee();
-        sysEmployee.setId(sysUser.getEmpId());
-        sysEmployee = this.sysEmployeeService.selectOne(sysEmployee);
-        sysEmployee.setStatus(SysEnum.StatusEnum.STATUS_DELETE.getCode());
-        this.sysEmployeeService.updateByPrimaryKeySelective(sysEmployee);
+        if(sysUser.getEmpId() != null){
+            SysEmployee sysEmployee = new SysEmployee();
+            sysEmployee.setId(sysUser.getEmpId());
+            sysEmployee = this.sysEmployeeService.selectOne(sysEmployee);
+            sysEmployee.setStatus(SysEnum.StatusEnum.STATUS_DELETE.getCode());
+            this.sysEmployeeService.updateByPrimaryKeySelective(sysEmployee);
+        }
     }
 
     @Override
