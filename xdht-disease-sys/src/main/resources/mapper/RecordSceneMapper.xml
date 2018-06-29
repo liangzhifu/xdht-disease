@@ -8,7 +8,8 @@
     <id column="id" jdbcType="BIGINT" property="id" />
     <result column="record_no" jdbcType="VARCHAR" property="recordNo" />
     <result column="project_name" jdbcType="VARCHAR" property="projectName" />
-    <result column="inquiry_type" jdbcType="CHAR" property="inquiryType" />
+    <result column="inquiry_year" jdbcType="INTEGER" property="inquiryYear" />
+    <result column="inquiry_type" jdbcType="INTEGER" property="inquiryType" />
     <result column="inquiry_person" jdbcType="VARCHAR" property="inquiryPerson" />
     <result column="inquiry_company" jdbcType="BIGINT" property="inquiryCompany" />
     <result column="inquiry_company_employee" jdbcType="BIGINT" property="inquiryCompanyEmployee" />
@@ -20,12 +21,13 @@
     <result column="update_date" jdbcType="TIMESTAMP" property="updateDate" />
   </resultMap>
 
-  <select id="selectRecordSceneMapByPrimaryKey" resultType="java.util.HashMap" parameterType="java.lang.Long">
+  <select id="selectRecordSceneMapByPrimaryKey" parameterType="java.lang.Long" resultType="java.util.HashMap">
     SELECT
     rs.`id` AS id,
     rs.`project_name` AS projectName,
     rs.`record_no` AS recordNo,
     rs.inquiry_type AS inquiryType,
+    (SELECT sd.`dictionary_name` FROM sys_dictionary sd where sd.id = rs.`inquiry_type`) as inquiryTypeName,
     rs.inquiry_person AS inquiryPerson,
     DATE_FORMAT(rs.inquiry_date, '%Y-%m-%d') AS inquiryDate,
     rs.inquiry_company AS inquiryCompany,
@@ -37,4 +39,36 @@
     AND rs.status = 0
   </select>
 
+  <sql id="WHERE_SQL">
+    <where>
+      rs.status = '0'
+      <if test="projectName != null and '' != projectName">
+        and rs.`project_name` like concat(',',#{projectName, jdbcType=VARCHAR} ,',')
+      </if>
+    </where>
+  </sql>
+
+  <select id="selectRecordSceneList" resultType="com.xdht.disease.sys.vo.response.RecordSceneResponse" parameterType="com.xdht.disease.sys.vo.request.RecordSceneRequest">
+    SELECT rs.id, rs.`record_no` AS recordNo,
+    rs.`project_name` AS projectName,
+    rs.`inquiry_type` AS inquiryType,
+    (SELECT sd.`dictionary_name` FROM sys_dictionary sd where sd.id = rs.`inquiry_type`) as inquiryTypeName,
+    rs.`inquiry_year` AS inquiryYear,
+    rs.`inquiry_person` AS inquiryPerson,
+    rs.`inquiry_date` AS inquiryDate,
+    rs.`inquiry_company` AS inquiryCompany,
+    (SELECT sc.`company_name` FROM sys_company sc WHERE sc.id = rs.`inquiry_company`) AS inquiryCompanyName,
+    rs.`inquiry_company_employee` AS inquiryCompanyEmployee,
+    (SELECT se.`emp_name` FROM `sys_employee` se WHERE se.`id` = rs.inquiry_company_employee) AS inquiryCompanyEmployeeName
+    FROM `record_scene` rs
+    <include refid="WHERE_SQL"></include>
+    order by rs.`inquiry_year` desc, rs.`inquiry_company` asc
+    limit #{start}, #{pageSize}
+  </select>
+
+  <select id="selectRecordSceneCount" resultType="java.lang.Integer" parameterType="com.xdht.disease.sys.vo.request.RecordSceneRequest">
+    select count(1)
+    FROM `record_scene` rs
+    <include refid="WHERE_SQL"></include>
+  </select>
 </mapper>

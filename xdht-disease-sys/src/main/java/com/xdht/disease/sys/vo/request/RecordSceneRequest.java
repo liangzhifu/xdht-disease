@@ -14,32 +14,11 @@ import java.util.List;
 @Data
 public class RecordSceneRequest {
 
-    @ApiModelProperty(value = "主键id")
-    private Long id;
-
     @ApiModelProperty(value = "编号")
     private String recordNo;
 
     @ApiModelProperty(value = "项目名称")
     private String projectName;
-
-    @ApiModelProperty(value = "调查类型")
-    private String inquiryType;
-
-    @ApiModelProperty(value = "调查人")
-    private String inquiryPerson;
-
-    @ApiModelProperty(value = "调查对象")
-    private Long inquiryCompany;
-
-    @ApiModelProperty(value = "用人单位陪同人")
-    private Long inquiryCompanyEmployee;
-
-    @ApiModelProperty(value = "调查日期")
-    private Date inquiryDate;
-
-    @ApiModelProperty(value = "状态（0正常 1删除）")
-    private String status;
 
     @ApiModelProperty(value = "分页数")
     private Integer  pageNumber;
@@ -47,11 +26,6 @@ public class RecordSceneRequest {
     @ApiModelProperty(value = "每页数量")
     private Integer pageSize;
 
-    @ApiModelProperty(value = "现场调查基础表")
-    private RecordScene recordScene;
-
-    @ApiModelProperty(value = "现场调查表关联数据")
-    private List<RecordScenQuestionnaire> recordScenQuestionnaireList;
-
-
+    @ApiModelProperty(value = "分页开始位置")
+    private Integer start;
 }

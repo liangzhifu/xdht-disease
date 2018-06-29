@@ -12,11 +12,15 @@ import com.xdht.disease.sys.service.RecordSceneService;
 import com.xdht.disease.sys.vo.request.RecordSceneInputRequest;
 import com.xdht.disease.sys.vo.request.RecordSceneRequest;
 import com.xdht.disease.sys.vo.response.RecordSceneDetailResponse;
+import com.xdht.disease.sys.vo.response.RecordSceneResponse;
+import lombok.Data;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import tk.mybatis.mapper.entity.Condition;
 
+import java.util.Calendar;
+import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -35,19 +39,14 @@ public class RecordSceneServiceImpl extends AbstractService<RecordScene> impleme
     private RecordScenQuestionnaireService recordScenQuestionnaireService;
 
     @Override
-    public PageResult<RecordScene> queryListPage(RecordSceneRequest recordSceneRequest) {
-        Condition condition = new Condition(RecordScene.class);
-        condition.createCriteria().andEqualTo("status", SysEnum.StatusEnum.STATUS_NORMAL.getCode());
-        if (recordSceneRequest.getProjectName() != null && !"".equals(recordSceneRequest.getProjectName())) {
-            condition.getOredCriteria().get(0).andLike("projectName","%"+recordSceneRequest.getProjectName()+"%");
-        }
-        condition.setOrderByClause("id desc");
-        PageHelper.startPage(recordSceneRequest.getPageNumber(), recordSceneRequest.getPageSize());
-        List<RecordScene> dataList = this.selectByCondition(condition);
-        Integer count = this.selectCountByCondition(condition);
-        PageResult<RecordScene> pageList = new  PageResult<RecordScene>();
+    public PageResult<RecordSceneResponse> queryListPage(RecordSceneRequest recordSceneRequest) {
+        Integer start = (recordSceneRequest.getPageNumber() - 1) * recordSceneRequest.getPageSize();
+        recordSceneRequest.setStart(start);
+        List<RecordSceneResponse> recordSceneResponseList = this.recordSceneMapper.selectRecordSceneList(recordSceneRequest);
+        Integer count = this.recordSceneMapper.selectRecordSceneCount(recordSceneRequest);
+        PageResult<RecordSceneResponse> pageList = new  PageResult<RecordSceneResponse>();
         pageList.setTotal(count);
-        pageList.setDataList(dataList);
+        pageList.setDataList(recordSceneResponseList);
         return pageList;
     }
 
@@ -62,6 +61,10 @@ public class RecordSceneServiceImpl extends AbstractService<RecordScene> impleme
     @Override
     public void updateRecordScene(RecordSceneInputRequest recordSceneInputRequest) {
         RecordScene recordScene = recordSceneInputRequest.getRecordScene();
+        Date inquiryDate = recordScene.getInquiryDate();
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(inquiryDate);
+        recordScene.setInquiryYear(cal.get(Calendar.YEAR));
         this.updateByPrimaryKeySelective(recordScene);
         List<RecordScenQuestionnaire> recordScenQuestionnaireList = recordSceneInputRequest.getRecordScenQuestionnaireList();
         if (recordScenQuestionnaireList != null && recordScenQuestionnaireList.size() > 0) {
@@ -74,6 +77,10 @@ public class RecordSceneServiceImpl extends AbstractService<RecordScene> impleme
     @Override
     public void addRecordScene(RecordSceneInputRequest recordSceneInputRequest) {
         RecordScene recordScene = recordSceneInputRequest.getRecordScene();
+        Date inquiryDate = recordScene.getInquiryDate();
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(inquiryDate);
+        recordScene.setInquiryYear(cal.get(Calendar.YEAR));
         recordScene.setStatus(SysEnum.StatusEnum.STATUS_NORMAL.getCode());
         this.insertUseGeneratedKeys(recordScene);
 

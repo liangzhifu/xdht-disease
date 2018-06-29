@@ -5,6 +5,7 @@ import com.xdht.disease.common.core.Service;
 import com.xdht.disease.sys.vo.request.RecordSceneInputRequest;
 import com.xdht.disease.sys.vo.request.RecordSceneRequest;
 import com.xdht.disease.sys.vo.response.RecordSceneDetailResponse;
+import com.xdht.disease.sys.vo.response.RecordSceneResponse;
 
 import java.util.List;
 
@@ -19,7 +20,7 @@ public interface RecordSceneService extends Service<RecordScene> {
      * @param recordSceneRequest 查询条件
      * @return 返回结果
      */
-    PageResult<RecordScene> queryListPage(RecordSceneRequest recordSceneRequest);
+    PageResult<RecordSceneResponse> queryListPage(RecordSceneRequest recordSceneRequest);
 
     /**
      * 删除
