@@ -7,6 +7,7 @@ import com.xdht.disease.sys.constant.SysEnum;
 import com.xdht.disease.sys.model.SysDictionary;
 import com.xdht.disease.sys.service.SysDictionaryService;
 import com.xdht.disease.sys.vo.request.SysDictionaryRequest;
+import com.xdht.disease.sys.vo.response.SysDictionaryResponse;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
@@ -36,7 +37,7 @@ public class SysDictionaryController {
 
     @RequestMapping(value = "/pageList", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     @ApiOperation(value = "分页查询字典列表")
-    public ResponseEntity<Result<PageResult<SysDictionary>>> queryPageList(@RequestBody SysDictionaryRequest SysDictionaryRequest) {
+    public ResponseEntity<Result<PageResult<SysDictionaryResponse>>> queryPageList(@RequestBody SysDictionaryRequest SysDictionaryRequest) {
         return new ResponseEntity<>(Result.ok(sysDictionaryService.querySysDictionaryPage(SysDictionaryRequest)), HttpStatus.OK);
     }
 
