@@ -28,6 +28,7 @@ public class SysNoticeServiceImpl extends AbstractService<SysNotice> implements 
         if (noticeTitle != null && !"".equals(noticeTitle)){
             condition.getOredCriteria().get(0).andLike("roleName", "%" + noticeTitle + "%");
         }
+        condition.orderBy("noticeReleaseDate").desc();
         PageHelper.startPage(sysNoticeRequest.getPageNumber(), sysNoticeRequest.getPageSize());
         List<SysNotice> dataList = this.selectByCondition(condition);
         Integer count = this.selectCountByCondition(condition);
