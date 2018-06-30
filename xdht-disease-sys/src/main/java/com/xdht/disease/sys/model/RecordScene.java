@@ -22,10 +22,16 @@ public class RecordScene {
     private String projectName;
 
     /**
+     * 调查年份
+     */
+    @Column(name = "inquiry_year")
+    private Integer inquiryYear;
+
+    /**
      * 调查类型
      */
     @Column(name = "inquiry_type")
-    private String inquiryType;
+    private Long inquiryType;
 
     /**
      * 调查人
@@ -131,11 +137,29 @@ public class RecordScene {
     }
 
     /**
+     * 获取调查年份
+     *
+     * @return inquiry_year - 调查年份
+     */
+    public Integer getInquiryYear() {
+        return inquiryYear;
+    }
+
+    /**
+     * 设置调查年份
+     *
+     * @param inquiryYear 调查年份
+     */
+    public void setInquiryYear(Integer inquiryYear) {
+        this.inquiryYear = inquiryYear;
+    }
+
+    /**
      * 获取调查类型
      *
      * @return inquiry_type - 调查类型
      */
-    public String getInquiryType() {
+    public Long getInquiryType() {
         return inquiryType;
     }
 
@@ -144,7 +168,7 @@ public class RecordScene {
      *
      * @param inquiryType 调查类型
      */
-    public void setInquiryType(String inquiryType) {
+    public void setInquiryType(Long inquiryType) {
         this.inquiryType = inquiryType;
     }
 
