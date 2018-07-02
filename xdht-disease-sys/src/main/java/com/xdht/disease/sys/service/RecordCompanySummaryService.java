@@ -4,6 +4,7 @@ import com.xdht.disease.common.core.PageResult;
 import com.xdht.disease.sys.model.RecordCompanySummary;
 import com.xdht.disease.common.core.Service;
 import com.xdht.disease.sys.vo.request.RecordCompanySummaryRequest;
+import com.xdht.disease.sys.vo.response.RecordCompanySummaryResponse;
 
 
 /**
@@ -16,7 +17,7 @@ public interface RecordCompanySummaryService extends Service<RecordCompanySummar
      * @param recordCompanySummaryRequest 查询条件
      * @return 返回结果
      */
-    PageResult<RecordCompanySummary> queryListPage(RecordCompanySummaryRequest recordCompanySummaryRequest);
+    PageResult<RecordCompanySummaryResponse> queryListPage(RecordCompanySummaryRequest recordCompanySummaryRequest);
 
     /**
      * 添加
