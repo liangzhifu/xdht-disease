@@ -1,6 +1,5 @@
 package com.xdht.disease.sys.service.impl;
 
-import com.github.pagehelper.PageHelper;
 import com.xdht.disease.common.core.AbstractService;
 import com.xdht.disease.common.core.PageResult;
 import com.xdht.disease.sys.constant.SysEnum;
@@ -8,11 +7,13 @@ import com.xdht.disease.sys.dao.RecordCompanySummaryMapper;
 import com.xdht.disease.sys.model.RecordCompanySummary;
 import com.xdht.disease.sys.service.RecordCompanySummaryService;
 import com.xdht.disease.sys.vo.request.RecordCompanySummaryRequest;
+import com.xdht.disease.sys.vo.response.RecordCompanySummaryResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import tk.mybatis.mapper.entity.Condition;
 
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 
@@ -27,33 +28,23 @@ public class RecordCompanySummaryServiceImpl extends AbstractService<RecordCompa
     private RecordCompanySummaryMapper recordCompanySummaryMapper;
 
     @Override
-    public PageResult<RecordCompanySummary> queryListPage(RecordCompanySummaryRequest recordCompanySummaryRequest) {
-        Condition condition = new Condition(RecordCompanySummary.class);
-        condition.createCriteria() .andEqualTo("id", recordCompanySummaryRequest.getId())
-                .andEqualTo("companyId",recordCompanySummaryRequest.getCompanyId())
-                .andEqualTo("inspectionDate",recordCompanySummaryRequest.getInspectionDate())
-                .andEqualTo("inspectedNumber",recordCompanySummaryRequest.getInspectedNumber())
-                .andEqualTo("actualInspectdNumber",recordCompanySummaryRequest.getActualInspectdNumber())
-                .andEqualTo("noAbnormality",recordCompanySummaryRequest.getNoAbnormality())
-                .andEqualTo("reviewNumber",recordCompanySummaryRequest.getReviewNumber())
-                .andEqualTo("doubtfulNumber",recordCompanySummaryRequest.getDoubtfulNumber());
-        if (recordCompanySummaryRequest.getInspectionAgency() != null) {
-            condition.getOredCriteria().get(0).andLike("inspectionAgency","%"+recordCompanySummaryRequest.getInspectionAgency()+"%");
-        }
-        if (recordCompanySummaryRequest.getPhysicalExaminationType() != null){
-            condition.getOredCriteria().get(0).andEqualTo("physicalExaminationType",recordCompanySummaryRequest.getPhysicalExaminationType());
-        }
-        PageHelper.startPage(recordCompanySummaryRequest.getPageNumber(), recordCompanySummaryRequest.getPageSize());
-        List<RecordCompanySummary> dataList = this.selectByCondition(condition);
-        Integer count = this.selectCountByCondition(condition);
-        PageResult<RecordCompanySummary> pageList = new  PageResult<>();
+    public PageResult<RecordCompanySummaryResponse> queryListPage(RecordCompanySummaryRequest recordCompanySummaryRequest) {
+        Integer start = (recordCompanySummaryRequest.getPageNumber() - 1) * recordCompanySummaryRequest.getPageSize();
+        recordCompanySummaryRequest.setStart(start);
+        List<RecordCompanySummaryResponse> recordCompanySummaryResponseList = this.recordCompanySummaryMapper.setRecordCompanySummaryList(recordCompanySummaryRequest);
+        Integer count = this.recordCompanySummaryMapper.setRecordCompanySummaryCount(recordCompanySummaryRequest);
+        PageResult<RecordCompanySummaryResponse> pageList = new  PageResult<>();
         pageList.setTotal(count);
-        pageList.setDataList(dataList);
+        pageList.setDataList(recordCompanySummaryResponseList);
         return pageList;
     }
 
     @Override
     public void add(RecordCompanySummary recordCompanySummary) {
+        Date inspectionDate = recordCompanySummary.getInspectionDate();
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(inspectionDate);
+        recordCompanySummary.setInspectionYear(cal.get(Calendar.YEAR));
         recordCompanySummary.setStatus(SysEnum.StatusEnum.STATUS_NORMAL.getCode());
         this.insertUseGeneratedKeys(recordCompanySummary);
     }
@@ -68,6 +59,10 @@ public class RecordCompanySummaryServiceImpl extends AbstractService<RecordCompa
 
     @Override
     public void update(RecordCompanySummary recordCompanySummary) {
+        Date inspectionDate = recordCompanySummary.getInspectionDate();
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(inspectionDate);
+        recordCompanySummary.setInspectionYear(cal.get(Calendar.YEAR));
         this.updateByPrimaryKeySelective(recordCompanySummary);
     }
 }
