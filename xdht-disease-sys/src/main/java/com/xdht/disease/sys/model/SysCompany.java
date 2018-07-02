@@ -93,6 +93,7 @@ public class SysCompany {
      * 成立日期
      */
     @Column(name = "establish_date")
+    @JSONField(format = "yyyy-MM-dd")
     private Date establishDate;
 
     /**
