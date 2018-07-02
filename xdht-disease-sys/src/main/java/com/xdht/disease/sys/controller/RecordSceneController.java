@@ -10,6 +10,7 @@ import com.xdht.disease.sys.service.RecordSceneService;
 import com.xdht.disease.sys.vo.request.RecordSceneInputRequest;
 import com.xdht.disease.sys.vo.request.RecordSceneRequest;
 import com.xdht.disease.sys.vo.response.RecordSceneDetailResponse;
+import com.xdht.disease.sys.vo.response.RecordSceneResponse;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
@@ -33,7 +34,7 @@ public class RecordSceneController {
 
     @RequestMapping(value = "/pageList", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     @ApiOperation(value = "分页查询")
-    public ResponseEntity<Result<PageResult<RecordScene>>> recordPage(@RequestBody RecordSceneRequest recordSceneRequest) {
+    public ResponseEntity<Result<PageResult<RecordSceneResponse>>> recordPage(@RequestBody RecordSceneRequest recordSceneRequest) {
         return new ResponseEntity<>(Result.ok(recordSceneService.queryListPage(recordSceneRequest)), HttpStatus.OK);
     }
 
