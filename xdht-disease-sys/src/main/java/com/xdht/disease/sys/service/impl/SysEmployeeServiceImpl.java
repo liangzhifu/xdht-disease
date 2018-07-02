@@ -3,6 +3,7 @@ package com.xdht.disease.sys.service.impl;
 import com.github.pagehelper.PageHelper;
 import com.xdht.disease.common.core.AbstractService;
 import com.xdht.disease.common.core.PageResult;
+import com.xdht.disease.common.util.Md5Utils;
 import com.xdht.disease.sys.constant.SysEnum;
 import com.xdht.disease.sys.model.*;
 import com.xdht.disease.sys.service.*;
@@ -91,9 +92,10 @@ public class SysEmployeeServiceImpl extends AbstractService<SysEmployee> impleme
         sysUser.setSex(sysEmployee.getEmpSex());
         sysUser.setMgrType(SysEnum.MgrTypeEnum.MGR_TYPE_NOT.getCode());
         sysUser.setLoginCode(sysEmployee.getEmpIdentityNumber());
-        sysUser.setPassword(sysEmployee.getEmpIdentityNumber());
+        sysUser.setPassword(Md5Utils.md5("111111"));
         sysUser.setStatus(SysEnum.StatusEnum.STATUS_NORMAL.getCode());
         sysUser.setEmpId(sysEmployee.getId());
+        sysUser.setAvatar(sysEmployee.getImageName());
         this.sysUserService.insertUseGeneratedKeys(sysUser);
         List<SysEmployeeCase> sysEmployeeCaseList = sysEmployeeResponse.getSysEmployeeCaseList();
         if (sysEmployeeCaseList != null && sysEmployeeCaseList.size() > 0) {
@@ -181,6 +183,8 @@ public class SysEmployeeServiceImpl extends AbstractService<SysEmployee> impleme
         sysUser = this.sysUserService.selectOne(sysUser);
         sysUser.setUserName(sysEmployee.getEmpName());
         sysUser.setSex(sysEmployee.getEmpSex());
+        sysUser.setLoginCode(sysEmployee.getEmpIdentityNumber());
+        sysUser.setAvatar(sysEmployee.getImageName());
         this.sysUserService.updateByPrimaryKeySelective(sysUser);
 
         Condition condition = new Condition(SysEmployeeCase.class);

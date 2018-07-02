@@ -18,7 +18,6 @@ import com.xdht.disease.sys.service.SysUserService;
 import com.xdht.disease.sys.vo.request.LoginRequest;
 import com.xdht.disease.sys.vo.response.LoginResponse;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -66,6 +65,7 @@ public class SysUserServiceImpl extends AbstractService<SysUser> implements SysU
             TokenModel tokenModel = this.tokenManager.createToken(user);
             loginResponse.setToken(tokenModel.getToken());
             loginResponse.setUserName(sysUser.getUserName());
+            loginResponse.setImageName(sysUser.getAvatar());
             loginResponse.setStatus("1");
         }
         return loginResponse;
