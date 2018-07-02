@@ -82,7 +82,7 @@ public class CodeGenerator {
     private static final String DATE = new SimpleDateFormat("yyyy/MM/dd").format(new Date());
 
     public static void main(String[] args) {
-        genCode("sys_dictionary_type");
+        genCode("record_scene");
         //genCode("输入表名","输入自定义Model名称");
     }
 
@@ -113,7 +113,7 @@ public class CodeGenerator {
             file2.getAbsoluteFile().mkdirs();
         }
         genModelAndMapper(tableName, modelName);
-        genService(tableName, modelName);
+//        genService(tableName, modelName);
 //        genController(tableName, modelName);
     }
 

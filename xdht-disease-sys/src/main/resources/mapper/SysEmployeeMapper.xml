@@ -22,6 +22,7 @@
     <result column="update_by" jdbcType="BIGINT" property="updateBy" />
     <result column="update_date" jdbcType="TIMESTAMP" property="updateDate" />
     <result column="remarks" jdbcType="VARCHAR" property="remarks" />
+    <result column="image_name" jdbcType="VARCHAR" property="imageName" />
   </resultMap>
 
 

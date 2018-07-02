@@ -31,7 +31,7 @@ public class SysFileServiceImpl extends AbstractService<SysFile> implements SysF
         sysFile.setFileSuffix(fileSuffix);
         sysFile.setFileAlias(fileAlias);
         sysFile.setFilePath(filePath);
-        String localFilePath = "E:/Angular/xdht-disease-web/src/assets/img/employee/" + fileAlias;
+        String localFilePath = "D:/Program Files/apache-tomcat-7.0.67/webapps/testCom/img/" + fileAlias;
         file.transferTo(new File(localFilePath));
         this.insertUseGeneratedKeys(sysFile);
         return filePath;

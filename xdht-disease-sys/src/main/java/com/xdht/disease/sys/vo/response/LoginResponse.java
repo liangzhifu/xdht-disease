@@ -18,4 +18,7 @@ public class LoginResponse {
     @ApiModelProperty("登录结果 0失败 1成功")
     private String status;
 
+    @ApiModelProperty("个人图片")
+    private String imageName;
+
 }
