@@ -57,15 +57,17 @@ public class RecordWorkLogServiceImpl extends AbstractService<RecordWorkLog> imp
 
     @Override
     public void add(RecordWorkLogInputRequest recordWorkLogInputRequest) {
-            RecordWorkLog recordWorkLog = recordWorkLogInputRequest.getRecordWorkLog();
-            recordWorkLog.setStatus(SysEnum.StatusEnum.STATUS_NORMAL.getCode());
-            this.insertUseGeneratedKeys(recordWorkLog);
-            List<RecordWorkLogData> recordWorkLogDataList = new LinkedList<>();
+        RecordWorkLog recordWorkLog = recordWorkLogInputRequest.getRecordWorkLog();
+        recordWorkLog.setStatus(SysEnum.StatusEnum.STATUS_NORMAL.getCode());
+        this.insertUseGeneratedKeys(recordWorkLog);
+        List<RecordWorkLogData> recordWorkLogDataList = new LinkedList<>();
+        if (recordWorkLogInputRequest.getRecordWorkLogDataList() != null) {
             for ( RecordWorkLogData recordWorkLogData : recordWorkLogInputRequest.getRecordWorkLogDataList() ) {
                 recordWorkLogData.setRelationId(recordWorkLog.getId());
                 recordWorkLogDataList.add(recordWorkLogData);
             }
             this.recordWorkLogDataService.insertList(recordWorkLogDataList);
+        }
     }
 
     @Override
@@ -80,8 +82,22 @@ public class RecordWorkLogServiceImpl extends AbstractService<RecordWorkLog> imp
     public void update(RecordWorkLogInputRequest recordWorkLogInputRequest) {
         RecordWorkLog recordWorkLog = recordWorkLogInputRequest.getRecordWorkLog();
         this.updateByPrimaryKeySelective(recordWorkLog);
-        for ( RecordWorkLogData recordWorkLogData : recordWorkLogInputRequest.getRecordWorkLogDataList() ) {
-            this.recordWorkLogDataService.updateByPrimaryKeySelective(recordWorkLogData);
+
+        Condition condition = new Condition(RecordWorkLogData.class);
+        condition.createCriteria().andEqualTo("relationId", recordWorkLog.getId());
+        List<RecordWorkLogData> recordWorkLogDataList = this.recordWorkLogDataService.selectByCondition(condition);
+        if (recordWorkLogDataList != null && recordWorkLogDataList.size() > 0) {
+            for ( RecordWorkLogData recordWorkLogData : recordWorkLogDataList) {
+                this.recordWorkLogDataService.deleteByPrimaryKey(recordWorkLogData.getId());
+            }
+        }
+        recordWorkLogDataList = new LinkedList<>();
+        if (recordWorkLogInputRequest.getRecordWorkLogDataList() != null) {
+            for (RecordWorkLogData recordWorkLogData : recordWorkLogInputRequest.getRecordWorkLogDataList()) {
+                recordWorkLogData.setRelationId(recordWorkLog.getId());
+                recordWorkLogDataList.add(recordWorkLogData);
+            }
+            this.recordWorkLogDataService.insertList(recordWorkLogDataList);
         }
     }
 

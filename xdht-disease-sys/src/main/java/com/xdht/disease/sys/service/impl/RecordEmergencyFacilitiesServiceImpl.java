@@ -87,7 +87,7 @@ public class RecordEmergencyFacilitiesServiceImpl extends AbstractService<Record
         condition.createCriteria().andEqualTo("relationId", recordEmergencyFacilities.getId());
         List<RecordEmergencyFacilitiesData> recordEmergencyFacilitiesDataList = this.recordEmergencyFacilitiesDataService.selectByCondition(condition);
         if (recordEmergencyFacilitiesDataList != null && recordEmergencyFacilitiesDataList.size() > 0 ) {
-            for ( RecordEmergencyFacilitiesData recordEmergencyFacilitiesData: recordEmergencyFacilitiesInputRequest.getRecordEmergencyFacilitiesDataList() ) {
+            for ( RecordEmergencyFacilitiesData recordEmergencyFacilitiesData:  recordEmergencyFacilitiesDataList) {
                 this.recordEmergencyFacilitiesDataService.deleteByPrimaryKey(recordEmergencyFacilitiesData.getId());
             }
         }
