@@ -78,6 +78,9 @@ public class SysUserServiceImpl extends AbstractService<SysUser> implements SysU
         if (sysUserRequest.getUserName() != null && !"".equals(sysUserRequest.getUserName())){
             condition.getOredCriteria().get(0).andLike("userName", "%"+sysUserRequest.getUserName()+"%");
         }
+        if (sysUserRequest.getLoginCode() != null && !"".equals(sysUserRequest.getLoginCode())){
+            condition.getOredCriteria().get(0).andLike("loginCode", "%"+sysUserRequest.getLoginCode()+"%");
+        }
         PageHelper.startPage(sysUserRequest.getPageNumber(), sysUserRequest.getPageSize());
         List<SysUser> dataList = this.selectByCondition(condition);
         Integer count = this.selectCountByCondition(condition);

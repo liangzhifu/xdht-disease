@@ -55,8 +55,17 @@ public class SysEmployeeServiceImpl extends AbstractService<SysEmployee> impleme
         if (sysEmployeeRequest.getEmpName() != null && !"".equals(sysEmployeeRequest.getEmpName())) {
             condition.getOredCriteria().get(0).andLike("empName","%"+sysEmployeeRequest.getEmpName()+"%");
         }
+        if (sysEmployeeRequest.getEmpIdentityNumber() != null && !"".equals(sysEmployeeRequest.getEmpIdentityNumber())) {
+            condition.getOredCriteria().get(0).andLike("empIdentityNumber","%"+sysEmployeeRequest.getEmpIdentityNumber()+"%");
+        }
+        if (sysEmployeeRequest.getEmpSex() != null && !"".equals(sysEmployeeRequest.getEmpSex())) {
+            condition.getOredCriteria().get(0).andEqualTo("empSex",sysEmployeeRequest.getEmpSex());
+        }
         if(sysEmployeeRequest.getEmpNative() != null && !"".equals(sysEmployeeRequest.getEmpNative())){
-            condition.getOredCriteria().get(0).andLike("empNative",sysEmployeeRequest.getEmpNative());
+            condition.getOredCriteria().get(0).andLike("empNative","%" + sysEmployeeRequest.getEmpNative() + "%");
+        }
+        if(sysEmployeeRequest.getEmpMarriage() != null && !"".equals(sysEmployeeRequest.getEmpMarriage())){
+            condition.getOredCriteria().get(0).andEqualTo("empMarriage",sysEmployeeRequest.getEmpMarriage());
         }
         PageHelper.startPage(sysEmployeeRequest.getPageNumber(), sysEmployeeRequest.getPageSize());
         List<SysEmployee> dataList = this.selectByCondition(condition);
@@ -181,11 +190,13 @@ public class SysEmployeeServiceImpl extends AbstractService<SysEmployee> impleme
         SysUser sysUser = new SysUser();
         sysUser.setEmpId(sysEmployeeId);
         sysUser = this.sysUserService.selectOne(sysUser);
-        sysUser.setUserName(sysEmployee.getEmpName());
-        sysUser.setSex(sysEmployee.getEmpSex());
-        sysUser.setLoginCode(sysEmployee.getEmpIdentityNumber());
-        sysUser.setAvatar(sysEmployee.getImageName());
-        this.sysUserService.updateByPrimaryKeySelective(sysUser);
+        if (sysUser != null) {
+            sysUser.setUserName(sysEmployee.getEmpName());
+            sysUser.setSex(sysEmployee.getEmpSex());
+            sysUser.setLoginCode(sysEmployee.getEmpIdentityNumber());
+            sysUser.setAvatar(sysEmployee.getImageName());
+            this.sysUserService.updateByPrimaryKeySelective(sysUser);
+        }
 
         Condition condition = new Condition(SysEmployeeCase.class);
         condition.createCriteria().andEqualTo("employeeId", sysEmployeeId).andEqualTo("status",SysEnum.StatusEnum.STATUS_NORMAL.getCode());

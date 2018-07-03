@@ -43,7 +43,19 @@
     <where>
       rs.status = '0'
       <if test="projectName != null and '' != projectName">
-        and rs.`project_name` like concat(',',#{projectName, jdbcType=VARCHAR} ,',')
+        and rs.`project_name` like concat('%',#{projectName, jdbcType=VARCHAR} ,'%')
+      </if>
+      <if test="recordNo != null and '' != recordNo">
+        and rs.`record_no` like concat('%',#{recordNo, jdbcType=VARCHAR} ,'%')
+      </if>
+      <if test="inquiryPerson != null and '' != inquiryPerson">
+        and rs.`inquiry_person` like concat('%',#{inquiryPerson, jdbcType=VARCHAR} ,'%')
+      </if>
+      <if test="inquiryDate != null " >
+        and rs.`inquiry_date` = #{inquiryDate, jdbcType=DATE}
+      </if>
+      <if test="inquiryYear != null " >
+        and rs.`inquiry_year` = #{inquiryYear, jdbcType=INTEGER}
       </if>
     </where>
   </sql>

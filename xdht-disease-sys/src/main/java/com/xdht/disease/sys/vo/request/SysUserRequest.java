@@ -14,6 +14,9 @@ public class SysUserRequest {
     @ApiModelProperty(value = "用户名称")
     private String userName;
 
+    @ApiModelProperty(value = "用户登录名")
+    private String loginCode;
+
     @ApiModelProperty(value = "分页数")
     private Integer  pageNumber;
 
