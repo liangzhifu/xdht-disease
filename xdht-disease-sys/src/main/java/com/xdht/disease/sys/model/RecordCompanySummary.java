@@ -18,6 +18,12 @@ public class RecordCompanySummary {
     private Long companyId;
 
     /**
+     * 调查年份
+     */
+    @Column(name = "inspection_year")
+    private Integer inspectionYear;
+
+    /**
      * 检查日期
      */
     @JSONField(format="yyyy-MM-dd")
@@ -379,5 +385,13 @@ public class RecordCompanySummary {
 
     public void setUpdateDate(Date updateDate) {
         this.updateDate = updateDate;
+    }
+
+    public Integer getInspectionYear() {
+        return inspectionYear;
+    }
+
+    public void setInspectionYear(Integer inspectionYear) {
+        this.inspectionYear = inspectionYear;
     }
 }

@@ -87,7 +87,7 @@ public class RecordIndividualProtectiveEquipmentServiceImpl extends AbstractServ
         condition.createCriteria().andEqualTo("relationId", recordIndividualProtective.getId());
         List<RecordIndividualProtectiveEquipmentData> recordIndividualProtectiveDataList = this.recordIndividualProtectiveEquipmentDataService.selectByCondition(condition);
         if (recordIndividualProtectiveDataList != null && recordIndividualProtectiveDataList.size() > 0 ) {
-            for ( RecordIndividualProtectiveEquipmentData recordIndividualProtectiveData: recordIndividualProtectiveInputRequest.getRecordIndividualProtectiveDataList() ) {
+            for ( RecordIndividualProtectiveEquipmentData recordIndividualProtectiveData : recordIndividualProtectiveDataList ) {
                 this.recordIndividualProtectiveEquipmentDataService.deleteByPrimaryKey(recordIndividualProtectiveData.getId());
             }
         }

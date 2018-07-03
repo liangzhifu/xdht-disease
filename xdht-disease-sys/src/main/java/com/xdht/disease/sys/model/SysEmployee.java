@@ -110,6 +110,11 @@ public class SysEmployee {
     private String remarks;
 
     /**
+     * 图片名称
+     */
+    private String imageName;
+
+    /**
      * 获取id
      *
      * @return id - id
@@ -415,4 +420,11 @@ public class SysEmployee {
         this.remarks = remarks;
     }
 
+    public String getImageName() {
+        return imageName;
+    }
+
+    public void setImageName(String imageName) {
+        this.imageName = imageName;
+    }
 }

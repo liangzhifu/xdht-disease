@@ -20,6 +20,15 @@ public class RecordSceneRequest {
     @ApiModelProperty(value = "项目名称")
     private String projectName;
 
+    @ApiModelProperty(value = "调查日期")
+    private Date inquiryDate;
+
+    @ApiModelProperty(value = "年份")
+    private Integer inquiryYear;
+
+    @ApiModelProperty(value = "调查人")
+    private String inquiryPerson;
+
     @ApiModelProperty(value = "分页数")
     private Integer  pageNumber;
 

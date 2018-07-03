@@ -18,7 +18,6 @@ import com.xdht.disease.sys.service.SysUserService;
 import com.xdht.disease.sys.vo.request.LoginRequest;
 import com.xdht.disease.sys.vo.response.LoginResponse;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -66,6 +65,7 @@ public class SysUserServiceImpl extends AbstractService<SysUser> implements SysU
             TokenModel tokenModel = this.tokenManager.createToken(user);
             loginResponse.setToken(tokenModel.getToken());
             loginResponse.setUserName(sysUser.getUserName());
+            loginResponse.setImageName(sysUser.getAvatar());
             loginResponse.setStatus("1");
         }
         return loginResponse;
@@ -77,6 +77,9 @@ public class SysUserServiceImpl extends AbstractService<SysUser> implements SysU
         condition.createCriteria().andEqualTo("status", SysEnum.StatusEnum.STATUS_NORMAL.getCode());
         if (sysUserRequest.getUserName() != null && !"".equals(sysUserRequest.getUserName())){
             condition.getOredCriteria().get(0).andLike("userName", "%"+sysUserRequest.getUserName()+"%");
+        }
+        if (sysUserRequest.getLoginCode() != null && !"".equals(sysUserRequest.getLoginCode())){
+            condition.getOredCriteria().get(0).andLike("loginCode", "%"+sysUserRequest.getLoginCode()+"%");
         }
         PageHelper.startPage(sysUserRequest.getPageNumber(), sysUserRequest.getPageSize());
         List<SysUser> dataList = this.selectByCondition(condition);

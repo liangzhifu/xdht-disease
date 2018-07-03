@@ -7,6 +7,7 @@
     -->
     <id column="id" jdbcType="BIGINT" property="id" />
     <result column="company_id" jdbcType="BIGINT" property="companyId" />
+    <result column="inspection_year" jdbcType="BIGINT" property="inspectionYear" />
     <result column="inspection_date" jdbcType="DATE" property="inspectionDate" />
     <result column="inspection_agency" jdbcType="VARCHAR" property="inspectionAgency" />
     <result column="physical_examination_type" jdbcType="VARCHAR" property="physicalExaminationType" />
@@ -19,4 +20,39 @@
     <result column="other_diseases_number" jdbcType="BIGINT" property="otherDiseasesNumber" />
     <result column="remarks" jdbcType="VARCHAR" property="remarks" />
   </resultMap>
+
+  <sql id="WHERE_SQL">
+    <where>
+      rcs.status = '0'
+      <if test="inspectionAgency != null and inspectionAgency != ''">
+        rcs.inspection_agency like concat('%', #{inspectionAgency},'%')
+      </if>
+    </where>
+  </sql>
+
+  <select id="setRecordCompanySummaryList" resultType="java.util.HashMap" parameterType="com.xdht.disease.sys.vo.request.RecordCompanySummaryRequest">
+    SELECT rcs.id, rcs.company_id as companyId,
+    (SELECT sc.`company_name` FROM sys_company sc WHERE sc.id = rcs.company_id) as companyName,
+    rcs.inspection_year as inspectionYear,
+    rcs.inspection_date as inspectionDate,
+    rcs.inspection_agency as inspectionAgency,
+    rcs.physical_examination_type as physicalExaminationType,
+    rcs.inspected_number as inspectedNumber,
+    rcs.actual_inspectd_number as actualInspectdNumber,
+    rcs.no_abnormality as noAbnormality,
+    rcs.review_number as reviewNumber,
+    rcs.doubtful_number as doubtfulNumber,
+    rcs.taboo_number as tabooNumber,
+    rcs.other_diseases_number as otherDiseasesNumber,
+    rcs.remarks
+    FROM record_company_summary rcs
+    <include refid="WHERE_SQL"></include>
+    limit #{start}, #{pageSize}
+  </select>
+
+  <select id="setRecordCompanySummaryCount" resultType="java.lang.Integer" parameterType="com.xdht.disease.sys.vo.request.RecordCompanySummaryRequest">
+      SELECT count(1)
+      FROM record_company_summary rcs
+      <include refid="WHERE_SQL"></include>
+  </select>
 </mapper>
