@@ -21,6 +21,12 @@ public class SysEmployeeRequest {
     @ApiModelProperty(value = "籍贯")
     private String empNative;
 
+    @ApiModelProperty(value = "性别")
+    private String empSex;
+
+    @ApiModelProperty(value = "婚姻")
+    private String empMarriage;
+
     @ApiModelProperty(value = "分页数")
     private Integer  pageNumber;
 

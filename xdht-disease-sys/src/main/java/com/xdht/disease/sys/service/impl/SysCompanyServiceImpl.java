@@ -28,6 +28,21 @@ public class SysCompanyServiceImpl extends AbstractService<SysCompany> implement
         if (sysCompanyRequest.getCompanyName() != null){
             condition.getOredCriteria().get(0).andLike("companyName","%"+sysCompanyRequest.getCompanyName()+"%");
         }
+        if (sysCompanyRequest.getContactUsername() != null){
+            condition.getOredCriteria().get(0).andLike("contactUsername","%"+sysCompanyRequest.getContactUsername()+"%");
+        }
+        if (sysCompanyRequest.getBelongToJurisdiction() != null){
+            condition.getOredCriteria().get(0).andLike("belongToJurisdiction","%"+sysCompanyRequest.getBelongToJurisdiction()+"%");
+        }
+        if (sysCompanyRequest.getLegalRepresentative() != null ){
+            condition.getOredCriteria().get(0).andLike("legalRepresentative","%"+sysCompanyRequest.getLegalRepresentative()+"%");
+        }
+        if (sysCompanyRequest.getCompanyNature() != null && ! "".equals(sysCompanyRequest.getCompanyNature())){
+            condition.getOredCriteria().get(0).andEqualTo("companyNature",sysCompanyRequest.getCompanyNature());
+        }
+        if (sysCompanyRequest.getEstablishDate() != null && ! "".equals(sysCompanyRequest.getEstablishDate())){
+            condition.getOredCriteria().get(0).andEqualTo("establishDate",sysCompanyRequest.getEstablishDate());
+        }
         PageHelper.startPage(sysCompanyRequest.getPageNumber(), sysCompanyRequest.getPageSize());
         List<SysCompany> dataList = this.selectByCondition(condition);
         Integer count = this.selectCountByCondition(condition);
@@ -43,6 +58,9 @@ public class SysCompanyServiceImpl extends AbstractService<SysCompany> implement
         condition.createCriteria().andEqualTo("status", SysEnum.StatusEnum.STATUS_NORMAL.getCode());
         if (sysCompanyRequest.getCompanyName() != null){
             condition.getOredCriteria().get(0).andLike("companyName","%"+sysCompanyRequest.getCompanyName()+"%");
+        }
+        if (sysCompanyRequest.getContactUsername() != null){
+            condition.getOredCriteria().get(0).andLike("contactUsername","%"+sysCompanyRequest.getContactUsername()+"%");
         }
         return this.selectByCondition(condition);
     }

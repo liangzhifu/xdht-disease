@@ -26,7 +26,7 @@ public class SysNoticeServiceImpl extends AbstractService<SysNotice> implements 
         condition.createCriteria().andEqualTo("status", SysEnum.StatusEnum.STATUS_NORMAL.getCode());
         String noticeTitle = sysNoticeRequest.getNoticeTitle();
         if (noticeTitle != null && !"".equals(noticeTitle)){
-            condition.getOredCriteria().get(0).andLike("roleName", "%" + noticeTitle + "%");
+            condition.getOredCriteria().get(0).andLike("noticeTitle", "%" + noticeTitle + "%");
         }
         condition.orderBy("noticeReleaseDate").desc();
         PageHelper.startPage(sysNoticeRequest.getPageNumber(), sysNoticeRequest.getPageSize());

@@ -56,8 +56,8 @@ public class SysUserRoleServiceImpl extends AbstractService<SysUserRole> impleme
                 sysUserRole.setStatus(SysEnum.StatusEnum.STATUS_NORMAL.getCode());
                 sysUserRoleList.add(sysUserRole);
             }
+            this.insertList(sysUserRoleList);
         }
-        this.insertList(sysUserRoleList);
     }
 
 }
