@@ -57,8 +57,8 @@ public class SysRoleMenuServiceImpl extends AbstractService<SysRoleMenu> impleme
                 sysRoleMenu.setStatus(SysEnum.StatusEnum.STATUS_NORMAL.getCode());
                 sysRoleMenuList.add(sysRoleMenu);
             }
+            this.insertList(sysRoleMenuList);
         }
-        this.insertList(sysRoleMenuList);
     }
 
 }
