@@ -3,6 +3,8 @@ package com.xdht.disease.sys.controller;
 import com.xdht.disease.common.authorization.annotation.Authorization;
 import com.xdht.disease.common.core.PageResult;
 import com.xdht.disease.common.core.Result;
+import com.xdht.disease.sys.constant.SysConstant;
+import com.xdht.disease.sys.constant.SysEnum;
 import com.xdht.disease.sys.model.RecordEmployeeSummary;
 import com.xdht.disease.sys.service.RecordEmployeeSummaryService;
 import com.xdht.disease.sys.vo.request.RecordEmployeeSummaryRequest;
@@ -26,11 +28,6 @@ public class RecordEmployeeSummaryController {
     @Autowired
     private RecordEmployeeSummaryService recordEmployeeSummaryService;
 
-    @RequestMapping(value = "/recordList", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
-    @ApiOperation(value = "查询列表")
-    public ResponseEntity<Result<List<RecordEmployeeSummary>>> recordList(@RequestBody RecordEmployeeSummaryRequest recordEmployeeSummaryRequest) {
-        return new ResponseEntity<>(Result.ok(recordEmployeeSummaryService.queryList(recordEmployeeSummaryRequest)), HttpStatus.OK);
-    }
     @RequestMapping(value = "/recordPage", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     @ApiOperation(value = "分页查询")
     public ResponseEntity<Result<PageResult<RecordEmployeeSummary>>> recordPage(@RequestBody RecordEmployeeSummaryRequest recordEmployeeSummaryRequest) {
@@ -39,8 +36,9 @@ public class RecordEmployeeSummaryController {
 
     @RequestMapping(value = "/add", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     @ApiOperation(value = "添加")
-    public ResponseEntity<Result<RecordEmployeeSummary>> add(@RequestBody RecordEmployeeSummaryResponse recordEmployeeSummaryResponse) {
-        return new ResponseEntity<>(Result.ok(recordEmployeeSummaryService.add(recordEmployeeSummaryResponse)), HttpStatus.OK);
+    public ResponseEntity<Result<String>> add(@RequestBody RecordEmployeeSummary RecordEmployeeSummary) {
+        recordEmployeeSummaryService.add(RecordEmployeeSummary);
+        return new ResponseEntity<>(Result.ok(SysEnum.ResultEnum.RESULT_SUCCESS.getCode()), HttpStatus.OK);
     }
 
     @RequestMapping(value = "/delete", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
@@ -49,14 +47,16 @@ public class RecordEmployeeSummaryController {
     @ApiImplicitParams({
             @ApiImplicitParam(name = "authorization", value = "authorization", required = true, dataType = "string", paramType = "header"),
     })
-    public ResponseEntity<Result<RecordEmployeeSummary>> delete(@RequestParam Long id) {
-        return new ResponseEntity<>(Result.ok(recordEmployeeSummaryService.delete(id)), HttpStatus.OK);
+    public ResponseEntity<Result<String>> delete(@RequestParam Long id) {
+        recordEmployeeSummaryService.delete(id);
+        return new ResponseEntity<>(Result.ok(SysEnum.ResultEnum.RESULT_SUCCESS.getCode()), HttpStatus.OK);
     }
 
     @RequestMapping(value = "/update", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     @ApiOperation(value = "修改")
-    public ResponseEntity<Result<RecordEmployeeSummary>> update(@RequestBody RecordEmployeeSummaryResponse recordEmployeeSummaryResponse) {
-        return new ResponseEntity<>(Result.ok(recordEmployeeSummaryService.update(recordEmployeeSummaryResponse)), HttpStatus.OK);
+    public ResponseEntity<Result<String>> update(@RequestBody RecordEmployeeSummary RecordEmployeeSummary) {
+        recordEmployeeSummaryService.update(RecordEmployeeSummary);
+        return new ResponseEntity<>(Result.ok(SysEnum.ResultEnum.RESULT_SUCCESS.getCode()), HttpStatus.OK);
     }
 
     @RequestMapping(value = "/detail/{id}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
