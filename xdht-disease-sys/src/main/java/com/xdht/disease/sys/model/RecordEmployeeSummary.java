@@ -30,21 +30,6 @@ public class RecordEmployeeSummary {
     private Long workType;
 
     /**
-     * 姓名
-     */
-    private String name;
-
-    /**
-     * 性别：0 男 1 女
-     */
-    private String sex;
-
-    /**
-     * 年龄
-     */
-    private Integer age;
-
-    /**
      * 检查日期
      */
     @JSONField(format="yyyy-MM-dd")
@@ -72,13 +57,13 @@ public class RecordEmployeeSummary {
      * 血压收缩压
      */
     @Column(name = "blood_pressure_shrink")
-    private String bloodPressureShrink;
+    private Long bloodPressureShrink;
 
     /**
      * 血压舒张压
      */
     @Column(name = "blood_pressure_diastole")
-    private String bloodPressureDiastole;
+    private Long bloodPressureDiastole;
 
     /**
      * 心脏
@@ -117,29 +102,29 @@ public class RecordEmployeeSummary {
      * 白细胞×109/L
      */
     @Column(name = "white_blood_cell")
-    private String whiteBloodCell;
+    private Long whiteBloodCell;
 
     /**
      * 中性粒细胞计数×109/L
      */
     @Column(name = "neutrophile_granulocyte")
-    private String neutrophileGranulocyte;
+    private Long neutrophileGranulocyte;
 
     /**
      * 红细胞计数×1012/L
      */
     @Column(name = "red_blood_cell")
-    private String redBloodCell;
+    private Long redBloodCell;
 
     /**
      * 血色素g/L
      */
-    private String hemoglobin;
+    private Long hemoglobin;
 
     /**
      * 血小板×109/L
      */
-    private String platelet;
+    private Long platelet;
 
     /**
      * 白细胞（尿）
@@ -177,40 +162,40 @@ public class RecordEmployeeSummary {
     private String electrocardiogram;
 
     @Column(name = "dbhl_500_l")
-    private String dbhl500L;
+    private Long dbhl500L;
 
     @Column(name = "dbhl_1k_l")
-    private String dbhl1kL;
+    private Long dbhl1kL;
 
     @Column(name = "dbhl_2k_l")
-    private String dbhl2kL;
+    private Long dbhl2kL;
 
     @Column(name = "dbhl_3k_l")
-    private String dbhl3kL;
+    private Long dbhl3kL;
 
     @Column(name = "dbhl_4k_l")
-    private String dbhl4kL;
+    private Long dbhl4kL;
 
     @Column(name = "dbhl_6k_l")
-    private String dbhl6kL;
+    private Long dbhl6kL;
 
     @Column(name = "dbhl_500_r")
-    private String dbhl500R;
+    private Long dbhl500R;
 
     @Column(name = "dbhl_1k_r")
-    private String dbhl1kR;
+    private Long dbhl1kR;
 
     @Column(name = "dbhl_2k_r")
-    private String dbhl2kR;
+    private Long dbhl2kR;
 
     @Column(name = "dbhl_3k_r")
-    private String dbhl3kR;
+    private Long dbhl3kR;
 
     @Column(name = "dbhl_4k_r")
-    private String dbhl4kR;
+    private Long dbhl4kR;
 
     @Column(name = "dbhl_6k_r")
-    private String dbhl6kR;
+    private Long dbhl6kR;
 
     /**
      * 状态（0正常 1删除）
@@ -310,60 +295,6 @@ public class RecordEmployeeSummary {
     }
 
     /**
-     * 获取姓名
-     *
-     * @return name - 姓名
-     */
-    public String getName() {
-        return name;
-    }
-
-    /**
-     * 设置姓名
-     *
-     * @param name 姓名
-     */
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    /**
-     * 获取性别：0 男 1 女
-     *
-     * @return sex - 性别：0 男 1 女
-     */
-    public String getSex() {
-        return sex;
-    }
-
-    /**
-     * 设置性别：0 男 1 女
-     *
-     * @param sex 性别：0 男 1 女
-     */
-    public void setSex(String sex) {
-        this.sex = sex;
-    }
-
-    /**
-     * 获取年龄
-     *
-     * @return age - 年龄
-     */
-    public Integer getAge() {
-        return age;
-    }
-
-    /**
-     * 设置年龄
-     *
-     * @param age 年龄
-     */
-    public void setAge(Integer age) {
-        this.age = age;
-    }
-
-    /**
      * 获取接噪工龄
      *
      * @return contact_time - 接噪工龄
@@ -404,7 +335,7 @@ public class RecordEmployeeSummary {
      *
      * @return blood_pressure_shrink - 血压收缩压
      */
-    public String getBloodPressureShrink() {
+    public Long getBloodPressureShrink() {
         return bloodPressureShrink;
     }
 
@@ -413,7 +344,7 @@ public class RecordEmployeeSummary {
      *
      * @param bloodPressureShrink 血压收缩压
      */
-    public void setBloodPressureShrink(String bloodPressureShrink) {
+    public void setBloodPressureShrink(Long bloodPressureShrink) {
         this.bloodPressureShrink = bloodPressureShrink;
     }
 
@@ -422,7 +353,7 @@ public class RecordEmployeeSummary {
      *
      * @return blood_pressure_diastole - 血压舒张压
      */
-    public String getBloodPressureDiastole() {
+    public Long getBloodPressureDiastole() {
         return bloodPressureDiastole;
     }
 
@@ -431,7 +362,7 @@ public class RecordEmployeeSummary {
      *
      * @param bloodPressureDiastole 血压舒张压
      */
-    public void setBloodPressureDiastole(String bloodPressureDiastole) {
+    public void setBloodPressureDiastole(Long bloodPressureDiastole) {
         this.bloodPressureDiastole = bloodPressureDiastole;
     }
 
@@ -548,7 +479,7 @@ public class RecordEmployeeSummary {
      *
      * @return white_blood_cell - 白细胞×109/L
      */
-    public String getWhiteBloodCell() {
+    public Long getWhiteBloodCell() {
         return whiteBloodCell;
     }
 
@@ -557,7 +488,7 @@ public class RecordEmployeeSummary {
      *
      * @param whiteBloodCell 白细胞×109/L
      */
-    public void setWhiteBloodCell(String whiteBloodCell) {
+    public void setWhiteBloodCell(Long whiteBloodCell) {
         this.whiteBloodCell = whiteBloodCell;
     }
 
@@ -566,7 +497,7 @@ public class RecordEmployeeSummary {
      *
      * @return neutrophile_granulocyte - 中性粒细胞计数×109/L
      */
-    public String getNeutrophileGranulocyte() {
+    public Long getNeutrophileGranulocyte() {
         return neutrophileGranulocyte;
     }
 
@@ -575,7 +506,7 @@ public class RecordEmployeeSummary {
      *
      * @param neutrophileGranulocyte 中性粒细胞计数×109/L
      */
-    public void setNeutrophileGranulocyte(String neutrophileGranulocyte) {
+    public void setNeutrophileGranulocyte(Long neutrophileGranulocyte) {
         this.neutrophileGranulocyte = neutrophileGranulocyte;
     }
 
@@ -584,7 +515,7 @@ public class RecordEmployeeSummary {
      *
      * @return red_blood_cell - 红细胞计数×1012/L
      */
-    public String getRedBloodCell() {
+    public Long getRedBloodCell() {
         return redBloodCell;
     }
 
@@ -593,7 +524,7 @@ public class RecordEmployeeSummary {
      *
      * @param redBloodCell 红细胞计数×1012/L
      */
-    public void setRedBloodCell(String redBloodCell) {
+    public void setRedBloodCell(Long redBloodCell) {
         this.redBloodCell = redBloodCell;
     }
 
@@ -602,7 +533,7 @@ public class RecordEmployeeSummary {
      *
      * @return hemoglobin - 血色素g/L
      */
-    public String getHemoglobin() {
+    public Long getHemoglobin() {
         return hemoglobin;
     }
 
@@ -611,7 +542,7 @@ public class RecordEmployeeSummary {
      *
      * @param hemoglobin 血色素g/L
      */
-    public void setHemoglobin(String hemoglobin) {
+    public void setHemoglobin(Long hemoglobin) {
         this.hemoglobin = hemoglobin;
     }
 
@@ -620,7 +551,7 @@ public class RecordEmployeeSummary {
      *
      * @return platelet - 血小板×109/L
      */
-    public String getPlatelet() {
+    public Long getPlatelet() {
         return platelet;
     }
 
@@ -629,7 +560,7 @@ public class RecordEmployeeSummary {
      *
      * @param platelet 血小板×109/L
      */
-    public void setPlatelet(String platelet) {
+    public void setPlatelet(Long platelet) {
         this.platelet = platelet;
     }
 
@@ -744,168 +675,168 @@ public class RecordEmployeeSummary {
     /**
      * @return dbhl_500_l
      */
-    public String getDbhl500L() {
+    public Long getDbhl500L() {
         return dbhl500L;
     }
 
     /**
      * @param dbhl500L
      */
-    public void setDbhl500L(String dbhl500L) {
+    public void setDbhl500L(Long dbhl500L) {
         this.dbhl500L = dbhl500L;
     }
 
     /**
      * @return dbhl_1k_l
      */
-    public String getDbhl1kL() {
+    public Long getDbhl1kL() {
         return dbhl1kL;
     }
 
     /**
      * @param dbhl1kL
      */
-    public void setDbhl1kL(String dbhl1kL) {
+    public void setDbhl1kL(Long dbhl1kL) {
         this.dbhl1kL = dbhl1kL;
     }
 
     /**
      * @return dbhl_2k_l
      */
-    public String getDbhl2kL() {
+    public Long getDbhl2kL() {
         return dbhl2kL;
     }
 
     /**
      * @param dbhl2kL
      */
-    public void setDbhl2kL(String dbhl2kL) {
+    public void setDbhl2kL(Long dbhl2kL) {
         this.dbhl2kL = dbhl2kL;
     }
 
     /**
      * @return dbhl_3k_l
      */
-    public String getDbhl3kL() {
+    public Long getDbhl3kL() {
         return dbhl3kL;
     }
 
     /**
      * @param dbhl3kL
      */
-    public void setDbhl3kL(String dbhl3kL) {
+    public void setDbhl3kL(Long dbhl3kL) {
         this.dbhl3kL = dbhl3kL;
     }
 
     /**
      * @return dbhl_4k_l
      */
-    public String getDbhl4kL() {
+    public Long getDbhl4kL() {
         return dbhl4kL;
     }
 
     /**
      * @param dbhl4kL
      */
-    public void setDbhl4kL(String dbhl4kL) {
+    public void setDbhl4kL(Long dbhl4kL) {
         this.dbhl4kL = dbhl4kL;
     }
 
     /**
      * @return dbhl_6k_l
      */
-    public String getDbhl6kL() {
+    public Long getDbhl6kL() {
         return dbhl6kL;
     }
 
     /**
      * @param dbhl6kL
      */
-    public void setDbhl6kL(String dbhl6kL) {
+    public void setDbhl6kL(Long dbhl6kL) {
         this.dbhl6kL = dbhl6kL;
     }
 
     /**
      * @return dbhl_500_r
      */
-    public String getDbhl500R() {
+    public Long getDbhl500R() {
         return dbhl500R;
     }
 
     /**
      * @param dbhl500R
      */
-    public void setDbhl500R(String dbhl500R) {
+    public void setDbhl500R(Long dbhl500R) {
         this.dbhl500R = dbhl500R;
     }
 
     /**
      * @return dbhl_1k_r
      */
-    public String getDbhl1kR() {
+    public Long getDbhl1kR() {
         return dbhl1kR;
     }
 
     /**
      * @param dbhl1kR
      */
-    public void setDbhl1kR(String dbhl1kR) {
+    public void setDbhl1kR(Long dbhl1kR) {
         this.dbhl1kR = dbhl1kR;
     }
 
     /**
      * @return dbhl_2k_r
      */
-    public String getDbhl2kR() {
+    public Long getDbhl2kR() {
         return dbhl2kR;
     }
 
     /**
      * @param dbhl2kR
      */
-    public void setDbhl2kR(String dbhl2kR) {
+    public void setDbhl2kR(Long dbhl2kR) {
         this.dbhl2kR = dbhl2kR;
     }
 
     /**
      * @return dbhl_3k_r
      */
-    public String getDbhl3kR() {
+    public Long getDbhl3kR() {
         return dbhl3kR;
     }
 
     /**
      * @param dbhl3kR
      */
-    public void setDbhl3kR(String dbhl3kR) {
+    public void setDbhl3kR(Long dbhl3kR) {
         this.dbhl3kR = dbhl3kR;
     }
 
     /**
      * @return dbhl_4k_r
      */
-    public String getDbhl4kR() {
+    public Long getDbhl4kR() {
         return dbhl4kR;
     }
 
     /**
      * @param dbhl4kR
      */
-    public void setDbhl4kR(String dbhl4kR) {
+    public void setDbhl4kR(Long dbhl4kR) {
         this.dbhl4kR = dbhl4kR;
     }
 
     /**
      * @return dbhl_6k_r
      */
-    public String getDbhl6kR() {
+    public Long getDbhl6kR() {
         return dbhl6kR;
     }
 
     /**
      * @param dbhl6kR
      */
-    public void setDbhl6kR(String dbhl6kR) {
+    public void setDbhl6kR(Long dbhl6kR) {
         this.dbhl6kR = dbhl6kR;
     }
 

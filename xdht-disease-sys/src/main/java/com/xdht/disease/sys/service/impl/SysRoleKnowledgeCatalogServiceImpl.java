@@ -56,7 +56,7 @@ public class SysRoleKnowledgeCatalogServiceImpl extends AbstractService<SysRoleK
                 sysRoleKnowledgeCatalog.setStatus(SysEnum.StatusEnum.STATUS_NORMAL.getCode());
                 sysRoleKnowledgeCatalogList.add(sysRoleKnowledgeCatalog);
             }
+            this.insertList(sysRoleKnowledgeCatalogList);
         }
-        this.insertList(sysRoleKnowledgeCatalogList);
     }
 }
