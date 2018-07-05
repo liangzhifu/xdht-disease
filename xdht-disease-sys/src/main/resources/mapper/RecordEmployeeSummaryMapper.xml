@@ -9,6 +9,8 @@
     <result column="emp_id" jdbcType="BIGINT" property="empId" />
     <result column="office_id" jdbcType="BIGINT" property="officeId" />
     <result column="work_type" jdbcType="BIGINT" property="workType" />
+    <result column="inspect_date" jdbcType="DATE" property="inspectDate" />
+    <result column="inspect" jdbcType="VARCHAR" property="inspect" />
     <result column="contact_time" jdbcType="INTEGER" property="contactTime" />
     <result column="hazard_factor" jdbcType="VARCHAR" property="hazardFactor" />
     <result column="blood_pressure_shrink" jdbcType="BIGINT" property="bloodPressureShrink" />
@@ -55,12 +57,15 @@
     res.emp_id as empId,
     (SELECT se.emp_name FROM sys_employee se WHERE se.id = res.`emp_id`) AS empName,
     (SELECT se.emp_sex FROM sys_employee se WHERE se.id = res.`emp_id`) AS empSex,
+    (SELECT DATE_FORMAT(NOW(), '%Y') - SUBSTRING( se.emp_identity_number,7,4) FROM sys_employee se WHERE se.id = res.`emp_id`) AS age,
     res.office_id as officeId,
     (SELECT sco.office_name FROM sys_company_office sco WHERE sco.id = res.`office_id`) AS officeName,
     (SELECT sco.company_id FROM sys_company_office sco WHERE sco.id = res.`office_id`) AS companyId,
     (SELECT sc.company_name FROM sys_company_office sco, sys_company sc WHERE sco.company_id = sc.id AND sco.id = res.`office_id`) AS companyName,
     res.work_type as workType,
     (SELECT sd.`dictionary_name` FROM sys_dictionary sd WHERE sd.`id` = res.work_type) as workTypeName,
+    res.inspect_date as inspectDate,
+    res.inspect as inspect,
     res.contact_time as contactTime,
     res.hazard_factor as hazardFactor,
     res.blood_pressure_shrink as bloodPressureShrink,
@@ -116,6 +121,8 @@
     (SELECT sc.company_name FROM sys_company_office sco, sys_company sc WHERE sco.company_id = sc.id AND sco.id = res.`office_id`) AS companyName,
     res.work_type as workType,
     (SELECT sd.`dictionary_name` FROM sys_dictionary sd WHERE sd.`id` = res.work_type) as workTypeName,
+    res.inspect_date as inspectDate,
+    res.inspect as inspect,
     res.contact_time as contactTime,
     res.hazard_factor as hazardFactor,
     res.blood_pressure_shrink as bloodPressureShrink,
