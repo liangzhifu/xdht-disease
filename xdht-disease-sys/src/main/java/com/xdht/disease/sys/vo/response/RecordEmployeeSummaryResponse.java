@@ -20,6 +20,9 @@ public class RecordEmployeeSummaryResponse {
     @ApiModelProperty(value = "职工ID")
     private Long empId;
 
+    @ApiModelProperty(value = "职工年龄")
+    private  Integer age;
+
     @ApiModelProperty(value = "职工姓名")
     private String empName;
 

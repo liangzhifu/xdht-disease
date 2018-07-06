@@ -25,7 +25,7 @@
     <where>
       rcs.status = '0'
       <if test="inspectionAgency != null and inspectionAgency != ''">
-        rcs.inspection_agency like concat('%', #{inspectionAgency},'%')
+       AND rcs.inspection_agency like concat('%', #{inspectionAgency},'%')
       </if>
     </where>
   </sql>
