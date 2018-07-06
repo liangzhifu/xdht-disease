@@ -27,6 +27,7 @@
       <if test="inspectionAgency != null and inspectionAgency != ''">
        AND rcs.inspection_agency like concat('%', #{inspectionAgency},'%')
       </if>
+      ORDER BY rcs.create_date DESC
     </where>
   </sql>
 

@@ -32,19 +32,19 @@ public class SysKnowledgeController {
     private SysKnowledgeService sysKnowledgeService;
 
     @RequestMapping(value = "/pageList", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
-    @ApiOperation(value = "分页查询公告列表")
+    @ApiOperation(value = "分页查询知识库列表")
     public ResponseEntity<Result<PageResult<SysKnowledge>>> rolePage(@RequestBody SysKnowledgeRequest sysKnowledgeRequest) {
         return new ResponseEntity<>(Result.ok(sysKnowledgeService.querySysKnowledgePage(sysKnowledgeRequest)), HttpStatus.OK);
     }
 
     @RequestMapping(value = "/list", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
-    @ApiOperation(value = "查询单位部门列表")
+    @ApiOperation(value = "查询知识库列表")
     public ResponseEntity<Result<List<SysKnowledge>>> companyOfficeList(@RequestBody SysKnowledgeRequest sysKnowledgeRequest) {
         return new ResponseEntity<>(Result.ok(sysKnowledgeService.querySysKnowledgeList(sysKnowledgeRequest)), HttpStatus.OK);
     }
 
     @RequestMapping(value = "/add", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
-    @ApiOperation(value = "添加单位部门")
+    @ApiOperation(value = "添加知识库")
     @Authorization
     @ApiImplicitParams({
             @ApiImplicitParam(name = "authorization", value = "authorization", required = true, dataType = "string", paramType = "header"),
@@ -55,7 +55,7 @@ public class SysKnowledgeController {
     }
 
     @RequestMapping(value = "/delete", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
-    @ApiOperation(value = "删除单位部门")
+    @ApiOperation(value = "删除知识库")
     @Authorization
     @ApiImplicitParams({
             @ApiImplicitParam(name = "authorization", value = "authorization", required = true, dataType = "string", paramType = "header"),
@@ -66,7 +66,7 @@ public class SysKnowledgeController {
     }
 
     @RequestMapping(value = "/update", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
-    @ApiOperation(value = "修改单位部门")
+    @ApiOperation(value = "修改知识库")
     @Authorization
     @ApiImplicitParams({
             @ApiImplicitParam(name = "authorization", value = "authorization", required = true, dataType = "string", paramType = "header"),
@@ -77,7 +77,7 @@ public class SysKnowledgeController {
     }
 
     @RequestMapping(value = "/detail/{id}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
-    @ApiOperation(value = "单位部门详情")
+    @ApiOperation(value = "知识库详情")
     public ResponseEntity<Result<SysKnowledge>> getDetail(@PathVariable Long id) {
         return new ResponseEntity<>(Result.ok(sysKnowledgeService.selectByPrimaryKey(id)), HttpStatus.OK);
     }

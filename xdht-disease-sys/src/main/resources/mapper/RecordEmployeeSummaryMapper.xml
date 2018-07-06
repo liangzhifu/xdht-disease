@@ -52,6 +52,7 @@
       <if test="empName != null and empName != ''">
         AND (SELECT se.emp_name FROM sys_employee se WHERE se.id = res.`emp_id`) like concat('%', #{empName},'%')
       </if>
+      ORDER  BY res.create_date DESC
     </where>
   </sql>
 
