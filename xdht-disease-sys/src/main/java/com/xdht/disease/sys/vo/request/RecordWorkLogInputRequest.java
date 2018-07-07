@@ -21,4 +21,6 @@ public class RecordWorkLogInputRequest {
     @ApiModelProperty(value = "工作日写实记录表-内容表")
     private List<RecordWorkLogData> recordWorkLogDataList;
 
+    @ApiModelProperty(value = "调查表id")
+    private Long questionnaireId;
 }

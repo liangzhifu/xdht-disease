@@ -7,8 +7,10 @@ import com.xdht.disease.sys.constant.SysEnum;
 import com.xdht.disease.sys.dao.RecordPreEvaluationMapper;
 import com.xdht.disease.sys.model.RecordPreEvaluation;
 import com.xdht.disease.sys.model.RecordPreEvaluationData;
+import com.xdht.disease.sys.model.RecordScenQuestionnaire;
 import com.xdht.disease.sys.service.RecordPreEvaluationDataService;
 import com.xdht.disease.sys.service.RecordPreEvaluationService;
+import com.xdht.disease.sys.service.RecordScenQuestionnaireService;
 import com.xdht.disease.sys.vo.request.RecordPreEvaluationInputRequest;
 import com.xdht.disease.sys.vo.request.RecordPreEvaluationRequest;
 import com.xdht.disease.sys.vo.response.RecordPreEvaluationDetailResponse;
@@ -35,6 +37,9 @@ public class RecordPreEvaluationServiceImpl extends AbstractService<RecordPreEva
     @Autowired
     private RecordPreEvaluationDataService recordPreEvaluationDataService;
 
+    @Autowired
+    private RecordScenQuestionnaireService recordScenQuestionnaireService;
+
     @Override
     public PageResult<RecordPreEvaluation> queryListPage(RecordPreEvaluationRequest recordPreEvaluationRequest) {
         Condition condition = new Condition(RecordPreEvaluation.class);
@@ -56,6 +61,16 @@ public class RecordPreEvaluationServiceImpl extends AbstractService<RecordPreEva
         RecordPreEvaluation recordPreEvaluation = recordPreEvaluationInputRequest.getRecordPreEvaluation();
         recordPreEvaluation.setStatus(SysEnum.StatusEnum.STATUS_NORMAL.getCode());
         this.insertUseGeneratedKeys(recordPreEvaluation);
+        // 修改调查表的编辑状态
+        RecordScenQuestionnaire recordScenQuestionnaire = new RecordScenQuestionnaire();
+        recordScenQuestionnaire.setQuestionnaireId(recordPreEvaluationInputRequest.getQuestionnaireId());
+        recordScenQuestionnaire.setSceneId(recordPreEvaluationInputRequest.getRecordPreEvaluation().getSceneId());
+        recordScenQuestionnaire.setStatus(SysEnum.StatusEnum.STATUS_NORMAL.getCode());
+        recordScenQuestionnaire = recordScenQuestionnaireService.selectOne(recordScenQuestionnaire);
+        if (recordScenQuestionnaire != null) {
+            recordScenQuestionnaire.setEditStatus(SysEnum.EditStauts.EDIT_STATUS.getCode());
+            recordScenQuestionnaireService.updateByPrimaryKeySelective(recordScenQuestionnaire);
+        }
         List<RecordPreEvaluationData> recordPreEvaluationDataList = new LinkedList<>();
         for (RecordPreEvaluationData recordPreEvaluationData : recordPreEvaluationInputRequest.getRecordPreEvaluationDataList() ) {
             recordPreEvaluationData.setPreEvaluationId(recordPreEvaluation.getId());

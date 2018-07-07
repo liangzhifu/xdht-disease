@@ -8,8 +8,10 @@ import com.xdht.disease.sys.dao.RecordEmergencyFacilitiesMapper;
 import com.xdht.disease.sys.model.RecordEmergencyFacilities;
 import com.xdht.disease.sys.model.RecordEmergencyFacilitiesData;
 import com.xdht.disease.sys.model.RecordIndividualProtectiveEquipmentData;
+import com.xdht.disease.sys.model.RecordScenQuestionnaire;
 import com.xdht.disease.sys.service.RecordEmergencyFacilitiesDataService;
 import com.xdht.disease.sys.service.RecordEmergencyFacilitiesService;
+import com.xdht.disease.sys.service.RecordScenQuestionnaireService;
 import com.xdht.disease.sys.vo.request.RecordEmergencyFacilitiesInputRequest;
 import com.xdht.disease.sys.vo.request.RecordEmergencyFacilitiesRequest;
 import com.xdht.disease.sys.vo.response.RecordEmergencyFacilitiesDetailResponse;
@@ -34,6 +36,9 @@ public class RecordEmergencyFacilitiesServiceImpl extends AbstractService<Record
     private RecordEmergencyFacilitiesMapper recordEmergencyFacilitiesMapper;
     @Autowired
     private RecordEmergencyFacilitiesDataService recordEmergencyFacilitiesDataService;
+
+    @Autowired
+    private RecordScenQuestionnaireService recordScenQuestionnaireService;
 
     @Override
     public PageResult<RecordEmergencyFacilities> queryListPage(RecordEmergencyFacilitiesRequest recordEmergencyFacilitiesRequest) {
@@ -60,6 +65,17 @@ public class RecordEmergencyFacilitiesServiceImpl extends AbstractService<Record
         RecordEmergencyFacilities recordEmergencyFacilities = recordEmergencyFacilitiesInputRequest.getRecordEmergencyFacilities();
         recordEmergencyFacilities.setStatus(SysEnum.StatusEnum.STATUS_NORMAL.getCode());
         this.insertUseGeneratedKeys(recordEmergencyFacilities);
+
+        // 修改调查表的编辑状态
+        RecordScenQuestionnaire recordScenQuestionnaire = new RecordScenQuestionnaire();
+        recordScenQuestionnaire.setQuestionnaireId(recordEmergencyFacilitiesInputRequest.getQuestionnaireId());
+        recordScenQuestionnaire.setSceneId(recordEmergencyFacilitiesInputRequest.getRecordEmergencyFacilities().getSceneId());
+        recordScenQuestionnaire.setStatus(SysEnum.StatusEnum.STATUS_NORMAL.getCode());
+        recordScenQuestionnaire = recordScenQuestionnaireService.selectOne(recordScenQuestionnaire);
+        if (recordScenQuestionnaire != null) {
+            recordScenQuestionnaire.setEditStatus(SysEnum.EditStauts.EDIT_STATUS.getCode());
+            recordScenQuestionnaireService.updateByPrimaryKeySelective(recordScenQuestionnaire);
+        }
         List<RecordEmergencyFacilitiesData> recordEmergencyFacilitiesDataList = new LinkedList<>();
         if (recordEmergencyFacilitiesInputRequest.getRecordEmergencyFacilitiesDataList() != null) {
             for ( RecordEmergencyFacilitiesData recordEmergencyFacilitiesData : recordEmergencyFacilitiesInputRequest.getRecordEmergencyFacilitiesDataList()) {

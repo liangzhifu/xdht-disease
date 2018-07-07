@@ -7,8 +7,10 @@ import com.xdht.disease.sys.constant.SysEnum;
 import com.xdht.disease.sys.dao.RecordHazardFactorsMapper;
 import com.xdht.disease.sys.model.RecordHazardFactors;
 import com.xdht.disease.sys.model.RecordHazardFactorsData;
+import com.xdht.disease.sys.model.RecordScenQuestionnaire;
 import com.xdht.disease.sys.service.RecordHazardFactorsDataService;
 import com.xdht.disease.sys.service.RecordHazardFactorsService;
+import com.xdht.disease.sys.service.RecordScenQuestionnaireService;
 import com.xdht.disease.sys.vo.request.RecordHazardFactorsInputRequest;
 import com.xdht.disease.sys.vo.request.RecordHazardFactorsRequest;
 import com.xdht.disease.sys.vo.response.RecordHazardFactorsDetailResponse;
@@ -35,6 +37,8 @@ public class RecordHazardFactorsServiceImpl extends AbstractService<RecordHazard
     @Autowired
     private RecordHazardFactorsDataService recordHazardFactorsDataService;
 
+    @Autowired
+    private RecordScenQuestionnaireService recordScenQuestionnaireService;
 
     @Override
     public PageResult<RecordHazardFactors> queryListPage(RecordHazardFactorsRequest recordHazardFactorsRequest) {
@@ -62,6 +66,18 @@ public class RecordHazardFactorsServiceImpl extends AbstractService<RecordHazard
         RecordHazardFactors  recordHazardFactors =  recordHazardFactorsInputRequest.getRecordHazardFactors();
         recordHazardFactors.setStatus(SysEnum.StatusEnum.STATUS_NORMAL.getCode());
         this.insertUseGeneratedKeys(recordHazardFactors);
+
+        // 修改调查表的编辑状态
+        RecordScenQuestionnaire recordScenQuestionnaire = new RecordScenQuestionnaire();
+        recordScenQuestionnaire.setQuestionnaireId(recordHazardFactorsInputRequest.getQuestionnaireId());
+        recordScenQuestionnaire.setSceneId(recordHazardFactorsInputRequest.getRecordHazardFactors().getSceneId());
+        recordScenQuestionnaire.setStatus(SysEnum.StatusEnum.STATUS_NORMAL.getCode());
+        recordScenQuestionnaire = recordScenQuestionnaireService.selectOne(recordScenQuestionnaire);
+        if (recordScenQuestionnaire != null) {
+            recordScenQuestionnaire.setEditStatus(SysEnum.EditStauts.EDIT_STATUS.getCode());
+            recordScenQuestionnaireService.updateByPrimaryKeySelective(recordScenQuestionnaire);
+        }
+
         List<RecordHazardFactorsData> recordHazardFactorsDataList = new LinkedList<>();
         if (recordHazardFactorsInputRequest.getRecordHazardFactorsDataList() != null ) {
             for ( RecordHazardFactorsData recordHazardFactorsData : recordHazardFactorsInputRequest.getRecordHazardFactorsDataList()) {

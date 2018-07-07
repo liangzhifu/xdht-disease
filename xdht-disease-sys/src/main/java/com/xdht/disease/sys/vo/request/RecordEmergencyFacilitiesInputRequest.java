@@ -21,4 +21,6 @@ public class RecordEmergencyFacilitiesInputRequest {
     @ApiModelProperty(value = "应急设施调查表-内容表")
     private List<RecordEmergencyFacilitiesData> recordEmergencyFacilitiesDataList;
 
+    @ApiModelProperty(value = "调查表id")
+    private Long questionnaireId;
 }

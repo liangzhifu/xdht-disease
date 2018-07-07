@@ -57,6 +57,20 @@ public class RecordScenQuestionnaire {
     private Date updateDate;
 
     /**
+     * 编辑状态
+     */
+    @Column(name = "edit_status")
+    private String editStatus;
+
+    public String getEditStatus() {
+        return editStatus;
+    }
+
+    public void setEditStatus(String editStatus) {
+        this.editStatus = editStatus;
+    }
+
+    /**
      * @return id
      */
     public Long getId() {

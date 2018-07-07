@@ -5,12 +5,10 @@ import com.xdht.disease.common.core.AbstractService;
 import com.xdht.disease.common.core.PageResult;
 import com.xdht.disease.sys.constant.SysEnum;
 import com.xdht.disease.sys.dao.RecordFundsMapper;
-import com.xdht.disease.sys.model.RecordFunds;
-import com.xdht.disease.sys.model.RecordFundsData;
-import com.xdht.disease.sys.model.RecordPreEvaluation;
-import com.xdht.disease.sys.model.RecordPreEvaluationData;
+import com.xdht.disease.sys.model.*;
 import com.xdht.disease.sys.service.RecordFundsDataService;
 import com.xdht.disease.sys.service.RecordFundsService;
+import com.xdht.disease.sys.service.RecordScenQuestionnaireService;
 import com.xdht.disease.sys.vo.request.RecordFundsRequest;
 import com.xdht.disease.sys.vo.response.RecordFundsDetailResponse;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,6 +32,8 @@ public class RecordFundsServiceImpl extends AbstractService<RecordFunds> impleme
     private RecordFundsMapper recordFundsMapper;
     @Autowired
     private RecordFundsDataService recordFundsDataService;
+    @Autowired
+    private RecordScenQuestionnaireService recordScenQuestionnaireService;
 
     @Override
     public List<RecordFunds> queryList(RecordFundsRequest recordFundsRequest) {
@@ -75,6 +75,18 @@ public class RecordFundsServiceImpl extends AbstractService<RecordFunds> impleme
         RecordFunds recordFunds = recordFundsRequest.getRecordFunds();
         recordFunds.setStatus(SysEnum.StatusEnum.STATUS_NORMAL.getCode());
         this.insertUseGeneratedKeys(recordFunds);
+
+        // 修改调查表的编辑状态
+        RecordScenQuestionnaire recordScenQuestionnaire = new RecordScenQuestionnaire();
+        recordScenQuestionnaire.setQuestionnaireId(recordFundsRequest.getQuestionnaireId());
+        recordScenQuestionnaire.setSceneId(recordFundsRequest.getRecordFunds().getSceneId());
+        recordScenQuestionnaire.setStatus(SysEnum.StatusEnum.STATUS_NORMAL.getCode());
+        recordScenQuestionnaire = recordScenQuestionnaireService.selectOne(recordScenQuestionnaire);
+        if (recordScenQuestionnaire != null) {
+            recordScenQuestionnaire.setEditStatus(SysEnum.EditStauts.EDIT_STATUS.getCode());
+            recordScenQuestionnaireService.updateByPrimaryKeySelective(recordScenQuestionnaire);
+        }
+
         List<RecordFundsData> recordFundsDataList = new LinkedList<>();
         for (RecordFundsData recordFundsData : recordFundsRequest.getRecordFundsDataList() ) {
             recordFundsData.setFundsId(recordFunds.getId());

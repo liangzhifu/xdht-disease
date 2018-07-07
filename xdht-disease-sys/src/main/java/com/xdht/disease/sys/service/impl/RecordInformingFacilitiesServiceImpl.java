@@ -7,8 +7,10 @@ import com.xdht.disease.sys.constant.SysEnum;
 import com.xdht.disease.sys.dao.RecordInformingFacilitiesMapper;
 import com.xdht.disease.sys.model.RecordInformingFacilities;
 import com.xdht.disease.sys.model.RecordInformingFacilitiesData;
+import com.xdht.disease.sys.model.RecordScenQuestionnaire;
 import com.xdht.disease.sys.service.RecordInformingFacilitiesDataService;
 import com.xdht.disease.sys.service.RecordInformingFacilitiesService;
+import com.xdht.disease.sys.service.RecordScenQuestionnaireService;
 import com.xdht.disease.sys.vo.request.RecordInformingFacilitiesInputRequest;
 import com.xdht.disease.sys.vo.request.RecordInformingFacilitiesRequest;
 import com.xdht.disease.sys.vo.response.RecordInformingFacilitiesDetailResponse;
@@ -35,6 +37,9 @@ public class RecordInformingFacilitiesServiceImpl extends AbstractService<Record
     @Autowired
     private RecordInformingFacilitiesDataService recordInformingFacilitiesDataService;
 
+    @Autowired
+    private RecordScenQuestionnaireService recordScenQuestionnaireService;
+
     @Override
     public PageResult<RecordInformingFacilities> queryListPage(RecordInformingFacilitiesRequest recordRequest) {
         Condition condition = new Condition(RecordInformingFacilities.class);
@@ -60,6 +65,18 @@ public class RecordInformingFacilitiesServiceImpl extends AbstractService<Record
         RecordInformingFacilities recordInformingFacilities = recordInformingFacilitiesInputRequest.getRecordInformingFacilities();
         recordInformingFacilities.setStatus(SysEnum.StatusEnum.STATUS_NORMAL.getCode());
         this.insertUseGeneratedKeys(recordInformingFacilities);
+
+        // 修改调查表的编辑状态
+        RecordScenQuestionnaire recordScenQuestionnaire = new RecordScenQuestionnaire();
+        recordScenQuestionnaire.setQuestionnaireId(recordInformingFacilitiesInputRequest.getQuestionnaireId());
+        recordScenQuestionnaire.setSceneId(recordInformingFacilitiesInputRequest.getRecordInformingFacilities().getSceneId());
+        recordScenQuestionnaire.setStatus(SysEnum.StatusEnum.STATUS_NORMAL.getCode());
+        recordScenQuestionnaire = recordScenQuestionnaireService.selectOne(recordScenQuestionnaire);
+        if (recordScenQuestionnaire != null) {
+            recordScenQuestionnaire.setEditStatus(SysEnum.EditStauts.EDIT_STATUS.getCode());
+            recordScenQuestionnaireService.updateByPrimaryKeySelective(recordScenQuestionnaire);
+        }
+
         List<RecordInformingFacilitiesData> recordInformingFacilitiesDataList = new LinkedList<>();
        if (recordInformingFacilitiesInputRequest.getRecordInformingFacilitiesDataList() != null ) {
            for ( RecordInformingFacilitiesData recordInformingFacilitiesData :  recordInformingFacilitiesInputRequest.getRecordInformingFacilitiesDataList()) {

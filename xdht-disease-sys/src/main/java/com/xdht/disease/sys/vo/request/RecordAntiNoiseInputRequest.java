@@ -21,4 +21,7 @@ public class RecordAntiNoiseInputRequest {
     @ApiModelProperty(value = "防噪声设施调查表-内容表")
     private List<RecordAntiNoiseFacilitiesData> recordAntiNoiseFacilitiesDataList;
 
+    @ApiModelProperty(value = "调查表id")
+    private Long questionnaireId;
+
 }

@@ -5,12 +5,10 @@ import com.xdht.disease.common.core.AbstractService;
 import com.xdht.disease.common.core.PageResult;
 import com.xdht.disease.sys.constant.SysEnum;
 import com.xdht.disease.sys.dao.RecordBuildingBaseMapper;
-import com.xdht.disease.sys.model.RecordBuildingBase;
-import com.xdht.disease.sys.model.RecordBuildingBaseData;
-import com.xdht.disease.sys.model.RecordPostPersonnel;
-import com.xdht.disease.sys.model.RecordPostPersonnelData;
+import com.xdht.disease.sys.model.*;
 import com.xdht.disease.sys.service.RecordBuildingBaseDataService;
 import com.xdht.disease.sys.service.RecordBuildingBaseService;
+import com.xdht.disease.sys.service.RecordScenQuestionnaireService;
 import com.xdht.disease.sys.vo.request.RecordBuildingBaseRequest;
 import com.xdht.disease.sys.vo.response.RecordBuildingBaseDetailResponse;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,6 +32,9 @@ public class RecordBuildingBaseServiceImpl extends AbstractService<RecordBuildin
     private RecordBuildingBaseMapper recordBuildingBaseMapper;
     @Autowired
     private RecordBuildingBaseDataService recordBuildingBaseDataService;
+
+    @Autowired
+    private RecordScenQuestionnaireService recordScenQuestionnaireService;
 
     @Override
     public List<RecordBuildingBase> queryList(RecordBuildingBaseRequest recordBuildingBaseRequest) {
@@ -75,6 +76,16 @@ public class RecordBuildingBaseServiceImpl extends AbstractService<RecordBuildin
         RecordBuildingBase recordBuildingBase = recordBuildingBaseRequest.getRecordBuildingBase();
         recordBuildingBase.setStatus(SysEnum.StatusEnum.STATUS_NORMAL.getCode());
         this.insertUseGeneratedKeys(recordBuildingBase);
+        // 修改调查表的编辑状态
+        RecordScenQuestionnaire recordScenQuestionnaire = new RecordScenQuestionnaire();
+        recordScenQuestionnaire.setQuestionnaireId(recordBuildingBaseRequest.getQuestionnaireId());
+        recordScenQuestionnaire.setSceneId(recordBuildingBaseRequest.getRecordBuildingBase().getSceneId());
+        recordScenQuestionnaire.setStatus(SysEnum.StatusEnum.STATUS_NORMAL.getCode());
+        recordScenQuestionnaire = recordScenQuestionnaireService.selectOne(recordScenQuestionnaire);
+        if (recordScenQuestionnaire != null) {
+            recordScenQuestionnaire.setEditStatus(SysEnum.EditStauts.EDIT_STATUS.getCode());
+            recordScenQuestionnaireService.updateByPrimaryKeySelective(recordScenQuestionnaire);
+        }
         List<RecordBuildingBaseData> recordBuildingBaseDataList = new LinkedList<>();
         if (recordBuildingBaseRequest.getRecordBuildingBaseDataList() != null) {
             for (RecordBuildingBaseData recordBuildingBaseData : recordBuildingBaseRequest.getRecordBuildingBaseDataList()) {

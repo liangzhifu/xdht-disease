@@ -21,4 +21,6 @@ public class RecordProductInputRequest {
     @ApiModelProperty(value = "物料及产品调查表-内容表")
     private List<RecordProductData> recordProductDataList;
 
+    @ApiModelProperty(value = "调查表id")
+    private Long questionnaireId;
 }

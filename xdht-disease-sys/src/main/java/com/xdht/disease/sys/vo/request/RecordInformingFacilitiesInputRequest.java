@@ -21,4 +21,6 @@ public class RecordInformingFacilitiesInputRequest {
     @ApiModelProperty(value = "职业病危害告知设施调查表-内容表")
     private List<RecordInformingFacilitiesData> recordInformingFacilitiesDataList;
 
+    @ApiModelProperty(value = "调查表id")
+    private Long questionnaireId;
 }

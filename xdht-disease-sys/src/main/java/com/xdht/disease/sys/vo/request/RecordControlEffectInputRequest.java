@@ -21,4 +21,6 @@ public class RecordControlEffectInputRequest {
     @ApiModelProperty(value = "建设项目内容表（控制效果评价）")
     private List<RecordControlEffectData> recordControlEffectDataList;
 
+    @ApiModelProperty(value = "调查表id")
+    private Long questionnaireId;
 }

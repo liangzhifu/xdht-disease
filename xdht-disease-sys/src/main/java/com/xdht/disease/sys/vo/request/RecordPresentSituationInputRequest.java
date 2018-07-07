@@ -21,4 +21,6 @@ public class RecordPresentSituationInputRequest {
     @ApiModelProperty(value = "用人单位概况调查表（现状评价）内容表")
     private List<RecordPresentSituationData> recordPresentSituationDataList;
 
+    @ApiModelProperty(value = "调查表id")
+    private Long questionnaireId;
 }

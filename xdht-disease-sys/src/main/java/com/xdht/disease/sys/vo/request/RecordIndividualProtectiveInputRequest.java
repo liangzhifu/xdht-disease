@@ -21,4 +21,6 @@ public class RecordIndividualProtectiveInputRequest {
     @ApiModelProperty(value = "个体防护用品调查表-内容表")
     private List<RecordIndividualProtectiveEquipmentData> recordIndividualProtectiveDataList;
 
+    @ApiModelProperty(value = "调查表id")
+    private Long questionnaireId;
 }

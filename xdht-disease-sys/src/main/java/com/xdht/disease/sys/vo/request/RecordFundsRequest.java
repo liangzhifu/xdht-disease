@@ -19,4 +19,7 @@ public class RecordFundsRequest {
     @ApiModelProperty(value = "职业病防治经费投入情况调查表--调查内容")
     private List<RecordFundsData> recordFundsDataList;
 
+    @ApiModelProperty(value = "调查表id")
+    private Long questionnaireId;
+
 }

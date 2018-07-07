@@ -87,6 +87,26 @@ public class SysEnum {
         }
 
     }
+    public enum EditStauts{
+        ADD_STATUS("0", "添加"),
+        EDIT_STATUS("1", "编辑");
+
+        private String code;
+        private String msg;
+
+        public String getCode() {
+            return code;
+        }
+        public String getMsg() {
+            return msg;
+        }
+
+        EditStauts(String code, String msg) {
+            this.code = code;
+            this.msg = msg;
+        }
+
+    }
 
     public enum StatusEnum {
 

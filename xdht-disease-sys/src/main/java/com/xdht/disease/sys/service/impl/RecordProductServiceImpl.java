@@ -7,8 +7,10 @@ import com.xdht.disease.sys.constant.SysEnum;
 import com.xdht.disease.sys.dao.RecordProductMapper;
 import com.xdht.disease.sys.model.RecordProduct;
 import com.xdht.disease.sys.model.RecordProductData;
+import com.xdht.disease.sys.model.RecordScenQuestionnaire;
 import com.xdht.disease.sys.service.RecordProductDataService;
 import com.xdht.disease.sys.service.RecordProductService;
+import com.xdht.disease.sys.service.RecordScenQuestionnaireService;
 import com.xdht.disease.sys.vo.request.RecordProductInputRequest;
 import com.xdht.disease.sys.vo.request.RecordProductRequest;
 import com.xdht.disease.sys.vo.response.RecordProductDetailResponse;
@@ -34,6 +36,9 @@ public class RecordProductServiceImpl extends AbstractService<RecordProduct> imp
 
     @Autowired
     private RecordProductDataService recordProductDataService;
+
+    @Autowired
+    private RecordScenQuestionnaireService recordScenQuestionnaireService;
 
 
     @Override
@@ -61,6 +66,18 @@ public class RecordProductServiceImpl extends AbstractService<RecordProduct> imp
         RecordProduct recordProduct = recordProductInputRequest.getRecordProduct();
         recordProduct.setStatus(SysEnum.StatusEnum.STATUS_NORMAL.getCode());
         this.insertUseGeneratedKeys(recordProduct);
+
+        // 修改调查表的编辑状态
+        RecordScenQuestionnaire recordScenQuestionnaire = new RecordScenQuestionnaire();
+        recordScenQuestionnaire.setQuestionnaireId(recordProductInputRequest.getQuestionnaireId());
+        recordScenQuestionnaire.setSceneId(recordProductInputRequest.getRecordProduct().getSceneId());
+        recordScenQuestionnaire.setStatus(SysEnum.StatusEnum.STATUS_NORMAL.getCode());
+        recordScenQuestionnaire = recordScenQuestionnaireService.selectOne(recordScenQuestionnaire);
+        if (recordScenQuestionnaire != null) {
+            recordScenQuestionnaire.setEditStatus(SysEnum.EditStauts.EDIT_STATUS.getCode());
+            recordScenQuestionnaireService.updateByPrimaryKeySelective(recordScenQuestionnaire);
+        }
+
         List<RecordProductData> recordProductDataList = new LinkedList<>();
         if (recordProductInputRequest.getRecordProductDataList().size() > 0){
             for (RecordProductData recordProductData : recordProductInputRequest.getRecordProductDataList()) {
