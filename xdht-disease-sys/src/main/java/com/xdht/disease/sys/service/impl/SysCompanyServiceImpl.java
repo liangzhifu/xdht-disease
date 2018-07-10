@@ -43,6 +43,7 @@ public class SysCompanyServiceImpl extends AbstractService<SysCompany> implement
         if (sysCompanyRequest.getEstablishDate() != null && ! "".equals(sysCompanyRequest.getEstablishDate())){
             condition.getOredCriteria().get(0).andEqualTo("establishDate",sysCompanyRequest.getEstablishDate());
         }
+        condition.orderBy("createDate").desc();
         PageHelper.startPage(sysCompanyRequest.getPageNumber(), sysCompanyRequest.getPageSize());
         List<SysCompany> dataList = this.selectByCondition(condition);
         Integer count = this.selectCountByCondition(condition);

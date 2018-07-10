@@ -30,13 +30,13 @@ public class SysKnowledgeCatalogController {
     private SysKnowledgeCatalogService sysKnowledgeCatalogService;
 
     @RequestMapping(value = "/list", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
-    @ApiOperation(value = "查询单位部门列表")
+    @ApiOperation(value = "查询知识库目录列表")
     public ResponseEntity<Result<List<SysKnowledgeCatalog>>> companyOfficeList(@RequestBody SysKnowledgeCatalogRequest sysKnowledgeCatalogRequest) {
         return new ResponseEntity<>(Result.ok(sysKnowledgeCatalogService.querySysKnowledgeCatalogList(sysKnowledgeCatalogRequest)), HttpStatus.OK);
     }
 
     @RequestMapping(value = "/add", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
-    @ApiOperation(value = "添加单位部门")
+    @ApiOperation(value = "添加知识库目录")
     @Authorization
     @ApiImplicitParams({
             @ApiImplicitParam(name = "authorization", value = "authorization", required = true, dataType = "string", paramType = "header"),
@@ -47,7 +47,7 @@ public class SysKnowledgeCatalogController {
     }
 
     @RequestMapping(value = "/delete", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
-    @ApiOperation(value = "删除单位部门")
+    @ApiOperation(value = "删除知识库目录")
     @Authorization
     @ApiImplicitParams({
             @ApiImplicitParam(name = "authorization", value = "authorization", required = true, dataType = "string", paramType = "header"),
@@ -58,7 +58,7 @@ public class SysKnowledgeCatalogController {
     }
 
     @RequestMapping(value = "/update", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
-    @ApiOperation(value = "修改单位部门")
+    @ApiOperation(value = "修改知识库目录")
     @Authorization
     @ApiImplicitParams({
             @ApiImplicitParam(name = "authorization", value = "authorization", required = true, dataType = "string", paramType = "header"),
@@ -69,7 +69,7 @@ public class SysKnowledgeCatalogController {
     }
 
     @RequestMapping(value = "/detail/{id}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
-    @ApiOperation(value = "单位部门详情")
+    @ApiOperation(value = "知识库目录详情")
     public ResponseEntity<Result<SysKnowledgeCatalog>> getDetail(@PathVariable Long id) {
         return new ResponseEntity<>(Result.ok(sysKnowledgeCatalogService.selectByPrimaryKey(id)), HttpStatus.OK);
     }

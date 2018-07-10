@@ -67,6 +67,7 @@ public class SysEmployeeServiceImpl extends AbstractService<SysEmployee> impleme
         if(sysEmployeeRequest.getEmpMarriage() != null && !"".equals(sysEmployeeRequest.getEmpMarriage())){
             condition.getOredCriteria().get(0).andEqualTo("empMarriage",sysEmployeeRequest.getEmpMarriage());
         }
+        condition.orderBy("createDate").desc();
         PageHelper.startPage(sysEmployeeRequest.getPageNumber(), sysEmployeeRequest.getPageSize());
         List<SysEmployee> dataList = this.selectByCondition(condition);
         Integer total = this.selectCountByCondition(condition);

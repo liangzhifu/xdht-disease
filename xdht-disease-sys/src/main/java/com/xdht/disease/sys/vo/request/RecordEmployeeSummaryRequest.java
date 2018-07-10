@@ -18,4 +18,7 @@ public class RecordEmployeeSummaryRequest {
     @ApiModelProperty(value = "分页开始位置")
     private Integer start;
 
+    @ApiModelProperty(value = "职工姓名")
+    private String empName;
+
 }
