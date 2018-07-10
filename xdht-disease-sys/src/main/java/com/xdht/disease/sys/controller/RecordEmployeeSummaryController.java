@@ -64,4 +64,9 @@ public class RecordEmployeeSummaryController {
     public  ResponseEntity<Result<RecordEmployeeSummaryResponse>> getRecordEmployeeSummaryDetail(@PathVariable Long id) {
         return new ResponseEntity<>(Result.ok(recordEmployeeSummaryService.getRecordEmployeeSummaryDetail(id)), HttpStatus.OK);
     }
+    @RequestMapping(value = "/echars/detail/{id}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    @ApiOperation(value = "查询企业体检详情")
+    public  ResponseEntity<Result<RecordEmployeeSummaryResponse>> getRecordEmployeeSummaryEcharsDetail(@PathVariable Long id) {
+        return new ResponseEntity<>(Result.ok(recordEmployeeSummaryService.getRecordEmployeeSummaryEcharsDetail(id)), HttpStatus.OK);
+    }
 }

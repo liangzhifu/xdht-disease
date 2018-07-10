@@ -5,6 +5,8 @@ import com.xdht.disease.common.core.Service;
 import com.xdht.disease.sys.vo.request.RecordEmployeeSummaryRequest;
 import com.xdht.disease.sys.vo.response.RecordEmployeeSummaryResponse;
 
+import java.util.List;
+
 
 /**
  * Created by lzf on 2018/06/21.
@@ -43,4 +45,10 @@ public interface RecordEmployeeSummaryService extends Service<RecordEmployeeSumm
      */
     RecordEmployeeSummaryResponse getRecordEmployeeSummaryDetail(Long id);
 
+    /**
+     * 根据职工id查询职工体检信息（最近3年的，如果同一年有多个体检，取最后一次体检的信息）
+     * @param id 职工id
+     * @return 返回结果
+     */
+    List<RecordEmployeeSummaryResponse> getRecordEmployeeSummaryEcharsDetail(Long id);
 }
