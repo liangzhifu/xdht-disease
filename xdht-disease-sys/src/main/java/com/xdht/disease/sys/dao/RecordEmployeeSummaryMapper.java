@@ -30,4 +30,10 @@ public interface RecordEmployeeSummaryMapper extends Mapper<RecordEmployeeSummar
      */
     RecordEmployeeSummaryResponse selectRecordEmployeeSummaryDetail(Long id);
 
+    /**
+     * 查询个人最近3年的体检信息
+     * @param empId 员工id
+     * @return 返回结果
+     */
+    List<RecordEmployeeSummaryResponse> selectRecordEmployeeSummaryEcharsDetail(Long empId);
 }

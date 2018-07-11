@@ -18,4 +18,7 @@ public class RecordPreEvaluationInputRequest {
     @ApiModelProperty(value = "建设项目内容表")
     private List<RecordPreEvaluationData> recordPreEvaluationDataList;
 
+    @ApiModelProperty(value = "调查表id")
+    private Long questionnaireId;
+
 }

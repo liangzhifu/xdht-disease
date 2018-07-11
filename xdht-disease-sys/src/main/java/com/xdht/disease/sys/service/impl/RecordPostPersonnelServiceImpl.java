@@ -7,8 +7,10 @@ import com.xdht.disease.sys.constant.SysEnum;
 import com.xdht.disease.sys.dao.RecordPostPersonnelMapper;
 import com.xdht.disease.sys.model.RecordPostPersonnel;
 import com.xdht.disease.sys.model.RecordPostPersonnelData;
+import com.xdht.disease.sys.model.RecordScenQuestionnaire;
 import com.xdht.disease.sys.service.RecordPostPersonnelDataService;
 import com.xdht.disease.sys.service.RecordPostPersonnelService;
+import com.xdht.disease.sys.service.RecordScenQuestionnaireService;
 import com.xdht.disease.sys.vo.request.RecordPostPersonnelInputRequest;
 import com.xdht.disease.sys.vo.request.RecordPostPersonnelRequest;
 import com.xdht.disease.sys.vo.response.RecordPostPersonnelDetailResponse;
@@ -35,6 +37,9 @@ public class RecordPostPersonnelServiceImpl extends AbstractService<RecordPostPe
     @Autowired
     private RecordPostPersonnelDataService recordPostPersonnelDataService;
 
+    @Autowired
+    private RecordScenQuestionnaireService recordScenQuestionnaireService;
+
     @Override
     public PageResult<RecordPostPersonnel> queryListPage(RecordPostPersonnelRequest recordRequest) {
         Condition condition = new Condition(RecordPostPersonnel.class);
@@ -60,6 +65,18 @@ public class RecordPostPersonnelServiceImpl extends AbstractService<RecordPostPe
         RecordPostPersonnel recordPostPersonnel = recordPostPersonnelInputRequest.getRecordPostPersonnel();
         recordPostPersonnel.setStatus(SysEnum.StatusEnum.STATUS_NORMAL.getCode());
         this.insertUseGeneratedKeys(recordPostPersonnel);
+
+        // 修改调查表的编辑状态
+        RecordScenQuestionnaire recordScenQuestionnaire = new RecordScenQuestionnaire();
+        recordScenQuestionnaire.setQuestionnaireId(recordPostPersonnelInputRequest.getQuestionnaireId());
+        recordScenQuestionnaire.setSceneId(recordPostPersonnelInputRequest.getRecordPostPersonnel().getSceneId());
+        recordScenQuestionnaire.setStatus(SysEnum.StatusEnum.STATUS_NORMAL.getCode());
+        recordScenQuestionnaire = recordScenQuestionnaireService.selectOne(recordScenQuestionnaire);
+        if (recordScenQuestionnaire != null) {
+            recordScenQuestionnaire.setEditStatus(SysEnum.EditStauts.EDIT_STATUS.getCode());
+            recordScenQuestionnaireService.updateByPrimaryKeySelective(recordScenQuestionnaire);
+        }
+
         List<RecordPostPersonnelData> recordPostPersonnelDataList = new LinkedList<>();
         if (recordPostPersonnelInputRequest.getRecordPostPersonnelDataList() != null) {
             for (RecordPostPersonnelData recordPostPersonnelData : recordPostPersonnelInputRequest.getRecordPostPersonnelDataList()) {

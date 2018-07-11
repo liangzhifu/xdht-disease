@@ -7,8 +7,10 @@ import com.xdht.disease.sys.constant.SysEnum;
 import com.xdht.disease.sys.dao.RecordAntiNoiseFacilitiesMapper;
 import com.xdht.disease.sys.model.RecordAntiNoiseFacilities;
 import com.xdht.disease.sys.model.RecordAntiNoiseFacilitiesData;
+import com.xdht.disease.sys.model.RecordScenQuestionnaire;
 import com.xdht.disease.sys.service.RecordAntiNoiseFacilitiesDataService;
 import com.xdht.disease.sys.service.RecordAntiNoiseFacilitiesService;
+import com.xdht.disease.sys.service.RecordScenQuestionnaireService;
 import com.xdht.disease.sys.vo.request.RecordAntiNoiseFacilitiesRequest;
 import com.xdht.disease.sys.vo.request.RecordAntiNoiseInputRequest;
 import com.xdht.disease.sys.vo.response.RecordAntiNoiseDetailResponse;
@@ -35,6 +37,8 @@ public class RecordAntiNoiseFacilitiesServiceImpl extends AbstractService<Record
     @Autowired
     private RecordAntiNoiseFacilitiesDataService recordAntiNoiseFacilitiesDataService;
 
+    @Autowired
+    private RecordScenQuestionnaireService recordScenQuestionnaireService;
 
     @Override
     public PageResult<RecordAntiNoiseFacilities> queryListPage(RecordAntiNoiseFacilitiesRequest recordAntiNoiseFacilitiesRequest) {
@@ -61,6 +65,16 @@ public class RecordAntiNoiseFacilitiesServiceImpl extends AbstractService<Record
         RecordAntiNoiseFacilities recordAntiNoiseFacilities = recordAntiNoiseInputRequest.getRecordAntiNoiseFacilities();
         recordAntiNoiseFacilities.setStatus(SysEnum.StatusEnum.STATUS_NORMAL.getCode());
         this.insertUseGeneratedKeys(recordAntiNoiseFacilities);
+        // 修改调查表的编辑状态
+        RecordScenQuestionnaire recordScenQuestionnaire = new RecordScenQuestionnaire();
+        recordScenQuestionnaire.setQuestionnaireId(recordAntiNoiseInputRequest.getQuestionnaireId());
+        recordScenQuestionnaire.setSceneId(recordAntiNoiseInputRequest.getRecordAntiNoiseFacilities().getSceneId());
+        recordScenQuestionnaire.setStatus(SysEnum.StatusEnum.STATUS_NORMAL.getCode());
+        recordScenQuestionnaire = recordScenQuestionnaireService.selectOne(recordScenQuestionnaire);
+        if (recordScenQuestionnaire != null) {
+            recordScenQuestionnaire.setEditStatus(SysEnum.EditStauts.EDIT_STATUS.getCode());
+            recordScenQuestionnaireService.updateByPrimaryKeySelective(recordScenQuestionnaire);
+        }
         List<RecordAntiNoiseFacilitiesData> recordAntiNoiseFacilitiesDataList = new LinkedList<>();
         if (recordAntiNoiseInputRequest.getRecordAntiNoiseFacilitiesDataList() != null) {
             for ( RecordAntiNoiseFacilitiesData recordAntiNoiseFacilitiesData : recordAntiNoiseInputRequest.getRecordAntiNoiseFacilitiesDataList()) {

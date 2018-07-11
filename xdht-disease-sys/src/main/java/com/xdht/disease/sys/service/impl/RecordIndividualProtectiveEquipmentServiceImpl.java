@@ -7,8 +7,10 @@ import com.xdht.disease.sys.constant.SysEnum;
 import com.xdht.disease.sys.dao.RecordIndividualProtectiveEquipmentMapper;
 import com.xdht.disease.sys.model.RecordIndividualProtectiveEquipment;
 import com.xdht.disease.sys.model.RecordIndividualProtectiveEquipmentData;
+import com.xdht.disease.sys.model.RecordScenQuestionnaire;
 import com.xdht.disease.sys.service.RecordIndividualProtectiveEquipmentDataService;
 import com.xdht.disease.sys.service.RecordIndividualProtectiveEquipmentService;
+import com.xdht.disease.sys.service.RecordScenQuestionnaireService;
 import com.xdht.disease.sys.vo.request.RecordIndividualProtectiveEquipmentRequest;
 import com.xdht.disease.sys.vo.request.RecordIndividualProtectiveInputRequest;
 import com.xdht.disease.sys.vo.response.RecordIndividualProtectiveDetailResponse;
@@ -33,6 +35,9 @@ public class RecordIndividualProtectiveEquipmentServiceImpl extends AbstractServ
     private RecordIndividualProtectiveEquipmentMapper recordMapper;
     @Autowired
     private RecordIndividualProtectiveEquipmentDataService recordIndividualProtectiveEquipmentDataService;
+
+    @Autowired
+    private RecordScenQuestionnaireService recordScenQuestionnaireService;
 
     @Override
     public PageResult<RecordIndividualProtectiveEquipment> queryListPage(RecordIndividualProtectiveEquipmentRequest recordRequest) {
@@ -60,6 +65,18 @@ public class RecordIndividualProtectiveEquipmentServiceImpl extends AbstractServ
         RecordIndividualProtectiveEquipment recordIndividualProtective = recordIndividualProtectiveInputRequest.getRecordIndividualProtective();
         recordIndividualProtective.setStatus(SysEnum.StatusEnum.STATUS_NORMAL.getCode());
         this.insertUseGeneratedKeys(recordIndividualProtective);
+
+        // 修改调查表的编辑状态
+        RecordScenQuestionnaire recordScenQuestionnaire = new RecordScenQuestionnaire();
+        recordScenQuestionnaire.setQuestionnaireId(recordIndividualProtectiveInputRequest.getQuestionnaireId());
+        recordScenQuestionnaire.setSceneId(recordIndividualProtectiveInputRequest.getRecordIndividualProtective().getSceneId());
+        recordScenQuestionnaire.setStatus(SysEnum.StatusEnum.STATUS_NORMAL.getCode());
+        recordScenQuestionnaire = recordScenQuestionnaireService.selectOne(recordScenQuestionnaire);
+        if (recordScenQuestionnaire != null) {
+            recordScenQuestionnaire.setEditStatus(SysEnum.EditStauts.EDIT_STATUS.getCode());
+            recordScenQuestionnaireService.updateByPrimaryKeySelective(recordScenQuestionnaire);
+        }
+
         List<RecordIndividualProtectiveEquipmentData> recordIndividualProtectiveDataList = new LinkedList<>();
         if (recordIndividualProtectiveInputRequest.getRecordIndividualProtectiveDataList() != null) {
             for ( RecordIndividualProtectiveEquipmentData recordIndividualProtectiveData :  recordIndividualProtectiveInputRequest.getRecordIndividualProtectiveDataList()) {

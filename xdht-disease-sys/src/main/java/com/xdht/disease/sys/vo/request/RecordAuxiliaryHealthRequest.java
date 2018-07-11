@@ -19,6 +19,7 @@ public class RecordAuxiliaryHealthRequest {
     @ApiModelProperty(value = "辅助卫生用室调查表--调查内容")
     private List<RecordAuxiliaryHealthData> recordAuxiliaryHealthDataList;
 
-
+    @ApiModelProperty(value = "调查表id")
+    private Long questionnaireId;
 
 }

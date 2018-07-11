@@ -21,4 +21,7 @@ public class RecordTemperatureInputRequest {
     @ApiModelProperty(value = "防高温设施调查表-内容表")
     private List<RecordTemperatureProtectionFacilitiesData> recordTemperatureDataList;
 
+    @ApiModelProperty(value = "调查表id")
+    private Long questionnaireId;
+
 }

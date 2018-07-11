@@ -21,4 +21,6 @@ public class RecordHealthManagementInputRequest {
     @ApiModelProperty(value = "职业卫生管理情况调查表")
     private List<RecordHealthManagementData> recordHealthManagementDataList;
 
+    @ApiModelProperty(value = "调查表id")
+    private Long questionnaireId;
 }

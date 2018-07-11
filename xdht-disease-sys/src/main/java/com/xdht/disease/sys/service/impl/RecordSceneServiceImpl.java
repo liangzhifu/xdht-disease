@@ -89,6 +89,7 @@ public class RecordSceneServiceImpl extends AbstractService<RecordScene> impleme
             for (RecordScenQuestionnaire recordScenQuestionnaire : recordSceneInputRequest.getRecordScenQuestionnaireList()) {
                 recordScenQuestionnaire.setSceneId(recordScene.getId());
                 recordScenQuestionnaire.setStatus(SysEnum.StatusEnum.STATUS_NORMAL.getCode());
+                recordScenQuestionnaire.setEditStatus(SysEnum.EditStauts.ADD_STATUS.getCode());
                 recordScenQuestionnaireList.add(recordScenQuestionnaire);
             }
             this.recordScenQuestionnaireService.insertList(recordScenQuestionnaireList);

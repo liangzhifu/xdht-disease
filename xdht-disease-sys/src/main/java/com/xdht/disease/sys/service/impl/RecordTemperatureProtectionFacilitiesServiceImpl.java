@@ -5,8 +5,10 @@ import com.xdht.disease.common.core.AbstractService;
 import com.xdht.disease.common.core.PageResult;
 import com.xdht.disease.sys.constant.SysEnum;
 import com.xdht.disease.sys.dao.RecordTemperatureProtectionFacilitiesMapper;
+import com.xdht.disease.sys.model.RecordScenQuestionnaire;
 import com.xdht.disease.sys.model.RecordTemperatureProtectionFacilities;
 import com.xdht.disease.sys.model.RecordTemperatureProtectionFacilitiesData;
+import com.xdht.disease.sys.service.RecordScenQuestionnaireService;
 import com.xdht.disease.sys.service.RecordTemperatureProtectionFacilitiesDataService;
 import com.xdht.disease.sys.service.RecordTemperatureProtectionFacilitiesService;
 import com.xdht.disease.sys.vo.request.RecordTemperatureInputRequest;
@@ -35,6 +37,9 @@ public class RecordTemperatureProtectionFacilitiesServiceImpl extends AbstractSe
     @Autowired
     private RecordTemperatureProtectionFacilitiesDataService recordTemperatureDataService;
 
+    @Autowired
+    private RecordScenQuestionnaireService recordScenQuestionnaireService;
+
 
     @Override
     public PageResult<RecordTemperatureProtectionFacilities> queryListPage(RecordTemperatureProtectionFacilitiesRequest recordRequest) {
@@ -62,6 +67,18 @@ public class RecordTemperatureProtectionFacilitiesServiceImpl extends AbstractSe
         RecordTemperatureProtectionFacilities recordTemperature = recordTemperatureInputRequest.getRecordTemperature();
         recordTemperature.setStatus(SysEnum.StatusEnum.STATUS_NORMAL.getCode());
         this.recordMapper.insertUseGeneratedKeys(recordTemperature);
+
+        // 修改调查表的编辑状态
+        RecordScenQuestionnaire recordScenQuestionnaire = new RecordScenQuestionnaire();
+        recordScenQuestionnaire.setQuestionnaireId(recordTemperatureInputRequest.getQuestionnaireId());
+        recordScenQuestionnaire.setSceneId(recordTemperatureInputRequest.getRecordTemperature().getSceneId());
+        recordScenQuestionnaire.setStatus(SysEnum.StatusEnum.STATUS_NORMAL.getCode());
+        recordScenQuestionnaire = recordScenQuestionnaireService.selectOne(recordScenQuestionnaire);
+        if (recordScenQuestionnaire != null) {
+            recordScenQuestionnaire.setEditStatus(SysEnum.EditStauts.EDIT_STATUS.getCode());
+            recordScenQuestionnaireService.updateByPrimaryKeySelective(recordScenQuestionnaire);
+        }
+
         List<RecordTemperatureProtectionFacilitiesData> recordTemperatureDataList = new LinkedList<>();
        if (recordTemperatureInputRequest.getRecordTemperatureDataList() != null) {
            for ( RecordTemperatureProtectionFacilitiesData recordTemperatureData : recordTemperatureInputRequest.getRecordTemperatureDataList()) {

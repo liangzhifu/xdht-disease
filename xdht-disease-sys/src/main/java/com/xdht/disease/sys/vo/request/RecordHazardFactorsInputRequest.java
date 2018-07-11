@@ -21,4 +21,6 @@ public class RecordHazardFactorsInputRequest {
     @ApiModelProperty(value = "职业病危害因素调查表-内容表")
     private List<RecordHazardFactorsData> recordHazardFactorsDataList;
 
+    @ApiModelProperty(value = "调查表id")
+    private Long questionnaireId;
 }

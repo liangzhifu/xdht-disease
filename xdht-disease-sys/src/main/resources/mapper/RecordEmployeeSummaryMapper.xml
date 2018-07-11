@@ -163,4 +163,62 @@
     from `record_employee_summary` res
     where res.id = #{id}
   </select>
+  <select id="selectRecordEmployeeSummaryEcharsDetail" parameterType="java.lang.Long" resultType="com.xdht.disease.sys.vo.response.RecordEmployeeSummaryResponse">
+    select res.id as id,
+    res.emp_id as empId,
+    (SELECT se.emp_name FROM sys_employee se WHERE se.id = res.`emp_id`) AS empName,
+    (SELECT se.emp_sex FROM sys_employee se WHERE se.id = res.`emp_id`) AS empSex,
+    res.office_id as officeId,
+    (SELECT sco.office_name FROM sys_company_office sco WHERE sco.id = res.`office_id`) AS officeName,
+    (SELECT sco.company_id FROM sys_company_office sco WHERE sco.id = res.`office_id`) AS companyId,
+    (SELECT sc.company_name FROM sys_company_office sco, sys_company sc WHERE sco.company_id = sc.id AND sco.id = res.`office_id`) AS companyName,
+    res.work_type as workType,
+    (SELECT sd.`dictionary_name` FROM sys_dictionary sd WHERE sd.`id` = res.work_type) as workTypeName,
+    res.inspect_date as inspectDate,
+    res.inspect as inspect,
+    res.contact_time as contactTime,
+    res.hazard_factor as hazardFactor,
+    res.blood_pressure_shrink as bloodPressureShrink,
+    res.blood_pressure_diastole as bloodPressureDiastole,
+    res.heart as heart,
+    res.lungs as lungs,
+    res.skin_mucous_membrane as skinMucousMembrane,
+    res.lymph_node as lymphNode,
+    res.thyroid_gland as thyroidGland,
+    res.ear as ear,
+    res.white_blood_cell as whiteBloodCell,
+    res.neutrophile_granulocyte as neutrophileGranulocyte,
+    res.red_blood_cell as redBloodCell,
+    res.hemoglobin as hemoglobin,
+    res.platelet as platelet,
+    res.white_blood_cell_urine as whiteBloodCellUrine,
+    res.urine_protein as urineProtein,
+    res.urine_occult_blood as urineOccultBlood,
+    res.urine_sugar as urineSugar,
+    res.ALTU_L as altuL,
+    res.electrocardiogram as electrocardiogram,
+    res.dbhl_500_l as dbhl500L,
+    res.dbhl_1k_l as dbhl1kL,
+    res.dbhl_2k_l as dbhl2kL,
+    res.dbhl_3k_l as dbhl3kL,
+    res.dbhl_4k_l as dbhl4kL,
+    res.dbhl_6k_l as dbhl6kL,
+    res.dbhl_500_r as dbhl500R,
+    res.dbhl_1k_r as dbhl1kR,
+    res.dbhl_2k_r as dbhl2kR,
+    res.dbhl_3k_r as dbhl3kR,
+    res.dbhl_4k_r as dbhl4kR,
+    res.dbhl_6k_r as dbhl6kR
+    from `record_employee_summary` res
+    where res.emp_id = #{id}
+    AND res.inspect_date in (
+    SELECT MAX(rs.inspect_date) as newTime FROM `record_employee_summary` rs
+    WHERE
+	  rs.emp_id = 16
+    GROUP BY
+	  year(rs.inspect_date)
+    )
+    GROUP BY YEAR (res.inspect_date) ORDER BY res.inspect_date DESC
+    LIMIT 3
+  </select>
 </mapper>

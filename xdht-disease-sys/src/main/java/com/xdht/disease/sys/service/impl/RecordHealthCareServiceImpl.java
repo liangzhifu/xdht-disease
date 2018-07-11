@@ -5,12 +5,10 @@ import com.xdht.disease.common.core.AbstractService;
 import com.xdht.disease.common.core.PageResult;
 import com.xdht.disease.sys.constant.SysEnum;
 import com.xdht.disease.sys.dao.RecordHealthCareMapper;
-import com.xdht.disease.sys.model.RecordHealthCare;
-import com.xdht.disease.sys.model.RecordHealthCareData;
-import com.xdht.disease.sys.model.RecordPreEvaluation;
-import com.xdht.disease.sys.model.RecordPreEvaluationData;
+import com.xdht.disease.sys.model.*;
 import com.xdht.disease.sys.service.RecordHealthCareDataService;
 import com.xdht.disease.sys.service.RecordHealthCareService;
+import com.xdht.disease.sys.service.RecordScenQuestionnaireService;
 import com.xdht.disease.sys.vo.request.RecordHealthCareRequest;
 import com.xdht.disease.sys.vo.response.RecordHealthCareResponse;
 import com.xdht.disease.sys.vo.response.RecordPreEvaluationDetailResponse;
@@ -35,6 +33,9 @@ public class RecordHealthCareServiceImpl extends AbstractService<RecordHealthCar
     private RecordHealthCareMapper recordHealthCareMapper;
     @Autowired
     private RecordHealthCareDataService recordHealthCareDataService;
+
+    @Autowired
+    private RecordScenQuestionnaireService recordScenQuestionnaireService;
 
     @Override
     public List<RecordHealthCare> queryList(RecordHealthCareRequest recordHealthCareRequest) {
@@ -77,6 +78,18 @@ public class RecordHealthCareServiceImpl extends AbstractService<RecordHealthCar
         RecordHealthCare recordHealthCare = recordHealthCareRequest.getRecordHealthCare();
         recordHealthCare.setStatus(SysEnum.StatusEnum.STATUS_NORMAL.getCode());
         this.insertUseGeneratedKeys(recordHealthCare);
+
+        // 修改调查表的编辑状态
+        RecordScenQuestionnaire recordScenQuestionnaire = new RecordScenQuestionnaire();
+        recordScenQuestionnaire.setQuestionnaireId(recordHealthCareRequest.getQuestionnaireId());
+        recordScenQuestionnaire.setSceneId(recordHealthCareRequest.getRecordHealthCare().getSceneId());
+        recordScenQuestionnaire.setStatus(SysEnum.StatusEnum.STATUS_NORMAL.getCode());
+        recordScenQuestionnaire = recordScenQuestionnaireService.selectOne(recordScenQuestionnaire);
+        if (recordScenQuestionnaire != null) {
+            recordScenQuestionnaire.setEditStatus(SysEnum.EditStauts.EDIT_STATUS.getCode());
+            recordScenQuestionnaireService.updateByPrimaryKeySelective(recordScenQuestionnaire);
+        }
+
         List<RecordHealthCareData> recordRecordHealthCareDataList = new LinkedList<>();
         for (RecordHealthCareData recordHealthCareData : recordHealthCareRequest.getRecordHealthCareDataList() ) {
             recordHealthCareData.setHealthCareId(recordHealthCare.getId());

@@ -39,18 +39,19 @@ public class SysEmployeeServiceImpl extends AbstractService<SysEmployee> impleme
     @Override
     public PageResult<SysEmployee> querySysEmpPage(SysEmployeeRequest sysEmployeeRequest) {
         Condition condition = new Condition(SysEmployee.class);
-        condition.createCriteria().andEqualTo("officeId", sysEmployeeRequest.getOfficeId())
-            .andEqualTo("status", SysEnum.StatusEnum.STATUS_NORMAL.getCode());
+        condition.createCriteria().andEqualTo("status", SysEnum.StatusEnum.STATUS_NORMAL.getCode());
         if (sysEmployeeRequest.getCompanyId() != null) {
             Condition sysOfficeCondition = new Condition(SysCompanyOffice.class);
             sysOfficeCondition.createCriteria().andEqualTo("status", SysEnum.StatusEnum.STATUS_NORMAL.getCode())
                     .andEqualTo("companyId", sysEmployeeRequest.getCompanyId());
             List<SysCompanyOffice> sysCompanyOfficeList = this.sysCompanyOfficeService.selectByCondition(sysOfficeCondition);
             List<Long> sysOfficeIdList = new LinkedList<>();
-            for (SysCompanyOffice sysCompanyOffice : sysCompanyOfficeList) {
-                sysOfficeIdList.add(sysCompanyOffice.getId());
+            if (sysCompanyOfficeList != null && sysCompanyOfficeList.size()>0) {
+                for (SysCompanyOffice sysCompanyOffice : sysCompanyOfficeList) {
+                    sysOfficeIdList.add(sysCompanyOffice.getId());
+                }
+                condition.getOredCriteria().get(0).andIn("officeId", sysOfficeIdList);
             }
-            condition.getOredCriteria().get(0).andIn("officeId", sysOfficeIdList);
         }
         if (sysEmployeeRequest.getEmpName() != null && !"".equals(sysEmployeeRequest.getEmpName())) {
             condition.getOredCriteria().get(0).andLike("empName","%"+sysEmployeeRequest.getEmpName()+"%");
