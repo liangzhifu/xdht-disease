@@ -8,8 +8,10 @@ import com.xdht.disease.sys.dao.RecordBuildingAerationMapper;
 import com.xdht.disease.sys.model.RecordBuildingAeration;
 import com.xdht.disease.sys.model.RecordBuildingAerationData;
 import com.xdht.disease.sys.model.RecordBuildingBaseData;
+import com.xdht.disease.sys.model.RecordScenQuestionnaire;
 import com.xdht.disease.sys.service.RecordBuildingAerationDataService;
 import com.xdht.disease.sys.service.RecordBuildingAerationService;
+import com.xdht.disease.sys.service.RecordScenQuestionnaireService;
 import com.xdht.disease.sys.vo.request.RecordBuildingAerationRequest;
 import com.xdht.disease.sys.vo.response.RecordBuildingAerationResponse;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,6 +35,9 @@ public class RecordBuildingAerationServiceImpl extends AbstractService<RecordBui
     private RecordBuildingAerationMapper recordBuildingAerationMapper;
     @Autowired
     private RecordBuildingAerationDataService recordBuildingAerationDataService;
+
+    @Autowired
+    private RecordScenQuestionnaireService recordScenQuestionnaireService;
 
     @Override
     public List<RecordBuildingAeration> queryList(RecordBuildingAerationRequest recordBuildingAerationRequest) {
@@ -74,6 +79,16 @@ public class RecordBuildingAerationServiceImpl extends AbstractService<RecordBui
         RecordBuildingAeration recordBuildingAeration = recordBuildingAerationRequest.getRecordBuildingAeration();
         recordBuildingAeration.setStatus(SysEnum.StatusEnum.STATUS_NORMAL.getCode());
         this.insertUseGeneratedKeys(recordBuildingAeration);
+        // 修改调查表的编辑状态
+        RecordScenQuestionnaire recordScenQuestionnaire = new RecordScenQuestionnaire();
+        recordScenQuestionnaire.setQuestionnaireId(recordBuildingAerationRequest.getQuestionnaireId());
+        recordScenQuestionnaire.setSceneId(recordBuildingAerationRequest.getRecordBuildingAeration().getSceneId());
+        recordScenQuestionnaire.setStatus(SysEnum.StatusEnum.STATUS_NORMAL.getCode());
+        recordScenQuestionnaire = recordScenQuestionnaireService.selectOne(recordScenQuestionnaire);
+        if (recordScenQuestionnaire != null) {
+            recordScenQuestionnaire.setEditStatus(SysEnum.EditStauts.EDIT_STATUS.getCode());
+            recordScenQuestionnaireService.updateByPrimaryKeySelective(recordScenQuestionnaire);
+        }
         List<RecordBuildingAerationData> recordBuildingAerationDataList = new LinkedList<>();
         if (recordBuildingAerationRequest.getRecordBuildingAerationDataList() != null) {
             for (RecordBuildingAerationData recordBuildingAerationData : recordBuildingAerationRequest.getRecordBuildingAerationDataList()) {

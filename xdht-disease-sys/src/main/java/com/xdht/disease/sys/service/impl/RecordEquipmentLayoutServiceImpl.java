@@ -7,8 +7,10 @@ import com.xdht.disease.sys.constant.SysEnum;
 import com.xdht.disease.sys.dao.RecordEquipmentLayoutMapper;
 import com.xdht.disease.sys.model.RecordEquipmentLayout;
 import com.xdht.disease.sys.model.RecordEquipmentLayoutData;
+import com.xdht.disease.sys.model.RecordScenQuestionnaire;
 import com.xdht.disease.sys.service.RecordEquipmentLayoutDataService;
 import com.xdht.disease.sys.service.RecordEquipmentLayoutService;
+import com.xdht.disease.sys.service.RecordScenQuestionnaireService;
 import com.xdht.disease.sys.service.SysCompanyOfficeService;
 import com.xdht.disease.sys.vo.request.RecordEquipmentLayoutInputRequest;
 import com.xdht.disease.sys.vo.request.RecordEquipmentLayoutRequest;
@@ -39,6 +41,9 @@ public class RecordEquipmentLayoutServiceImpl extends AbstractService<RecordEqui
     @Autowired
     private SysCompanyOfficeService sysCompanyOfficeService;
 
+    @Autowired
+    private RecordScenQuestionnaireService recordScenQuestionnaireService;
+
 
     @Override
     public PageResult<RecordEquipmentLayout> queryListPage(RecordEquipmentLayoutRequest recordEquipmentLayoutRequest) {
@@ -65,6 +70,18 @@ public class RecordEquipmentLayoutServiceImpl extends AbstractService<RecordEqui
         RecordEquipmentLayout recordEquipmentLayout = recordEquipmentLayoutInputRequest.getRecordEquipmentLayout();
         recordEquipmentLayout.setStatus(SysEnum.StatusEnum.STATUS_NORMAL.getCode());
         this.insertUseGeneratedKeys(recordEquipmentLayout);
+
+        // 修改调查表的编辑状态
+        RecordScenQuestionnaire recordScenQuestionnaire = new RecordScenQuestionnaire();
+        recordScenQuestionnaire.setQuestionnaireId(recordEquipmentLayoutInputRequest.getQuestionnaireId());
+        recordScenQuestionnaire.setSceneId(recordEquipmentLayoutInputRequest.getRecordEquipmentLayout().getSceneId());
+        recordScenQuestionnaire.setStatus(SysEnum.StatusEnum.STATUS_NORMAL.getCode());
+        recordScenQuestionnaire = recordScenQuestionnaireService.selectOne(recordScenQuestionnaire);
+        if (recordScenQuestionnaire != null) {
+            recordScenQuestionnaire.setEditStatus(SysEnum.EditStauts.EDIT_STATUS.getCode());
+            recordScenQuestionnaireService.updateByPrimaryKeySelective(recordScenQuestionnaire);
+        }
+
         List<RecordEquipmentLayoutData> recordEquipmentLayoutDataList = new LinkedList<>();
         if (recordEquipmentLayoutInputRequest.getRecordEquipmentLayoutDataList() != null) {
             for (RecordEquipmentLayoutData recordEquipmentLayoutData : recordEquipmentLayoutInputRequest.getRecordEquipmentLayoutDataList()) {

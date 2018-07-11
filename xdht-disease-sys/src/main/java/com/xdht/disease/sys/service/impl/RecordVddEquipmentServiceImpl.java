@@ -5,8 +5,10 @@ import com.xdht.disease.common.core.AbstractService;
 import com.xdht.disease.common.core.PageResult;
 import com.xdht.disease.sys.constant.SysEnum;
 import com.xdht.disease.sys.dao.RecordVddEquipmentMapper;
+import com.xdht.disease.sys.model.RecordScenQuestionnaire;
 import com.xdht.disease.sys.model.RecordVddEquipment;
 import com.xdht.disease.sys.model.RecordVddEquipmentData;
+import com.xdht.disease.sys.service.RecordScenQuestionnaireService;
 import com.xdht.disease.sys.service.RecordVddEquipmentDataService;
 import com.xdht.disease.sys.service.RecordVddEquipmentService;
 import com.xdht.disease.sys.vo.request.RecordVddEquipmentInputRequest;
@@ -35,6 +37,9 @@ public class RecordVddEquipmentServiceImpl extends AbstractService<RecordVddEqui
     @Autowired
     private RecordVddEquipmentDataService recordVddEquipmentDataService;
 
+    @Autowired
+    private RecordScenQuestionnaireService recordScenQuestionnaireService;
+
 
     @Override
     public PageResult<RecordVddEquipment> queryListPage(RecordVddEquipmentRequest recordVddEquipmentRequest) {
@@ -61,6 +66,18 @@ public class RecordVddEquipmentServiceImpl extends AbstractService<RecordVddEqui
         RecordVddEquipment recordVddEquipment = recordVddEquipmentInputRequest.getRecordVddEquipment();
         recordVddEquipment.setStatus(SysEnum.StatusEnum.STATUS_NORMAL.getCode());
         this.insertUseGeneratedKeys(recordVddEquipment);
+
+        // 修改调查表的编辑状态
+        RecordScenQuestionnaire recordScenQuestionnaire = new RecordScenQuestionnaire();
+        recordScenQuestionnaire.setQuestionnaireId(recordVddEquipmentInputRequest.getQuestionnaireId());
+        recordScenQuestionnaire.setSceneId(recordVddEquipmentInputRequest.getRecordVddEquipment().getSceneId());
+        recordScenQuestionnaire.setStatus(SysEnum.StatusEnum.STATUS_NORMAL.getCode());
+        recordScenQuestionnaire = recordScenQuestionnaireService.selectOne(recordScenQuestionnaire);
+        if (recordScenQuestionnaire != null) {
+            recordScenQuestionnaire.setEditStatus(SysEnum.EditStauts.EDIT_STATUS.getCode());
+            recordScenQuestionnaireService.updateByPrimaryKeySelective(recordScenQuestionnaire);
+        }
+
         List<RecordVddEquipmentData> recordVddEquipmentDataList = new LinkedList<>();
         if (recordVddEquipmentInputRequest.getRecordVddEquipmentDataList() != null ) {
             for ( RecordVddEquipmentData recordVddEquipmentData : recordVddEquipmentInputRequest.getRecordVddEquipmentDataList()) {

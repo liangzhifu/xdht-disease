@@ -7,8 +7,10 @@ import com.xdht.disease.sys.constant.SysEnum;
 import com.xdht.disease.sys.dao.RecordOtherProtectiveFacilitiesMapper;
 import com.xdht.disease.sys.model.RecordOtherProtectiveFacilities;
 import com.xdht.disease.sys.model.RecordOtherProtectiveFacilitiesData;
+import com.xdht.disease.sys.model.RecordScenQuestionnaire;
 import com.xdht.disease.sys.service.RecordOtherProtectiveFacilitiesDataService;
 import com.xdht.disease.sys.service.RecordOtherProtectiveFacilitiesService;
+import com.xdht.disease.sys.service.RecordScenQuestionnaireService;
 import com.xdht.disease.sys.vo.request.RecordOtherProtectiveFacilitiesRequest;
 import com.xdht.disease.sys.vo.request.RecordOtherProtectiveInputRequest;
 import com.xdht.disease.sys.vo.response.RecordOtherProtectiveDetailResponse;
@@ -35,6 +37,8 @@ public class RecordOtherProtectiveFacilitiesServiceImpl extends AbstractService<
     @Autowired
     private RecordOtherProtectiveFacilitiesDataService recordOtherProtectiveFacilitiesDataService;
 
+    @Autowired
+    private RecordScenQuestionnaireService recordScenQuestionnaireService;
 
     @Override
     public PageResult<RecordOtherProtectiveFacilities> queryListPage(RecordOtherProtectiveFacilitiesRequest recordRequest) {
@@ -62,6 +66,18 @@ public class RecordOtherProtectiveFacilitiesServiceImpl extends AbstractService<
         RecordOtherProtectiveFacilities recordOtherProtective = recordOtherProtectiveInputRequest.getRecordOtherProtective();
         recordOtherProtective.setStatus(SysEnum.StatusEnum.STATUS_NORMAL.getCode());
         this.recordMapper.insertUseGeneratedKeys(recordOtherProtective);
+
+        // 修改调查表的编辑状态
+        RecordScenQuestionnaire recordScenQuestionnaire = new RecordScenQuestionnaire();
+        recordScenQuestionnaire.setQuestionnaireId(recordOtherProtectiveInputRequest.getQuestionnaireId());
+        recordScenQuestionnaire.setSceneId(recordOtherProtectiveInputRequest.getRecordOtherProtective().getSceneId());
+        recordScenQuestionnaire.setStatus(SysEnum.StatusEnum.STATUS_NORMAL.getCode());
+        recordScenQuestionnaire = recordScenQuestionnaireService.selectOne(recordScenQuestionnaire);
+        if (recordScenQuestionnaire != null) {
+            recordScenQuestionnaire.setEditStatus(SysEnum.EditStauts.EDIT_STATUS.getCode());
+            recordScenQuestionnaireService.updateByPrimaryKeySelective(recordScenQuestionnaire);
+        }
+
         List<RecordOtherProtectiveFacilitiesData> recordOtherProtectiveDataList = new LinkedList<>();
         if (recordOtherProtectiveInputRequest.getRecordOtherProtectiveDataList() != null ) {
             for ( RecordOtherProtectiveFacilitiesData recordOtherProtectiveData : recordOtherProtectiveInputRequest.getRecordOtherProtectiveDataList()) {

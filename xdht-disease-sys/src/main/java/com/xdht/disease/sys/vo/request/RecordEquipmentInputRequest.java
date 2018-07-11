@@ -21,4 +21,7 @@ public class RecordEquipmentInputRequest {
     @ApiModelProperty(value = "设备设施调查表-内容表")
     private List<RecordEquipmentData> recordEquipmentDataList;
 
+    @ApiModelProperty(value = "调查表id")
+    private Long questionnaireId;
+
 }

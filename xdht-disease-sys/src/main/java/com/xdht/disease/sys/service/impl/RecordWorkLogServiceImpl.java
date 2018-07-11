@@ -5,8 +5,10 @@ import com.xdht.disease.common.core.AbstractService;
 import com.xdht.disease.common.core.PageResult;
 import com.xdht.disease.sys.constant.SysEnum;
 import com.xdht.disease.sys.dao.RecordWorkLogMapper;
+import com.xdht.disease.sys.model.RecordScenQuestionnaire;
 import com.xdht.disease.sys.model.RecordWorkLog;
 import com.xdht.disease.sys.model.RecordWorkLogData;
+import com.xdht.disease.sys.service.RecordScenQuestionnaireService;
 import com.xdht.disease.sys.service.RecordWorkLogDataService;
 import com.xdht.disease.sys.service.RecordWorkLogService;
 import com.xdht.disease.sys.vo.request.RecordWorkLogInputRequest;
@@ -34,6 +36,9 @@ public class RecordWorkLogServiceImpl extends AbstractService<RecordWorkLog> imp
     @Autowired
     private RecordWorkLogDataService recordWorkLogDataService;
 
+    @Autowired
+    private RecordScenQuestionnaireService recordScenQuestionnaireService;
+
     @Override
     public PageResult<RecordWorkLog> queryListPage(RecordWorkLogRequest recordWorkLogRequest) {
 
@@ -60,6 +65,18 @@ public class RecordWorkLogServiceImpl extends AbstractService<RecordWorkLog> imp
         RecordWorkLog recordWorkLog = recordWorkLogInputRequest.getRecordWorkLog();
         recordWorkLog.setStatus(SysEnum.StatusEnum.STATUS_NORMAL.getCode());
         this.insertUseGeneratedKeys(recordWorkLog);
+
+        // 修改调查表的编辑状态
+        RecordScenQuestionnaire recordScenQuestionnaire = new RecordScenQuestionnaire();
+        recordScenQuestionnaire.setQuestionnaireId(recordWorkLogInputRequest.getQuestionnaireId());
+        recordScenQuestionnaire.setSceneId(recordWorkLogInputRequest.getRecordWorkLog().getSceneId());
+        recordScenQuestionnaire.setStatus(SysEnum.StatusEnum.STATUS_NORMAL.getCode());
+        recordScenQuestionnaire = recordScenQuestionnaireService.selectOne(recordScenQuestionnaire);
+        if (recordScenQuestionnaire != null) {
+            recordScenQuestionnaire.setEditStatus(SysEnum.EditStauts.EDIT_STATUS.getCode());
+            recordScenQuestionnaireService.updateByPrimaryKeySelective(recordScenQuestionnaire);
+        }
+
         List<RecordWorkLogData> recordWorkLogDataList = new LinkedList<>();
         if (recordWorkLogInputRequest.getRecordWorkLogDataList() != null) {
             for ( RecordWorkLogData recordWorkLogData : recordWorkLogInputRequest.getRecordWorkLogDataList() ) {

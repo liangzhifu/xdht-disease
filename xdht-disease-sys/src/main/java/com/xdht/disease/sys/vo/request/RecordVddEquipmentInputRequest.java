@@ -21,4 +21,6 @@ public class RecordVddEquipmentInputRequest {
     @ApiModelProperty(value = "通风排毒除尘设施调查表-内容表")
     private List<RecordVddEquipmentData> recordVddEquipmentDataList;
 
+    @ApiModelProperty(value = "调查表id")
+    private Long questionnaireId;
 }

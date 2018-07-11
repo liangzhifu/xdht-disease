@@ -19,4 +19,6 @@ public class RecordHealthCareRequest {
     @ApiModelProperty(value = "职业健康监护情况调查表--调查内容")
     private List<RecordHealthCareData> recordHealthCareDataList;
 
+    @ApiModelProperty(value = "调查表id")
+    private Long questionnaireId;
 }

@@ -8,8 +8,10 @@ import com.xdht.disease.sys.dao.RecordAuxiliaryHealthMapper;
 import com.xdht.disease.sys.model.RecordAuxiliaryHealth;
 import com.xdht.disease.sys.model.RecordAuxiliaryHealthData;
 import com.xdht.disease.sys.model.RecordBuildingBaseData;
+import com.xdht.disease.sys.model.RecordScenQuestionnaire;
 import com.xdht.disease.sys.service.RecordAuxiliaryHealthDataService;
 import com.xdht.disease.sys.service.RecordAuxiliaryHealthService;
+import com.xdht.disease.sys.service.RecordScenQuestionnaireService;
 import com.xdht.disease.sys.vo.request.RecordAuxiliaryHealthRequest;
 import com.xdht.disease.sys.vo.response.RecordAuxiliaryHealthResponse;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,6 +35,9 @@ public class RecordAuxiliaryHealthServiceImpl extends AbstractService<RecordAuxi
     private RecordAuxiliaryHealthMapper recordAuxiliaryHealthMapper;
     @Autowired
     private RecordAuxiliaryHealthDataService recordAuxiliaryHealthDataService;
+
+    @Autowired
+    private RecordScenQuestionnaireService recordScenQuestionnaireService;
 
     @Override
     public List<RecordAuxiliaryHealth> queryList(RecordAuxiliaryHealthRequest recordAuxiliaryHealthRequest) {
@@ -74,6 +79,16 @@ public class RecordAuxiliaryHealthServiceImpl extends AbstractService<RecordAuxi
         RecordAuxiliaryHealth recordAuxiliaryHealth = recordAuxiliaryHealthRequest.getRecordAuxiliaryHealth();
         recordAuxiliaryHealth.setStatus(SysEnum.StatusEnum.STATUS_NORMAL.getCode());
         this.insertUseGeneratedKeys(recordAuxiliaryHealth);
+        // 修改调查表的编辑状态
+        RecordScenQuestionnaire recordScenQuestionnaire = new RecordScenQuestionnaire();
+        recordScenQuestionnaire.setQuestionnaireId(recordAuxiliaryHealthRequest.getQuestionnaireId());
+        recordScenQuestionnaire.setSceneId(recordAuxiliaryHealthRequest.getRecordAuxiliaryHealth().getSceneId());
+        recordScenQuestionnaire.setStatus(SysEnum.StatusEnum.STATUS_NORMAL.getCode());
+        recordScenQuestionnaire = recordScenQuestionnaireService.selectOne(recordScenQuestionnaire);
+        if (recordScenQuestionnaire != null) {
+            recordScenQuestionnaire.setEditStatus(SysEnum.EditStauts.EDIT_STATUS.getCode());
+            recordScenQuestionnaireService.updateByPrimaryKeySelective(recordScenQuestionnaire);
+        }
         List<RecordAuxiliaryHealthData> recordAuxiliaryHealthDataList = new LinkedList<>();
         if (recordAuxiliaryHealthRequest.getRecordAuxiliaryHealthDataList() != null) {
             for (RecordAuxiliaryHealthData recordAuxiliaryHealthData : recordAuxiliaryHealthRequest.getRecordAuxiliaryHealthDataList()) {

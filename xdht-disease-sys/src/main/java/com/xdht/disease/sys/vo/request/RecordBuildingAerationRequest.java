@@ -20,6 +20,8 @@ public class RecordBuildingAerationRequest {
     @ApiModelProperty(value = "建筑物采暖通风及空调调查表--调查内容")
     private List<RecordBuildingAerationData> recordBuildingAerationDataList;
 
+    @ApiModelProperty(value = "调查表id")
+    private Long questionnaireId;
 
 
 }

@@ -19,4 +19,6 @@ public class RecordOtherProtectiveInputRequest {
     @ApiModelProperty(value = "其他防护设施调查表-内容表")
     private List<RecordOtherProtectiveFacilitiesData> recordOtherProtectiveDataList;
 
+    @ApiModelProperty(value = "调查表id")
+    private Long questionnaireId;
 }

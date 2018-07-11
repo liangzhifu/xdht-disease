@@ -7,8 +7,10 @@ import com.xdht.disease.sys.constant.SysEnum;
 import com.xdht.disease.sys.dao.RecordControlEffectMapper;
 import com.xdht.disease.sys.model.RecordControlEffect;
 import com.xdht.disease.sys.model.RecordControlEffectData;
+import com.xdht.disease.sys.model.RecordScenQuestionnaire;
 import com.xdht.disease.sys.service.RecordControlEffectDataService;
 import com.xdht.disease.sys.service.RecordControlEffectService;
+import com.xdht.disease.sys.service.RecordScenQuestionnaireService;
 import com.xdht.disease.sys.vo.request.RecordControlEffectInputRequest;
 import com.xdht.disease.sys.vo.request.RecordControlEffectRequest;
 import com.xdht.disease.sys.vo.response.RecordControlEffectDetailResponse;
@@ -34,6 +36,9 @@ public class RecordControlEffectServiceImpl extends AbstractService<RecordContro
 
     @Autowired
     private RecordControlEffectDataService recordControlEffectDataService;
+
+    @Autowired
+    private RecordScenQuestionnaireService recordScenQuestionnaireService;
 
 
         @Override
@@ -69,6 +74,17 @@ public class RecordControlEffectServiceImpl extends AbstractService<RecordContro
             RecordControlEffect recordControlEffect = recordControlEffectInputRequest.getRecordControlEffect();
             recordControlEffect.setStatus(SysEnum.StatusEnum.STATUS_NORMAL.getCode());
             this.insertUseGeneratedKeys(recordControlEffect);
+
+            // 修改调查表的编辑状态
+            RecordScenQuestionnaire recordScenQuestionnaire = new RecordScenQuestionnaire();
+            recordScenQuestionnaire.setQuestionnaireId(recordControlEffectInputRequest.getQuestionnaireId());
+            recordScenQuestionnaire.setSceneId(recordControlEffectInputRequest.getRecordControlEffect().getSceneId());
+            recordScenQuestionnaire.setStatus(SysEnum.StatusEnum.STATUS_NORMAL.getCode());
+            recordScenQuestionnaire = recordScenQuestionnaireService.selectOne(recordScenQuestionnaire);
+            if (recordScenQuestionnaire != null) {
+                recordScenQuestionnaire.setEditStatus(SysEnum.EditStauts.EDIT_STATUS.getCode());
+                recordScenQuestionnaireService.updateByPrimaryKeySelective(recordScenQuestionnaire);
+            }
             List<RecordControlEffectData> recordControlEffectDataList = new LinkedList<>();
             for (RecordControlEffectData recordControlEffectData : recordControlEffectInputRequest.getRecordControlEffectDataList()) {
                 recordControlEffectData.setPreEvaluationId(recordControlEffect.getId());

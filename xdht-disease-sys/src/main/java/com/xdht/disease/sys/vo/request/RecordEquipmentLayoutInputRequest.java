@@ -19,4 +19,7 @@ public class RecordEquipmentLayoutInputRequest {
     @ApiModelProperty(value = "设备设施布局调查表-内容表")
     private List<RecordEquipmentLayoutData> recordEquipmentLayoutDataList;
 
+    @ApiModelProperty(value = "调查表id")
+    private Long questionnaireId;
+
 }

@@ -7,8 +7,10 @@ import com.xdht.disease.sys.constant.SysEnum;
 import com.xdht.disease.sys.dao.RecordEquipmentMapper;
 import com.xdht.disease.sys.model.RecordEquipment;
 import com.xdht.disease.sys.model.RecordEquipmentData;
+import com.xdht.disease.sys.model.RecordScenQuestionnaire;
 import com.xdht.disease.sys.service.RecordEquipmentDataService;
 import com.xdht.disease.sys.service.RecordEquipmentService;
+import com.xdht.disease.sys.service.RecordScenQuestionnaireService;
 import com.xdht.disease.sys.service.SysCompanyOfficeService;
 import com.xdht.disease.sys.vo.request.RecordEquipmentInputRequest;
 import com.xdht.disease.sys.vo.request.RecordEquipmentRequest;
@@ -39,6 +41,9 @@ public class RecordEquipmentServiceImpl extends AbstractService<RecordEquipment>
     @Autowired
     private SysCompanyOfficeService sysCompanyOfficeService;
 
+    @Autowired
+    private RecordScenQuestionnaireService recordScenQuestionnaireService;
+
 
     @Override
     public PageResult<RecordEquipment> queryListPage(RecordEquipmentRequest recordEquipmentRequest) {
@@ -61,6 +66,18 @@ public class RecordEquipmentServiceImpl extends AbstractService<RecordEquipment>
         RecordEquipment recordEquipment = recordEquipmentInputRequest.getRecordEquipment();
         recordEquipment.setStatus(SysEnum.StatusEnum.STATUS_NORMAL.getCode());
         this.insertUseGeneratedKeys(recordEquipment);
+
+        // 修改调查表的编辑状态
+        RecordScenQuestionnaire recordScenQuestionnaire = new RecordScenQuestionnaire();
+        recordScenQuestionnaire.setQuestionnaireId(recordEquipmentInputRequest.getQuestionnaireId());
+        recordScenQuestionnaire.setSceneId(recordEquipmentInputRequest.getRecordEquipment().getSceneId());
+        recordScenQuestionnaire.setStatus(SysEnum.StatusEnum.STATUS_NORMAL.getCode());
+        recordScenQuestionnaire = recordScenQuestionnaireService.selectOne(recordScenQuestionnaire);
+        if (recordScenQuestionnaire != null) {
+            recordScenQuestionnaire.setEditStatus(SysEnum.EditStauts.EDIT_STATUS.getCode());
+            recordScenQuestionnaireService.updateByPrimaryKeySelective(recordScenQuestionnaire);
+        }
+
         List<RecordEquipmentData> recordEquipmentDataList = new LinkedList<>();
         if (recordEquipmentInputRequest.getRecordEquipmentDataList() != null){
             for (RecordEquipmentData recordEquipmentData : recordEquipmentInputRequest.getRecordEquipmentDataList()) {

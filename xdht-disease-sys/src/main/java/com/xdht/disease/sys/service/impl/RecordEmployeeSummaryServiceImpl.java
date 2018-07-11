@@ -60,4 +60,10 @@ public class RecordEmployeeSummaryServiceImpl extends AbstractService<RecordEmpl
     public RecordEmployeeSummaryResponse getRecordEmployeeSummaryDetail(Long id) {
         return this.recordEmployeeSummaryMapper.selectRecordEmployeeSummaryDetail(id);
     }
+
+    @Override
+    public List<RecordEmployeeSummaryResponse> getRecordEmployeeSummaryEcharsDetail(Long id) {
+        List<RecordEmployeeSummaryResponse> list = this.recordEmployeeSummaryMapper.selectRecordEmployeeSummaryEcharsDetail(id);
+        return list;
+    }
 }

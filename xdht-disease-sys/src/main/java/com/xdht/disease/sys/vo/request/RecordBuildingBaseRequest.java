@@ -19,4 +19,6 @@ public class RecordBuildingBaseRequest {
     @ApiModelProperty(value = "建筑物基本情况及采光照明调查表--调查内容")
     private List<RecordBuildingBaseData> recordBuildingBaseDataList;
 
+    @ApiModelProperty(value = "调查表id")
+    private Long questionnaireId;
 }

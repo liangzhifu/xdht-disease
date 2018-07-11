@@ -7,8 +7,10 @@ import com.xdht.disease.sys.constant.SysEnum;
 import com.xdht.disease.sys.dao.RecordPresentSituationMapper;
 import com.xdht.disease.sys.model.RecordPresentSituation;
 import com.xdht.disease.sys.model.RecordPresentSituationData;
+import com.xdht.disease.sys.model.RecordScenQuestionnaire;
 import com.xdht.disease.sys.service.RecordPresentSituationDataService;
 import com.xdht.disease.sys.service.RecordPresentSituationService;
+import com.xdht.disease.sys.service.RecordScenQuestionnaireService;
 import com.xdht.disease.sys.vo.request.RecordPresentSituationInputRequest;
 import com.xdht.disease.sys.vo.request.RecordPresentSituationRequest;
 import com.xdht.disease.sys.vo.response.RecordPresentSituationDetailResponse;
@@ -34,6 +36,9 @@ public class RecordPresentSituationServiceImpl extends AbstractService<RecordPre
 
     @Autowired
     private RecordPresentSituationDataService recordPresentSituationDataService;
+
+    @Autowired
+    private RecordScenQuestionnaireService recordScenQuestionnaireService;
 
     @Override
     public List<RecordPresentSituation> queryList(RecordPresentSituationRequest recordPresentSituationRequest) {
@@ -73,6 +78,18 @@ public class RecordPresentSituationServiceImpl extends AbstractService<RecordPre
         RecordPresentSituation recordPresentSituation = recordPresentSituationInputRequest.getRecordPresentSituation();
         recordPresentSituation.setStatus(SysEnum.StatusEnum.STATUS_NORMAL.getCode());
         this.insertUseGeneratedKeys(recordPresentSituation);
+
+        // 修改调查表的编辑状态
+        RecordScenQuestionnaire recordScenQuestionnaire = new RecordScenQuestionnaire();
+        recordScenQuestionnaire.setQuestionnaireId(recordPresentSituationInputRequest.getQuestionnaireId());
+        recordScenQuestionnaire.setSceneId(recordPresentSituationInputRequest.getRecordPresentSituation().getSceneId());
+        recordScenQuestionnaire.setStatus(SysEnum.StatusEnum.STATUS_NORMAL.getCode());
+        recordScenQuestionnaire = recordScenQuestionnaireService.selectOne(recordScenQuestionnaire);
+        if (recordScenQuestionnaire != null) {
+            recordScenQuestionnaire.setEditStatus(SysEnum.EditStauts.EDIT_STATUS.getCode());
+            recordScenQuestionnaireService.updateByPrimaryKeySelective(recordScenQuestionnaire);
+        }
+
         List<RecordPresentSituationData> recordPresentSituationDataList = new LinkedList<>();
         for ( RecordPresentSituationData recordPresentSituationData: recordPresentSituationInputRequest.getRecordPresentSituationDataList()) {
                 recordPresentSituationData.setPreEvaluationId(recordPresentSituation.getId());
