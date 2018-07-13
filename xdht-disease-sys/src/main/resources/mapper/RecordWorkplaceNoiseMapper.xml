@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.xdht.disease.sys.dao.RecordWorkplaceNoiseMapper">
+  <resultMap id="BaseResultMap" type="com.xdht.disease.sys.model.RecordWorkplaceNoise">
+    <!--
+      WARNING - @mbg.generated
+    -->
+    <id column="id" jdbcType="BIGINT" property="id" />
+    <result column="workshop" jdbcType="VARCHAR" property="workshop" />
+    <result column="post_id" jdbcType="BIGINT" property="postId" />
+    <result column="stop_place" jdbcType="VARCHAR" property="stopPlace" />
+    <result column="test_result" jdbcType="INTEGER" property="testResult" />
+    <result column="analysis_result" jdbcType="VARCHAR" property="analysisResult" />
+    <result column="contact_time" jdbcType="DATE" property="contactTime" />
+    <result column="sound_level" jdbcType="INTEGER" property="soundLevel" />
+    <result column="status" jdbcType="CHAR" property="status" />
+    <result column="check_place" jdbcType="VARCHAR" property="checkPlace" />
+  </resultMap>
+
+  <select id="selectRecordWorkplaceNoiseEcharsDetail" parameterType="java.lang.Long" resultType="com.xdht.disease.sys.vo.response.RecordWorkplaceNoiseResponse">
+    <![CDATA[
+    SELECT
+        rwn.id as id,
+        rwn.workshop as workshop,
+        rwn.post_id as postId,
+        rwn.stop_place as stopPlace,
+        rwn.test_result as testResult,
+        rwn.analysis_result as analysisResult,
+        rwn.contact_time as contactTime,
+        rwn.sound_level as soundLevel,
+        rwn.check_place as checkPlace,
+        (SELECT sd.`dictionary_name` FROM sys_dictionary sd WHERE sd.`id` = rwn.post_id) as postName
+      FROM
+      record_workplace_noise rwn
+      WHERE rwn.`status` = 0
+      AND rwn.contact_time in (
+        SELECT
+            MAX(r.contact_time) as newTime
+        FROM
+            `record_workplace_noise` r
+        WHERE
+            r.status = '0'
+        GROUP BY
+            year(r.contact_time),r.post_id ORDER BY r.contact_time DESC
+)
+      GROUP BY rwn.post_id ,rwn.contact_time HAVING ( year(now())- year(rwn.contact_time) <  3)
+     ]]>
+  </select>
+</mapper>

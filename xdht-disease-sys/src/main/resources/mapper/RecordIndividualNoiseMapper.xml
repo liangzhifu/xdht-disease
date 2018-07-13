@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.xdht.disease.sys.dao.RecordIndividualNoiseMapper">
+  <resultMap id="BaseResultMap" type="com.xdht.disease.sys.model.RecordIndividualNoise">
+    <!--
+      WARNING - @mbg.generated
+    -->
+    <id column="id" jdbcType="BIGINT" property="id" />
+    <result column="workshop" jdbcType="VARCHAR" property="workshop" />
+    <result column="post_id" jdbcType="BIGINT" property="postId" />
+    <result column="stop_place" jdbcType="VARCHAR" property="stopPlace" />
+    <result column="contact_time" jdbcType="DATE" property="contactTime" />
+    <result column="sound_level" jdbcType="INTEGER" property="soundLevel" />
+    <result column="status" jdbcType="CHAR" property="status" />
+  </resultMap>
+
+  <select id="selectRecordIndividualNoiseEcharsDetail" parameterType="java.lang.Long" resultType="com.xdht.disease.sys.vo.response.RecordIndividualNoiseResponse">
+    <![CDATA[
+    SELECT
+    rin.id as id,
+    rin.workshop as workshop,
+    rin.post_id as postId,
+    rin.stop_place as stopPlace,
+    rin.contact_time as contactTime,
+    rin.sound_level as soundLevel,
+    (SELECT sd.`dictionary_name` FROM sys_dictionary sd WHERE sd.`id` = rin.post_id) as postName
+    FROM
+    record_individual_noise rin
+    WHERE rin.`status` = 0
+    AND rin.contact_time in (
+        SELECT
+            MAX(r.contact_time) AS newTime
+        FROM
+            `record_individual_noise` r
+        WHERE
+            r. STATUS = '0'
+        GROUP BY
+            YEAR (r.contact_time),
+            r.post_id
+        ORDER BY
+            r.contact_time DESC
+    )
+    GROUP BY rin.post_id,year(rin.contact_time) HAVING( year(now())- year(rin.contact_time) < 3)
+  ]]>
+  </select>
+</mapper>

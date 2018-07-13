@@ -214,7 +214,7 @@
     AND res.inspect_date in (
     SELECT MAX(rs.inspect_date) as newTime FROM `record_employee_summary` rs
     WHERE
-	  rs.emp_id = 16
+	  rs.emp_id = #{id}
     GROUP BY
 	  year(rs.inspect_date)
     )
