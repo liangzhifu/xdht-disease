@@ -6,7 +6,9 @@ import com.xdht.disease.sys.constant.SysEnum;
 import com.xdht.disease.sys.dao.RecordCompanySummaryMapper;
 import com.xdht.disease.sys.model.RecordCompanySummary;
 import com.xdht.disease.sys.service.RecordCompanySummaryService;
+import com.xdht.disease.sys.vo.request.DateRequest;
 import com.xdht.disease.sys.vo.request.RecordCompanySummaryRequest;
+import com.xdht.disease.sys.vo.response.RecordCompanySummaryEchartsResponse;
 import com.xdht.disease.sys.vo.response.RecordCompanySummaryResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -65,4 +67,17 @@ public class RecordCompanySummaryServiceImpl extends AbstractService<RecordCompa
         recordCompanySummary.setInspectionYear(cal.get(Calendar.YEAR));
         this.updateByPrimaryKeySelective(recordCompanySummary);
     }
+
+    @Override
+    public List<RecordCompanySummaryEchartsResponse> selectCompanySummaryEcharts(DateRequest dateRequest) {
+        List<RecordCompanySummaryEchartsResponse> list = this.recordCompanySummaryMapper.selectCompanySummaryEcharts(dateRequest);
+        return list;
+    }
+
+    @Override
+    public List<RecordCompanySummaryEchartsResponse> selectCompanySummaryPercentEcharts(DateRequest dateRequest) {
+        List<RecordCompanySummaryEchartsResponse> list = this.recordCompanySummaryMapper.selectCompanySummaryPercentEcharts(dateRequest);
+        return list;
+    }
+
 }

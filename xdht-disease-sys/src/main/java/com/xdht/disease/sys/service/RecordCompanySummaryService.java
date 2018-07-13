@@ -1,10 +1,14 @@
 package com.xdht.disease.sys.service;
 
 import com.xdht.disease.common.core.PageResult;
-import com.xdht.disease.sys.model.RecordCompanySummary;
 import com.xdht.disease.common.core.Service;
+import com.xdht.disease.sys.model.RecordCompanySummary;
+import com.xdht.disease.sys.vo.request.DateRequest;
 import com.xdht.disease.sys.vo.request.RecordCompanySummaryRequest;
+import com.xdht.disease.sys.vo.response.RecordCompanySummaryEchartsResponse;
 import com.xdht.disease.sys.vo.response.RecordCompanySummaryResponse;
+
+import java.util.List;
 
 
 /**
@@ -36,4 +40,18 @@ public interface RecordCompanySummaryService extends Service<RecordCompanySummar
      * @param recordCompanySummary 实体
      */
     void update(RecordCompanySummary recordCompanySummary);
+
+    /**
+     * 查询企业体检的信息
+     * @return 返回结果
+     */
+    List<RecordCompanySummaryEchartsResponse> selectCompanySummaryEcharts(DateRequest dateRequest);
+
+    /**
+     * 查询百分比信息
+     * @param dateRequest 日期参数值
+     * @return 返回结果
+     */
+    List<RecordCompanySummaryEchartsResponse> selectCompanySummaryPercentEcharts(DateRequest dateRequest);
+
 }
