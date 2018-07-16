@@ -6,6 +6,7 @@ import com.xdht.disease.sys.vo.request.DateRequest;
 import com.xdht.disease.sys.vo.request.RecordCompanySummaryRequest;
 import com.xdht.disease.sys.vo.response.RecordCompanySummaryEchartsResponse;
 import com.xdht.disease.sys.vo.response.RecordCompanySummaryResponse;
+import com.xdht.disease.sys.vo.response.YearResponse;
 
 import java.util.List;
 
@@ -38,4 +39,9 @@ public interface RecordCompanySummaryMapper extends Mapper<RecordCompanySummary>
      */
     List<RecordCompanySummaryEchartsResponse> selectCompanySummaryPercentEcharts(DateRequest dateRequest);
 
+    /**
+     * 查询年份
+     * @return 返回结果
+     */
+    List<YearResponse> selectCompanySummarYear();
 }
