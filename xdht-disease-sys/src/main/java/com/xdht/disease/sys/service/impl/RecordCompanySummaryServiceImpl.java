@@ -10,6 +10,7 @@ import com.xdht.disease.sys.vo.request.DateRequest;
 import com.xdht.disease.sys.vo.request.RecordCompanySummaryRequest;
 import com.xdht.disease.sys.vo.response.RecordCompanySummaryEchartsResponse;
 import com.xdht.disease.sys.vo.response.RecordCompanySummaryResponse;
+import com.xdht.disease.sys.vo.response.YearResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -77,6 +78,12 @@ public class RecordCompanySummaryServiceImpl extends AbstractService<RecordCompa
     @Override
     public List<RecordCompanySummaryEchartsResponse> selectCompanySummaryPercentEcharts(DateRequest dateRequest) {
         List<RecordCompanySummaryEchartsResponse> list = this.recordCompanySummaryMapper.selectCompanySummaryPercentEcharts(dateRequest);
+        return list;
+    }
+
+    @Override
+    public List<YearResponse> selectCompanySummaryYear() {
+        List<YearResponse> list = this.recordCompanySummaryMapper.selectCompanySummarYear();
         return list;
     }
 

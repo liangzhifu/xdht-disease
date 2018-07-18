@@ -20,4 +20,10 @@ public class RecordCompanySummaryEchartsResponse {
 
     @ApiModelProperty(value = "百分比")
     private float percent;
+
+    @ApiModelProperty(value = "企业id")
+    private Long companyId;
+
+    @ApiModelProperty(value = "企业名称")
+    private String companyName;
 }

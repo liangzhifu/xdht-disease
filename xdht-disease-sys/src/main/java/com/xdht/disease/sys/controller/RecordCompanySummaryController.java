@@ -9,6 +9,7 @@ import com.xdht.disease.sys.service.RecordCompanySummaryService;
 import com.xdht.disease.sys.vo.request.DateRequest;
 import com.xdht.disease.sys.vo.request.RecordCompanySummaryRequest;
 import com.xdht.disease.sys.vo.response.RecordCompanySummaryEchartsResponse;
+import com.xdht.disease.sys.vo.response.YearResponse;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
@@ -83,6 +84,11 @@ public class RecordCompanySummaryController {
     @ApiOperation(value = "查询企业体检百分比详情")
     public  ResponseEntity<Result<RecordCompanySummaryEchartsResponse>> getRecordCompanySummaryPercentDetail(@RequestBody DateRequest dateRequest) {
         return new ResponseEntity<>(Result.ok(recordCompanySummaryService.selectCompanySummaryPercentEcharts(dateRequest)), HttpStatus.OK);
+    }
+    @RequestMapping(value = "/year", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    @ApiOperation(value = "查询企业年份")
+    public  ResponseEntity<Result<YearResponse>> getRecordCompanySummaryYear() {
+        return new ResponseEntity<>(Result.ok(recordCompanySummaryService.selectCompanySummaryYear()), HttpStatus.OK);
     }
 
 

@@ -58,26 +58,60 @@
   </select>
 
   <select id="selectCompanySummaryEcharts" parameterType="com.xdht.disease.sys.vo.request.DateRequest" resultType="com.xdht.disease.sys.vo.response.RecordCompanySummaryEchartsResponse">
-      SELECT
-          year(rcs.inspection_date) as year,
-          SUM(rcs.actual_inspectd_number) as 'counts'
-      FROM
-          record_company_summary rcs
+         SELECT
+            rcs.company_id AS companyId,
+            (
+                SELECT
+                    sc.company_name
+                FROM
+                    sys_company sc
+                WHERE
+                    sc.id = rcs.company_id
+            ) AS companyName,
+            YEAR (rcs.inspection_date) AS YEAR,
+            sum(rcs.actual_inspectd_number) AS counts
+        FROM
+            record_company_summary rcs
       <include refid="where"></include>
-      GROUP BY  year(rcs.inspection_date) ORDER BY year(rcs.inspection_date)
+        GROUP BY
+            YEAR (rcs.inspection_date),
+            rcs.company_id
+        ORDER BY
+            rcs.company_id ,YEAR (rcs.inspection_date)
+  </select>
+  <select id="selectCompanySummarYear"  resultType="com.xdht.disease.sys.vo.response.YearResponse">
+        SELECT
+          YEAR (rcs.inspection_date) AS YEAR
+        FROM
+          record_company_summary rcs
+        WHERE rcs.status = '0'
+        GROUP BY
+          YEAR (rcs.inspection_date)
+        ORDER BY
+          YEAR (rcs.inspection_date)
   </select>
 
   <select id="selectCompanySummaryPercentEcharts" parameterType="com.xdht.disease.sys.vo.request.DateRequest" resultType="com.xdht.disease.sys.vo.response.RecordCompanySummaryEchartsResponse">
-         SELECT
-          YEAR (rcs.inspection_date) AS YEAR,
-          round ((SUM(rcs.actual_inspectd_number)- SUM(rcs.no_abnormality)) / SUM(rcs.actual_inspectd_number) *100,2) as percent
-      FROM
-          record_company_summary rcs
-      <include refid="where"></include>
-      GROUP BY
-          YEAR (rcs.inspection_date)
-      ORDER BY
-          YEAR (rcs.inspection_date)
+        SELECT
+        rcs.company_id AS companyId,
+        (
+            SELECT
+                sc.company_name
+            FROM
+                sys_company sc
+            WHERE
+                sc.id = rcs.company_id
+        ) AS companyName,
+	  YEAR (rcs.inspection_date) AS YEAR,
+	  round ((SUM(rcs.actual_inspectd_number)- SUM(rcs.no_abnormality)) / SUM(rcs.actual_inspectd_number) *100,2) as percent
+    FROM
+           record_company_summary rcs
+          <include refid="where"></include>
+    GROUP BY
+        YEAR (rcs.inspection_date),
+        rcs.company_id
+    ORDER BY
+        rcs.company_id ,YEAR (rcs.inspection_date)
   </select>
 
   <sql id="where">
