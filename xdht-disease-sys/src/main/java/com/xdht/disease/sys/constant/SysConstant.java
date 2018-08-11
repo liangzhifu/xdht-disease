@@ -6,6 +6,6 @@ package com.xdht.disease.sys.constant;
 public class SysConstant {
 
     // 超级管理员账号ID
-    public static final String adminMgrType = "1";
+    public static final Long adminId = 1L;
 
 }

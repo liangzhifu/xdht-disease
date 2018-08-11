@@ -1,6 +1,7 @@
 package com.xdht.disease.sys.vo.request;
 
 import io.swagger.annotations.ApiModelProperty;
+import io.swagger.models.auth.In;
 import lombok.Data;
 
 /**
@@ -11,5 +12,8 @@ public class SysCompanyOfficeRequest {
 
     @ApiModelProperty(value = "公司id")
     private Long companyId;
+
+    @ApiModelProperty(value = "类型")
+    private Integer officeType;
 
 }

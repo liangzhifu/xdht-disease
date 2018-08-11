@@ -10,6 +10,7 @@ import com.xdht.disease.common.exception.ServiceException;
 import com.xdht.disease.common.model.TokenModel;
 import com.xdht.disease.common.model.User;
 import com.xdht.disease.common.util.Md5Utils;
+import com.xdht.disease.sys.constant.SysConstant;
 import com.xdht.disease.sys.constant.SysEnum;
 import com.xdht.disease.sys.model.SysEmployee;
 import com.xdht.disease.sys.model.SysUser;
@@ -74,7 +75,8 @@ public class SysUserServiceImpl extends AbstractService<SysUser> implements SysU
     @Override
     public PageResult<SysUser> querySysUserPage(SysUserRequest sysUserRequest) {
         Condition condition = new Condition(SysUser.class);
-        condition.createCriteria().andEqualTo("status", SysEnum.StatusEnum.STATUS_NORMAL.getCode());
+        condition.createCriteria().andEqualTo("status", SysEnum.StatusEnum.STATUS_NORMAL.getCode())
+            .andGreaterThan("id", SysConstant.adminId);
         if (sysUserRequest.getUserName() != null && !"".equals(sysUserRequest.getUserName())){
             condition.getOredCriteria().get(0).andLike("userName", "%"+sysUserRequest.getUserName()+"%");
         }
@@ -93,7 +95,8 @@ public class SysUserServiceImpl extends AbstractService<SysUser> implements SysU
     @Override
     public List<SysUser> querySysUserList(SysUser sysUser) {
         Condition condition = new Condition(SysUser.class);
-        condition.createCriteria().andEqualTo("status", SysEnum.StatusEnum.STATUS_NORMAL.getCode());
+        condition.createCriteria().andEqualTo("status", SysEnum.StatusEnum.STATUS_NORMAL.getCode())
+                .andGreaterThan("id", SysConstant.adminId);
         if (sysUser.getUserName() != null){
             condition.getOredCriteria().get(0).andLike("userName", "%"+sysUser.getUserName()+"%");
         }

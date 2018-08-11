@@ -34,7 +34,8 @@ public class SysCompanyOfficeServiceImpl extends AbstractService<SysCompanyOffic
     public List<SysCompanyOffice> querySysCompanyOfficeList(SysCompanyOfficeRequest sysCompanyOfficeRequest) {
         Condition condition = new Condition(SysCompanyOffice.class);
         condition.createCriteria() .andEqualTo("companyId", sysCompanyOfficeRequest.getCompanyId())
-            .andEqualTo("status", SysEnum.StatusEnum.STATUS_NORMAL.getCode());
+                .andEqualTo("officeType", sysCompanyOfficeRequest.getOfficeType())
+                .andEqualTo("status", SysEnum.StatusEnum.STATUS_NORMAL.getCode());
         return this.selectByCondition(condition);
     }
 

@@ -10,6 +10,7 @@
     <result column="parent_ids" jdbcType="VARCHAR" property="parentIds" />
     <result column="company_id" jdbcType="BIGINT" property="companyId" />
     <result column="office_name" jdbcType="VARCHAR" property="officeName" />
+    <result column="office_type" jdbcType="INTEGER" property="officeType" />
     <result column="create_by" jdbcType="BIGINT" property="createBy" />
     <result column="create_date" jdbcType="TIMESTAMP" property="createDate" />
     <result column="update_by" jdbcType="BIGINT" property="updateBy" />
