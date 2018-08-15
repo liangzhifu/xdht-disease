@@ -76,10 +76,10 @@ public class RecordIndividualNoiseController {
         return new ResponseEntity<>(Result.ok(recordIndividualNoise), HttpStatus.OK);
     }
 
-    @RequestMapping(value = "/echarts/detail", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
-    @ApiOperation(value = "获取Echarts--详细内容")
-    public ResponseEntity<Result<RecordIndividualNoiseResponse>> getRecordIndividualNoiseEchartsDetail() {
-        List<RecordIndividualNoiseResponse> recordIndividualNoiseResponseList = this.recordIndividualNoiseService.queryNoiseEchartsDetail();
-        return new ResponseEntity<>(Result.ok(recordIndividualNoiseResponseList), HttpStatus.OK);
-    }
+//    @RequestMapping(value = "/echarts/detail", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+//    @ApiOperation(value = "获取Echarts--详细内容")
+//    public ResponseEntity<Result<RecordIndividualNoiseResponse>> getRecordIndividualNoiseEchartsDetail() {
+//        List<RecordIndividualNoiseResponse> recordIndividualNoiseResponseList = this.recordIndividualNoiseService.queryNoiseEchartsDetail();
+//        return new ResponseEntity<>(Result.ok(recordIndividualNoiseResponseList), HttpStatus.OK);
+//    }
 }
