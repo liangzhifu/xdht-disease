@@ -1,5 +1,7 @@
 package com.xdht.disease.sys.model;
 
+import com.alibaba.fastjson.annotation.JSONField;
+
 import java.math.BigDecimal;
 import java.util.Date;
 import javax.persistence.*;
@@ -34,6 +36,7 @@ public class RecordIndividualNoise {
     /**
      * 检查时间
      */
+    @JSONField(format="yyyy-MM-dd")
     @Column(name = "inspect_date")
     private Date inspectDate;
 
