@@ -2,6 +2,7 @@ package com.xdht.disease.sys.model;
 
 import com.alibaba.fastjson.annotation.JSONField;
 
+import java.math.BigDecimal;
 import java.util.Date;
 import javax.persistence.*;
 
@@ -12,27 +13,40 @@ public class RecordWorkplaceNoise {
     private Long id;
 
     /**
-     * 车间
+     * 公司
      */
-    private String workshop;
+    @Column(name = "company_id")
+    private Long companyId;
+
+    /*
+    * 检查时间*/
+    @JSONField(format="yyyy-MM-dd")
+    @Column(name = "inspect_date")
+    private Date inspectDate;
+
+    /*
+    * 检查年份*/
+
+    @Column(name = "inspect_year")
+    private Integer inspectYear;
 
     /**
-     * 岗位
+     * 部门
      */
     @Column(name = "post_id")
     private Long postId;
 
-    /**
-     * 主要停留地点
-     */
-    @Column(name = "stop_place")
-    private String stopPlace;
+    /*
+    * 岗位*/
+    @Column(name = "work_type_id")
+    private Long workTypeId;
 
     /**
-     * 测定结果dB(A)
+     * 接触时间
      */
-    @Column(name = "test_result")
-    private Integer testResult;
+    @Column(name = "contact_time")
+    private BigDecimal contactTime;
+
 
     /**
      * 噪声频谱分析结果
@@ -41,17 +55,10 @@ public class RecordWorkplaceNoise {
     private String analysisResult;
 
     /**
-     * 接触时间
-     */
-    @JSONField(format="yyyy-MM-dd")
-    @Column(name = "contact_time")
-    private Date contactTime;
-
-    /**
      * 8h（或40h）等效声级[dB(A)]
      */
     @Column(name = "sound_level")
-    private Integer soundLevel;
+    private BigDecimal soundLevel;
 
     /**
      * 状态（0正常 1删除）
@@ -63,6 +70,31 @@ public class RecordWorkplaceNoise {
      */
     @Column(name = "check_place")
     private String checkPlace;
+
+    /**
+     * 创建人
+     */
+    @Column(name = "create_by")
+    private Long createBy;
+
+    /**
+     * 创建时间
+     */
+    @Column(name = "create_date")
+    private Date createDate;
+
+    /**
+     * 更新人
+     */
+    @Column(name = "update_by")
+    private Long updateBy;
+
+    /**
+     * 更新时间
+     */
+    @Column(name = "update_date")
+    private Date updateDate;
+
 
     /**
      * @return id
@@ -78,22 +110,84 @@ public class RecordWorkplaceNoise {
         this.id = id;
     }
 
-    /**
-     * 获取车间
-     *
-     * @return workshop - 车间
-     */
-    public String getWorkshop() {
-        return workshop;
+    public Long getCompanyId() {
+        return companyId;
     }
 
-    /**
-     * 设置车间
-     *
-     * @param workshop 车间
-     */
-    public void setWorkshop(String workshop) {
-        this.workshop = workshop;
+    public void setCompanyId(Long companyId) {
+        this.companyId = companyId;
+    }
+
+    public Date getInspectDate() {
+        return inspectDate;
+    }
+
+    public void setInspectDate(Date inspectDate) {
+        this.inspectDate = inspectDate;
+    }
+
+    public Integer getInspectYear() {
+        return inspectYear;
+    }
+
+    public void setInspectYear(Integer inspectYear) {
+        this.inspectYear = inspectYear;
+    }
+
+    public Long getWorkTypeId() {
+        return workTypeId;
+    }
+
+    public void setWorkTypeId(Long workTypeId) {
+        this.workTypeId = workTypeId;
+    }
+
+    public void setContactTime(BigDecimal contactTime) {
+        this.contactTime = contactTime;
+    }
+
+    public void setSoundLevel(BigDecimal soundLevel) {
+        this.soundLevel = soundLevel;
+    }
+
+    public BigDecimal getContactTime() {
+        return contactTime;
+    }
+
+    public BigDecimal getSoundLevel() {
+        return soundLevel;
+    }
+
+    public Long getCreateBy() {
+        return createBy;
+    }
+
+    public void setCreateBy(Long createBy) {
+        this.createBy = createBy;
+    }
+
+    public Date getCreateDate() {
+        return createDate;
+    }
+
+    public void setCreateDate(Date createDate) {
+        this.createDate = createDate;
+    }
+
+    public Long getUpdateBy() {
+        return updateBy;
+    }
+
+    public void setUpdateBy(Long updateBy) {
+        this.updateBy = updateBy;
+    }
+
+    public Date getUpdateDate() {
+        return updateDate;
+    }
+
+    public void setUpdateDate(Date updateDate) {
+        this.updateDate = updateDate;
     }
 
     /**
@@ -114,41 +208,6 @@ public class RecordWorkplaceNoise {
         this.postId = postId;
     }
 
-    /**
-     * 获取主要停留地点
-     *
-     * @return stop_place - 主要停留地点
-     */
-    public String getStopPlace() {
-        return stopPlace;
-    }
-
-    /**
-     * 设置主要停留地点
-     *
-     * @param stopPlace 主要停留地点
-     */
-    public void setStopPlace(String stopPlace) {
-        this.stopPlace = stopPlace;
-    }
-
-    /**
-     * 获取测定结果dB(A)
-     *
-     * @return test_result - 测定结果dB(A)
-     */
-    public Integer getTestResult() {
-        return testResult;
-    }
-
-    /**
-     * 设置测定结果dB(A)
-     *
-     * @param testResult 测定结果dB(A)
-     */
-    public void setTestResult(Integer testResult) {
-        this.testResult = testResult;
-    }
 
     /**
      * 获取噪声频谱分析结果
@@ -168,41 +227,6 @@ public class RecordWorkplaceNoise {
         this.analysisResult = analysisResult;
     }
 
-    /**
-     * 获取接触时间
-     *
-     * @return contact_time - 接触时间
-     */
-    public Date getContactTime() {
-        return contactTime;
-    }
-
-    /**
-     * 设置接触时间
-     *
-     * @param contactTime 接触时间
-     */
-    public void setContactTime(Date contactTime) {
-        this.contactTime = contactTime;
-    }
-
-    /**
-     * 获取8h（或40h）等效声级[dB(A)]
-     *
-     * @return sound_level - 8h（或40h）等效声级[dB(A)]
-     */
-    public Integer getSoundLevel() {
-        return soundLevel;
-    }
-
-    /**
-     * 设置8h（或40h）等效声级[dB(A)]
-     *
-     * @param soundLevel 8h（或40h）等效声级[dB(A)]
-     */
-    public void setSoundLevel(Integer soundLevel) {
-        this.soundLevel = soundLevel;
-    }
 
     /**
      * 获取状态（0正常 1删除）

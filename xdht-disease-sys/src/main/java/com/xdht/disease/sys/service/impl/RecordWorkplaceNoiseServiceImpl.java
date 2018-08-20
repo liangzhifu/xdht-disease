@@ -5,7 +5,9 @@ import com.xdht.disease.common.core.AbstractService;
 import com.xdht.disease.common.core.PageResult;
 import com.xdht.disease.sys.constant.SysEnum;
 import com.xdht.disease.sys.dao.RecordWorkplaceNoiseMapper;
+import com.xdht.disease.sys.dao.SysCompanyOfficeMapper;
 import com.xdht.disease.sys.model.RecordWorkplaceNoise;
+import com.xdht.disease.sys.model.SysCompanyOffice;
 import com.xdht.disease.sys.service.RecordWorkplaceNoiseService;
 import com.xdht.disease.sys.vo.request.RecordWorkplaceNoiseRequest;
 import com.xdht.disease.sys.vo.response.RecordWorkplaceNoiseResponse;
@@ -14,6 +16,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import tk.mybatis.mapper.entity.Condition;
 
+import java.util.Calendar;
 import java.util.List;
 
 
@@ -26,18 +29,15 @@ public class RecordWorkplaceNoiseServiceImpl extends AbstractService<RecordWorkp
 
     @Autowired
     private RecordWorkplaceNoiseMapper recordWorkplaceNoiseMapper;
+    @Autowired
+    private SysCompanyOfficeMapper sysCompanyOfficeMapper;
 
     @Override
     public PageResult<RecordWorkplaceNoise> queryListPage(RecordWorkplaceNoiseRequest recordWorkplaceNoiseRequest) {
         Condition condition =  new Condition(RecordWorkplaceNoise.class);
-        condition.createCriteria() .andEqualTo("id", recordWorkplaceNoiseRequest.getId())
-                .andEqualTo("postId",recordWorkplaceNoiseRequest.getPostId());
-        if (recordWorkplaceNoiseRequest.getStopPlace() != null) {
-            condition.getOredCriteria().get(0).andLike("stopPlace","%"+ recordWorkplaceNoiseRequest.getStopPlace()+ "%");
-        }
-        if (recordWorkplaceNoiseRequest.getWorkshop() != null) {
-            condition.getOredCriteria().get(0).andLike("workshop","%"+ recordWorkplaceNoiseRequest.getWorkshop()+ "%");
-        }
+        condition.createCriteria() .andEqualTo("id", recordWorkplaceNoiseRequest.getId()).
+                andEqualTo("companyId",recordWorkplaceNoiseRequest.getCompanyId())
+                .andEqualTo("workTypeId",recordWorkplaceNoiseRequest.getWorkTypeId());
         condition.getOredCriteria().get(0).andEqualTo("status", SysEnum.StatusEnum.STATUS_NORMAL.getCode());
         condition.orderBy("id").desc();
         PageHelper.startPage(recordWorkplaceNoiseRequest.getPageNumber(), recordWorkplaceNoiseRequest.getPageSize());
@@ -51,6 +51,13 @@ public class RecordWorkplaceNoiseServiceImpl extends AbstractService<RecordWorkp
 
     @Override
     public void add(RecordWorkplaceNoise recordWorkplaceNoise) {
+        long workTypeId = recordWorkplaceNoise.getWorkTypeId();
+        SysCompanyOffice sysCompanyOffice =sysCompanyOfficeMapper.selectByPrimaryKey(workTypeId);
+         recordWorkplaceNoise.setPostId(sysCompanyOffice.getParentId());
+        Calendar calendar=Calendar.getInstance();
+        calendar.setTime(recordWorkplaceNoise.getInspectDate());
+        recordWorkplaceNoise.setInspectYear(calendar.get(Calendar.YEAR));
+        System.err.println(calendar.get(Calendar.YEAR)+"..............");
         recordWorkplaceNoise.setStatus(SysEnum.StatusEnum.STATUS_NORMAL.getCode());
         this.insertUseGeneratedKeys(recordWorkplaceNoise);
     }
