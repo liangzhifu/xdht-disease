@@ -6,15 +6,20 @@
       WARNING - @mbg.generated
     -->
     <id column="id" jdbcType="BIGINT" property="id" />
-    <result column="workshop" jdbcType="VARCHAR" property="workshop" />
+    <result column="company_id" jdbcType="BIGINT" property="companyId" />
     <result column="post_id" jdbcType="BIGINT" property="postId" />
-    <result column="stop_place" jdbcType="VARCHAR" property="stopPlace" />
-    <result column="test_result" jdbcType="INTEGER" property="testResult" />
+    <result column="inspect_date" javaType="DATE" property="inspectDate"/>
+    <result column="inspect_Year" jdbcType="INTEGER" property="inspectYear" />
+    <result column="work_type_id" jdbcType="BIGINT" property="workTypeId"/>
     <result column="analysis_result" jdbcType="VARCHAR" property="analysisResult" />
-    <result column="contact_time" jdbcType="DATE" property="contactTime" />
-    <result column="sound_level" jdbcType="INTEGER" property="soundLevel" />
+    <result column="contact_time" jdbcType="DECIMAL" property="contactTime" />
+    <result column="sound_level" jdbcType="DECIMAL" property="soundLevel" />
     <result column="status" jdbcType="CHAR" property="status" />
     <result column="check_place" jdbcType="VARCHAR" property="checkPlace" />
+    <result column="create_by" jdbcType="BIGINT" property="createBy" />
+    <result column="create_date" jdbcType="TIMESTAMP" property="createDate" />
+    <result column="update_by" jdbcType="BIGINT" property="updateBy" />
+    <result column="update_date" jdbcType="TIMESTAMP" property="updateDate" />
   </resultMap>
 
   <select id="selectRecordWorkplaceNoiseEcharsDetail" parameterType="java.lang.Long" resultType="com.xdht.disease.sys.vo.response.RecordWorkplaceNoiseResponse">

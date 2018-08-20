@@ -74,13 +74,14 @@ public class RecordIndividualNoiseServiceImpl extends AbstractService<RecordIndi
     public PageResult<RecordIndividualNoise> queryListPage(RecordIndividualNoiseRequest recordIndividualNoiseRequest) {
         Condition condition =  new Condition(RecordIndividualNoise.class);
         condition.createCriteria() .andEqualTo("id", recordIndividualNoiseRequest.getId())
-                                    .andEqualTo("postId",recordIndividualNoiseRequest.getPostId());
-        if (recordIndividualNoiseRequest.getStopPlace() != null && !"".equals(recordIndividualNoiseRequest.getStopPlace())){
+                                 .andEqualTo("companyId",recordIndividualNoiseRequest.getCompanyId())
+                .andEqualTo("workTypeId",recordIndividualNoiseRequest.getWorkTypeId());
+        /*if (recordIndividualNoiseRequest.get() != null && !"".equals(recordIndividualNoiseRequest.getStopPlace())){
             condition.getOredCriteria().get(0).andLike("stopPlace","%"+ recordIndividualNoiseRequest.getStopPlace()+ "%");
         }
         if (recordIndividualNoiseRequest.getWorkshop() != null && !"".equals(recordIndividualNoiseRequest.getWorkshop())) {
             condition.getOredCriteria().get(0).andLike("workshop","%"+ recordIndividualNoiseRequest.getWorkshop()+ "%");
-        }
+    }*/
         condition.getOredCriteria().get(0).andEqualTo("status", SysEnum.StatusEnum.STATUS_NORMAL.getCode());
         condition.orderBy("id").desc();
         PageHelper.startPage(recordIndividualNoiseRequest.getPageNumber(), recordIndividualNoiseRequest.getPageSize());
