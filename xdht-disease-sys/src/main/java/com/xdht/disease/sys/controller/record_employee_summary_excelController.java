@@ -1,12 +1,21 @@
 package com.xdht.disease.sys.controller;
 
+import com.xdht.disease.common.authorization.annotation.Authorization;
+import com.xdht.disease.common.constant.ResultCode;
+import com.xdht.disease.common.core.Result;
+import com.xdht.disease.sys.constant.SysEnum;
 import com.xdht.disease.sys.model.record_employee_summary_excel;
 import com.xdht.disease.sys.service.record_employee_summary_excelService;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
+import io.swagger.annotations.ApiImplicitParam;
+import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.annotation.Resource;
 import java.util.List;
@@ -15,7 +24,7 @@ import java.util.List;
 * Created by lzf on 2018/08/20.
 */
 @RestController
-@RequestMapping("/record/employee/summary/excel")
+@RequestMapping("/api/v1/summaryExcel")
 public class record_employee_summary_excelController {
     @Resource
     private record_employee_summary_excelService record_employee_summary_excelService;
@@ -24,36 +33,21 @@ public class record_employee_summary_excelController {
    public void insert(){
       this.record_employee_summary_excelService.saveRecordEmployeeSummaryExcel();
    }
-/*
-    @PostMapping("/add")
-    public Result add(record_employee_summary_excel record_employee_summary_excel) {
-        record_employee_summary_excelService.save(record_employee_summary_excel);
-        return ResultGenerator.genSuccessResult();
-    }
 
-    @PostMapping("/delete")
-    public Result delete(@RequestParam Integer id) {
-        record_employee_summary_excelService.deleteById(id);
-        return ResultGenerator.genSuccessResult();
+    @RequestMapping(value="/upload", method = RequestMethod.POST)
+    @ApiOperation(value = "个人体检Excel上传")
+    @Authorization
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "authorization", value = "authorization", required = true, dataType = "string", paramType = "header"),
+    })
+    public ResponseEntity<Result<Object>> upload(@RequestParam("uploadFile") MultipartFile file) {
+        String contentType = file.getContentType();
+        String fileName = file.getOriginalFilename();
+        try {
+            //FileUtil.uploadFile(file.getBytes(), fileName);
+        } catch (Exception e) {
+            return new ResponseEntity<>(Result.error(ResultCode.FAIL, e.getMessage()), HttpStatus.OK);
+        }
+        return new ResponseEntity<>(Result.ok(null), HttpStatus.OK);
     }
-
-    @PostMapping("/update")
-    public Result update(record_employee_summary_excel record_employee_summary_excel) {
-        record_employee_summary_excelService.update(record_employee_summary_excel);
-        return ResultGenerator.genSuccessResult();
-    }
-
-    @PostMapping("/detail")
-    public Result detail(@RequestParam Integer id) {
-        record_employee_summary_excel record_employee_summary_excel = record_employee_summary_excelService.findById(id);
-        return ResultGenerator.genSuccessResult(record_employee_summary_excel);
-    }
-
-    @PostMapping("/list")
-    public Result list(@RequestParam(defaultValue = "0") Integer page, @RequestParam(defaultValue = "0") Integer size) {
-        PageHelper.startPage(page, size);
-        List<record_employee_summary_excel> list = record_employee_summary_excelService.findAll();
-        PageInfo pageInfo = new PageInfo(list);
-        return ResultGenerator.genSuccessResult(pageInfo);
-    }*/
 }
