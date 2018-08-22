@@ -96,6 +96,6 @@ select sys_employee.emp_identity_number from sys_employee where status='0');
  delete from record_employee_summary_excel;
   </delete>
 <update id="insertEmployeeContactTime">
-update sys_employee set contact_time= (select contact_time from record_employee_summary where emp_id= sys_employee.id and status='0');
+update sys_employee set contact_time= (select distinct contact_time from record_employee_summary where emp_id= sys_employee.id and status='0' order by update_date desc limit 1);
 </update>
 </mapper>
