@@ -1,34 +1,26 @@
 package com.xdht.disease.sys.service.impl;
 
 
+import com.xdht.disease.common.annotation.ExcelImport;
 import com.xdht.disease.sys.dao.record_employee_summary_excelMapper;
 import com.xdht.disease.sys.model.record_employee_summary_excel;
-import com.xdht.disease.sys.service.record_employee_summary_excelService;
+import com.xdht.disease.sys.service.*;
 import com.xdht.disease.common.core.AbstractService;
-import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.io.InputStream;
 import java.lang.reflect.Field;
-import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
-import java.sql.Date;
-import java.sql.SQLException;
 import java.text.SimpleDateFormat;
 import java.util.*;
-import java.util.Map.Entry;
 
-import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.DateUtil;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
-import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+import tk.mybatis.mapper.entity.Condition;
+
 
 
 
@@ -36,20 +28,23 @@ import org.apache.poi.xssf.usermodel.XSSFWorkbook;
  * Created by lzf on 2018/08/20.
  */
 @Service
-@Transactional
+@Transactional(rollbackFor=Exception.class)
 public class record_employee_summary_excelServiceImpl extends AbstractService<record_employee_summary_excel> implements record_employee_summary_excelService {
 
     @Autowired
     private record_employee_summary_excelMapper  recordEmployeeSummaryExcelMapper;
 
-     public void saveRecordEmployeeSummaryExcel( ) {
+    @Autowired
+    private RecordEmployeeSummaryService recordEmployeeSummaryService;
+
+     public void saveRecordEmployeeSummaryExcel(Workbook workbook )throws Exception {
 
          Workbook wb =null;
          Sheet sheet = null;
          Row row = null;
          List<Map<String,String>> list = null;
          String cellData = null;
-         String filePath = "C:\\新建文件夹\\test.xlsx";
+
          String columns[] = new String[50];
          Class rese =record_employee_summary_excel.class;
          Field[] field=rese.getDeclaredFields(); //获取字段类型，返回 Field 对象的一个数组，这些对象反映此 Class 对象所表示的类或接口所声明的所有字段。
@@ -59,23 +54,23 @@ public class record_employee_summary_excelServiceImpl extends AbstractService<re
              columns[n]=field[i].getName();
              n+=1;
          }
-         wb = readExcel(filePath);
+         wb = workbook;
          System.err.println(wb.getSheetName(0)+"sheet");
          if(wb != null){
              //用来存放表中数据
              list = new ArrayList<Map<String,String>>();
              //获取第一个sheet
              sheet = wb.getSheetAt(0);
-             System.err.println("获取第一个sheet"+sheet);
+
              //获取最大行数
              int rownum = sheet.getPhysicalNumberOfRows();
-             System.err.println("获取最大行数"+rownum);
+
              //获取第一行
              row = sheet.getRow(0);
-             System.err.println("获取第一行数"+row.toString());
+
              //获取最大列数
              int colnum = row.getPhysicalNumberOfCells();
-             System.err.println("获取最大列数"+colnum);
+
              for (int i = 1; i<rownum; i++) {
                  Map<String,String> map = new LinkedHashMap<String,String>();
                  row = sheet.getRow(i);
@@ -83,22 +78,27 @@ public class record_employee_summary_excelServiceImpl extends AbstractService<re
                      for (int j=0;j<colnum;j++){
 
                          cellData = (String) getCellFormatValue(row.getCell(j));
-                         if(columns[j].equals("age")||columns.equals("contactTime")){
+                        if(columns[j].equals("age")||columns.equals("contactTime")){
                              cellData=cellData.substring(0, cellData.lastIndexOf("."));
                          }
 
                          map.put(columns[j], cellData);
+
                      }
                  }else{
                      break;
                  }
                  list.add(map);
+                 for (Map.Entry<String,String> entry : map.entrySet()) {
+
+                     System.out.print(entry.getKey()+":"+entry.getValue()+",");
+
+                 }
              }
+
          }
 
-
-
-               List<record_employee_summary_excel> list1= new LinkedList<>();
+         List<record_employee_summary_excel> list1= new LinkedList<>();
          //遍历解析出来的list
          for (Map<String,String> map : list) {
 
@@ -107,70 +107,78 @@ public class record_employee_summary_excelServiceImpl extends AbstractService<re
 
                  Field[] fields = re.getClass().getDeclaredFields();
                  for (Field field1 : fields) {
-                     int mod = field1.getModifiers();
-                     if (Modifier.isStatic(mod) || Modifier.isFinal(mod)) {
-                         continue;
-                     }
-                     field1.setAccessible(true);
-                     String type=field1.getAnnotatedType().getType().getTypeName();
+                     if (field1.isAnnotationPresent(ExcelImport.class)) {
+                         int mod = field1.getModifiers();
+                         if (Modifier.isStatic(mod) || Modifier.isFinal(mod)) {
+                             continue;
+                         }
+                         field1.setAccessible(true);
+                         String type=field1.getAnnotatedType().getType().getTypeName();
 
-                     switch (type) {
-                         case "java.lang.String":
-                             field1.set(re, map.get(field1.getName()));
-                             break;
-                         case "java.lang.Integer":
-                             field1.set(re, Integer.parseInt(map.get(field1.getName())));
-                             break;
-                         default:
-                             break;
+                         switch (type) {
+                             case "java.lang.String":
+                                 field1.set(re, map.get(field1.getName()));
+                                 break;
+                             case "java.lang.Integer":
+                                 field1.set(re, Integer.parseInt(map.get(field1.getName())));
+                                 break;
+                             case "java.util.Date":
+                                 SimpleDateFormat sdf=new SimpleDateFormat("yyyy-MM-dd");
+                                 field1.set(re, sdf.parse(map.get(field1.getName())));
+                                 break;
+                             default:
+                                 break;
+                         }
                      }
-
                  }
-                 System.out.println(re.getCompany()+ re.getContactTime()+"..................");
-                 System.out.println(re.getName()+ re.getAge()+".............");
+
+                 re.setInspect("0");
+                  re.setStatus("0");
+                 re.setCreateBy((long)11);
+                 Date date =new Date();
+                 re.setCreateDate(date);
+                 re.setUpdateBy((long)11);
+                 re.setUpdateDate(date);
                    list1.add(re);
              } catch (Exception e) {
                  e.printStackTrace();
          }
 
-
-             for (Entry<String,String> entry : map.entrySet()) {
-
-                 System.out.print(entry.getKey()+":"+entry.getValue()+",");
-
-             }
-             System.out.println();
+        }
+       this.insertList(list1);
+          Integer identityCountNull =this.recordEmployeeSummaryExcelMapper.selectIdentity();
+           if(identityCountNull!=0&&identityCountNull!=null){
+               throw new Exception("员工不符合");
+           }
+         this.recordEmployeeSummaryExcelMapper.updateExcelCompanyId();
+         Condition condition = new Condition(record_employee_summary_excel.class);
+         condition.createCriteria().andIsNull("companyId");
+         List<record_employee_summary_excel> record_employee_summary_excelList =null;
+                record_employee_summary_excelList = this.selectByCondition(condition);
+         if(record_employee_summary_excelList!=null&&record_employee_summary_excelList.size()!=0){
+             throw new Exception("CompanyId 为空");
          }
-         this.insertList(list1);
+         this.recordEmployeeSummaryExcelMapper.updateExcelPostId();
+         Condition condition2 = new Condition(record_employee_summary_excel.class);
+         condition2.createCriteria().andIsNull("postId");
+         record_employee_summary_excelList = this.selectByCondition(condition2);
+         if(record_employee_summary_excelList!=null&&record_employee_summary_excelList.size()!=0){
+             throw new Exception("PostId 为空");
+         }
+
+         this.recordEmployeeSummaryExcelMapper.updateExcelWorkTypeId();
+         Condition condition3 = new Condition(record_employee_summary_excel.class);
+         condition3.createCriteria().andIsNull("workTypeId");
+         record_employee_summary_excelList = this.selectByCondition(condition3);
+         if(record_employee_summary_excelList!=null&&record_employee_summary_excelList.size()!=0){
+             throw new Exception("workTypeId 为空");
+         }
+         this.recordEmployeeSummaryExcelMapper.insertExcelToRecordEmployeeSummary();
+         this.recordEmployeeSummaryExcelMapper.insertEmployeeContactTime();
+        this.recordEmployeeSummaryExcelMapper.deleteAll();
+
 
      }
-    //读取excel
-    public static Workbook readExcel(String filePath){
-        Workbook wb = null;
-        if(filePath==null){
-            return null;
-        }
-        String extString = filePath.substring(filePath.lastIndexOf("."));
-
-        InputStream is = null;
-        try {
-            is = new FileInputStream(filePath);
-            if(".xls".equals(extString)){
-                return wb = new HSSFWorkbook(is);
-            }else if(".xlsx".equals(extString)){
-                return wb = new XSSFWorkbook(is);
-            }else{
-                return wb = null;
-            }
-
-
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        return wb;
-    }
 
     public static Object getCellFormatValue(Cell cell){
         Object cellValue = null;
@@ -209,5 +217,6 @@ public class record_employee_summary_excelServiceImpl extends AbstractService<re
 
 
     }
+
 
 }

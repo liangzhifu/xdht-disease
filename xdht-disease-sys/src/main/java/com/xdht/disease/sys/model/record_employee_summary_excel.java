@@ -1,5 +1,8 @@
 package com.xdht.disease.sys.model;
 
+import com.alibaba.fastjson.annotation.JSONField;
+import com.xdht.disease.common.annotation.ExcelImport;
+
 import java.util.Date;
 import javax.persistence.*;
 
@@ -25,40 +28,61 @@ public class record_employee_summary_excel {
      */
     @Column(name = "work_type_id")
     private Long workTypeId;
+/*
+* 检查日期
+* */
+    @ExcelImport
+    @Column(name = "inspect_date")
+    private Date inspectDate;
+
+    /*
+    * 职业病危害因素
+    * */
+    @ExcelImport
+    @Column(name = "hazard_factor")
+    private String  hazardFactor;
+
+    /*
+    身份证号*/
+    @ExcelImport
+    private  String empIdentityNumber;
 
     /**
      * 公司名称
      */
+    @ExcelImport
     private String company;
 
     /**
      * 部门/车间
 
-
-
-
      */
+    @ExcelImport
     private String post;
 
     /**
      * 工种
      */
-    @Column(name = "` work_type`")
+    @ExcelImport
+    @Column(name = "work_type")
     private String workType;
 
     /**
      * 姓名
      */
+    @ExcelImport
     private String name;
 
     /**
      * 性别
      */
+    @ExcelImport
     private String sex;
 
     /**
      * 年龄
      */
+    @ExcelImport
     private Integer age;
 
     /**
@@ -68,34 +92,40 @@ public class record_employee_summary_excel {
 
 
      */
+    @ExcelImport
     @Column(name = "contact_time")
     private Integer contactTime;
 
     /**
      * 血压收缩压
      */
+    @ExcelImport
     @Column(name = "blood_pressure_shrink")
     private String bloodPressureShrink;
 
     /**
      * 血压舒张压
      */
+    @ExcelImport
     @Column(name = "blood_pressure_diastole")
     private String bloodPressureDiastole;
 
     /**
      * 心脏
      */
+    @ExcelImport
     private String heart;
 
     /**
      * 肺
      */
+    @ExcelImport
     private String lungs;
 
     /**
      * 皮肤粘膜
      */
+    @ExcelImport
     @Column(name = "skin_mucous_membrane")
     private String skinMucousMembrane;
 
@@ -104,6 +134,7 @@ public class record_employee_summary_excel {
 
 
      */
+    @ExcelImport
     @Column(name = "lymph_node")
     private String lymphNode;
 
@@ -112,132 +143,155 @@ public class record_employee_summary_excel {
 
 
      */
+    @ExcelImport
     @Column(name = "thyroid_gland")
     private String thyroidGland;
 
     /**
      * 耳朵
      */
+    @ExcelImport
     private String ear;
 
     /**
      * 鼻子
      */
+    @ExcelImport
     private String nose;
 
     /**
      * 喉咙
      */
+    @ExcelImport
     private String throat;
 
     /**
      * 前庭功能检查
      */
+    @ExcelImport
     @Column(name = "vestibular_function")
     private String vestibularFunction;
 
     /**
      * 白细胞×109/L
      */
+    @ExcelImport
     @Column(name = "white_blood_cell")
     private String whiteBloodCell;
 
     /**
      * 中性粒细胞计数×109/L
      */
+    @ExcelImport
     @Column(name = "neutrophile_granulocyte")
     private String neutrophileGranulocyte;
 
     /**
      * 红细胞计数×1012/L
      */
+    @ExcelImport
     @Column(name = "red_blood_cell")
     private String redBloodCell;
 
     /**
      * 血色素g/L
      */
+    @ExcelImport
     private String hemoglobin;
 
     /**
      * 血小板×109/L
      */
+    @ExcelImport
     private String platelet;
 
     /**
      * 心电图
      */
+    @ExcelImport
     private String electrocardiogram;
 
     /**
      * 纯音听阈测试-左
      */
+    @ExcelImport
     @Column(name = "dbhl_500_l")
     private String dbhl500L;
 
     /**
      * 纯音听阈测试-左
      */
+    @ExcelImport
     @Column(name = "dbhl_1k_l")
     private String dbhl1kL;
 
     /**
      * 纯音听阈测试-左
      */
+    @ExcelImport
     @Column(name = "dbhl_2k_l")
     private String dbhl2kL;
 
     /**
      * 纯音听阈测试-左
      */
+    @ExcelImport
     @Column(name = "dbhl_3k_l")
     private String dbhl3kL;
 
     /**
      * 纯音听阈测试-左
      */
+    @ExcelImport
     @Column(name = "dbhl_4k_l")
     private String dbhl4kL;
 
     /**
      * 纯音听阈测试-左
      */
+    @ExcelImport
     @Column(name = "dbhl_6k_l")
     private String dbhl6kL;
 
     /**
      * 纯音听阈测试-右
      */
+    @ExcelImport
     @Column(name = "dbhl_500_r")
     private String dbhl500R;
 
     /**
      * 纯音听阈测试-右
      */
+    @ExcelImport
     @Column(name = "dbhl_1k_r")
     private String dbhl1kR;
 
     /**
      * 纯音听阈测试-右
      */
+    @ExcelImport
     @Column(name = "dbhl_2k_r")
     private String dbhl2kR;
 
     /**
      * 纯音听阈测试-右
      */
+    @ExcelImport
     @Column(name = "dbhl_3k_r")
     private String dbhl3kR;
 
     /**
      * 纯音听阈测试-右
      */
+    @ExcelImport
     @Column(name = "dbhl_4k_r")
     private String dbhl4kR;
 
     /**
      * 纯音听阈测试-右
      */
+    @ExcelImport
     @Column(name = "dbhl_6k_r")
     private String dbhl6kR;
 
@@ -269,7 +323,11 @@ public class record_employee_summary_excel {
      * 状态（0正常 1删除）
      */
     private String status;
-
+    /*
+    *0：初检  1：复检
+    * */
+    @Column(name = "inspect")
+   private String inspect;
     /**
      * @return id
      */
@@ -338,6 +396,13 @@ public class record_employee_summary_excel {
         this.workTypeId = workTypeId;
     }
 
+    public String getEmpIdentityNumber() {
+        return empIdentityNumber;
+    }
+
+    public void setEmpIdentityNumber(String empIdentityNumber) {
+        this.empIdentityNumber = empIdentityNumber;
+    }
     /**
      * 获取公司名称
      *
@@ -406,6 +471,22 @@ public class record_employee_summary_excel {
      */
     public void setWorkType(String workType) {
         this.workType = workType;
+    }
+
+    public Date getInspectDate() {
+        return inspectDate;
+    }
+
+    public void setInspectDate(Date inspectDate) {
+        this.inspectDate = inspectDate;
+    }
+
+    public String getHazardFactor() {
+        return hazardFactor;
+    }
+
+    public void setHazardFactor(String hazardFactor) {
+        this.hazardFactor = hazardFactor;
     }
 
     /**
@@ -1122,5 +1203,13 @@ public class record_employee_summary_excel {
      */
     public void setStatus(String status) {
         this.status = status;
+    }
+
+    public String getInspect() {
+        return inspect;
+    }
+
+    public void setInspect(String inspect) {
+        this.inspect = inspect;
     }
 }

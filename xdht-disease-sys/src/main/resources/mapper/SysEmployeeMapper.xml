@@ -13,6 +13,7 @@
     <result column="emp_marriage" jdbcType="CHAR" property="empMarriage" />
     <result column="emp_education" jdbcType="CHAR" property="empEducation" />
     <result column="emp_hobby" jdbcType="VARCHAR" property="empHobby" />
+    <result column="contact_time" jdbcType="INTEGER" property="contactTime"/>
     <result column="emp_work_date" jdbcType="DATE" property="empWorkDate" />
     <result column="emp_identity_number" jdbcType="VARCHAR" property="empIdentityNumber" />
     <result column="emp_photo_url" jdbcType="VARCHAR" property="empPhotoUrl" />
@@ -36,6 +37,7 @@
     emp_marriage,
     emp_education,
     emp_hobby,
+    contact_time
     emp_work_date,
     emp_identity_number,
     emp_photo_url,
