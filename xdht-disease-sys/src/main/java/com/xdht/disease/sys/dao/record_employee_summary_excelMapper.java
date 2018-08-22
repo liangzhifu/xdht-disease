@@ -41,4 +41,10 @@ public interface record_employee_summary_excelMapper extends Mapper<record_emplo
      * */
      void deleteAll();
 
+     /*
+     * 将接害时间 赋值给 员工信息
+     *
+     * */
+     void insertEmployeeContactTime();
+
 }

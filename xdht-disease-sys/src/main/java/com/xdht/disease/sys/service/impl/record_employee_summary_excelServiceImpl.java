@@ -174,11 +174,11 @@ public class record_employee_summary_excelServiceImpl extends AbstractService<re
              throw new Exception("workTypeId 为空");
          }
          this.recordEmployeeSummaryExcelMapper.insertExcelToRecordEmployeeSummary();
+         this.recordEmployeeSummaryExcelMapper.insertEmployeeContactTime();
         this.recordEmployeeSummaryExcelMapper.deleteAll();
 
 
      }
-
 
     public static Object getCellFormatValue(Cell cell){
         Object cellValue = null;
