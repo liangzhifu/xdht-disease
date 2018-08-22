@@ -56,6 +56,13 @@ public class SysEmployee {
     @Column(name = "emp_hobby")
     private String empHobby;
 
+    /*
+    * 接害时间
+    * */
+   private Integer contactTime;
+
+
+
     /**
      * 参加工作时间
      */
@@ -256,6 +263,14 @@ public class SysEmployee {
      */
     public void setEmpHobby(String empHobby) {
         this.empHobby = empHobby;
+    }
+
+    public Integer getContactTime() {
+        return contactTime;
+    }
+
+    public void setContactTime(Integer contactTime) {
+        this.contactTime = contactTime;
     }
 
     /**
