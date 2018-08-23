@@ -37,6 +37,20 @@ public class RecordEquipmentData {
      */
     @Column(name = "relation_id")
     private Long relationId;
+    /*
+    *
+    * */
+    @Column(name = "equipment_noise")
+    private String equipmentNoise;
+
+
+    public String getEquipmentNoise() {
+        return equipmentNoise;
+    }
+
+    public void setEquipmentNoise(String equipmentNoise) {
+        this.equipmentNoise = equipmentNoise;
+    }
 
     /**
      * @return id
