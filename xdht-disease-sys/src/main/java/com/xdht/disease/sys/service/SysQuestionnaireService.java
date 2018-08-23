@@ -15,4 +15,6 @@ public interface SysQuestionnaireService extends Service<SysQuestionnaire> {
      * @return 返回结果
      */
     public List<SysQuestionnaire> queryList();
+
+    public SysQuestionnaire selectOne(Long id);
 }

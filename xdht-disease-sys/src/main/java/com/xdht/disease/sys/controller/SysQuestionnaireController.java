@@ -29,5 +29,12 @@ public class SysQuestionnaireController {
     public  ResponseEntity<Result<List<SysQuestionnaire>>> recordList() {
         return new ResponseEntity<>(Result.ok(sysQuestionnaireService.queryList()), HttpStatus.OK);
     }
+    @RequestMapping(value = "/selectOne/{id}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    @ApiOperation(value = "查询调查表")
+    public ResponseEntity<Result<SysQuestionnaire>> selcetOne(@PathVariable Long id) {
+        SysQuestionnaire sysQuestionnaire=this.sysQuestionnaireService.selectOne(id);
+          return new ResponseEntity<>(Result.ok(sysQuestionnaire), HttpStatus.OK);
+
+    }
 
 }
