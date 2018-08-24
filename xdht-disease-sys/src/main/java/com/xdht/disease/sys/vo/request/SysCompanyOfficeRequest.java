@@ -12,7 +12,8 @@ public class SysCompanyOfficeRequest {
 
     @ApiModelProperty(value = "公司id")
     private Long companyId;
-
+    @ApiModelProperty(value = "公司id")
+    private Long parentId;
     @ApiModelProperty(value = "类型")
     private Integer officeType;
 

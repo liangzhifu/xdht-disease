@@ -5,7 +5,9 @@ import com.xdht.disease.common.core.ThreadLocalUserService;
 import com.xdht.disease.sys.constant.SysEnum;
 import com.xdht.disease.sys.dao.SysCompanyOfficeMapper;
 import com.xdht.disease.sys.model.SysCompanyOffice;
+import com.xdht.disease.sys.model.SysDictionary;
 import com.xdht.disease.sys.service.SysCompanyOfficeService;
+import com.xdht.disease.sys.service.SysDictionaryService;
 import com.xdht.disease.sys.vo.request.SysCompanyOfficeRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -29,12 +31,15 @@ public class SysCompanyOfficeServiceImpl extends AbstractService<SysCompanyOffic
 
     @Autowired
     private ThreadLocalUserService threadLocalUserService;
+    @Autowired
+    private SysDictionaryService sysDictionaryService;
 
     @Override
     public List<SysCompanyOffice> querySysCompanyOfficeList(SysCompanyOfficeRequest sysCompanyOfficeRequest) {
         Condition condition = new Condition(SysCompanyOffice.class);
         condition.createCriteria() .andEqualTo("companyId", sysCompanyOfficeRequest.getCompanyId())
                 .andEqualTo("officeType", sysCompanyOfficeRequest.getOfficeType())
+                .andEqualTo("parentId", sysCompanyOfficeRequest.getParentId())
                 .andEqualTo("status", SysEnum.StatusEnum.STATUS_NORMAL.getCode());
         return this.selectByCondition(condition);
     }
@@ -50,6 +55,8 @@ public class SysCompanyOfficeServiceImpl extends AbstractService<SysCompanyOffic
         }
         sysCompanyOffice.setStatus(SysEnum.StatusEnum.STATUS_NORMAL.getCode());
         this.insertUseGeneratedKeys(sysCompanyOffice);
+
+
     }
 
     @Override
@@ -61,11 +68,13 @@ public class SysCompanyOfficeServiceImpl extends AbstractService<SysCompanyOffic
         map.put("userId", threadLocalUserService.getUser().getId());
         this.sysCompanyOfficeMapper.deleteChild(map);
         this.updateByPrimaryKeySelective(sysCompanyOffice);
+
     }
 
     @Override
     public void updateCompanyOffice(SysCompanyOffice sysCompanyOffice) {
         this.updateByPrimaryKeySelective(sysCompanyOffice);
+
     }
 
 }

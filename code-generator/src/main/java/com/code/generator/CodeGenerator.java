@@ -20,9 +20,9 @@ public class CodeGenerator {
     /**
      * JDBC配置，请修改为你项目的实际配置
      */
-    private static final String JDBC_URL = "jdbc:mysql://120.77.251.154:3306/jessite";
-    private static final String JDBC_USERNAME = "jessite";
-    private static final String JDBC_PASSWORD = "jessite";
+    private static final String JDBC_URL = "jdbc:mysql://39.106.167.74:3306/disease";
+    private static final String JDBC_USERNAME = "root";
+    private static final String JDBC_PASSWORD = "123456";
     private static final String JDBC_DIVER_CLASS_NAME = "com.mysql.jdbc.Driver";
     /**
      * 模块名称
@@ -82,7 +82,7 @@ public class CodeGenerator {
     private static final String DATE = new SimpleDateFormat("yyyy/MM/dd").format(new Date());
 
     public static void main(String[] args) {
-        genCode("record_scene");
+        genCode("record_employee_summary_excel");
         //genCode("输入表名","输入自定义Model名称");
     }
 
@@ -93,7 +93,7 @@ public class CodeGenerator {
      */
     public static void genCode(String... tableNames) {
         for (String tableName : tableNames) {
-            genCode(tableName, null);
+            genCode(tableName, "record_employee_summary_excel");
         }
     }
 
@@ -113,8 +113,8 @@ public class CodeGenerator {
             file2.getAbsoluteFile().mkdirs();
         }
         genModelAndMapper(tableName, modelName);
-//        genService(tableName, modelName);
-//        genController(tableName, modelName);
+       genService(tableName, modelName);
+      genController(tableName, modelName);
     }
 
 
