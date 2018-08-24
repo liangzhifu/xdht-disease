@@ -146,9 +146,11 @@ public class record_employee_summary_excelServiceImpl extends AbstractService<re
 
         }
        this.insertList(list1);
-          Integer identityCountNull =this.recordEmployeeSummaryExcelMapper.selectIdentity();
-           if(identityCountNull!=0&&identityCountNull!=null){
-               throw new Exception("员工不符合");
+
+          List<record_employee_summary_excel> identityCountNull =this.recordEmployeeSummaryExcelMapper.selectIdentity();
+           if(identityCountNull.size()!=0&&identityCountNull!=null){
+
+               throw new Exception( "以下员工的身份证号不存在"+" "+ErrorReturn(identityCountNull));
            }
          this.recordEmployeeSummaryExcelMapper.updateExcelCompanyId();
          Condition condition = new Condition(record_employee_summary_excel.class);
@@ -156,14 +158,15 @@ public class record_employee_summary_excelServiceImpl extends AbstractService<re
          List<record_employee_summary_excel> record_employee_summary_excelList =null;
                 record_employee_summary_excelList = this.selectByCondition(condition);
          if(record_employee_summary_excelList!=null&&record_employee_summary_excelList.size()!=0){
-             throw new Exception("CompanyId 为空");
+
+             throw new Exception("以下员工的公司查询不到"+" "+ ErrorReturn(record_employee_summary_excelList));
          }
          this.recordEmployeeSummaryExcelMapper.updateExcelPostId();
          Condition condition2 = new Condition(record_employee_summary_excel.class);
          condition2.createCriteria().andIsNull("postId");
          record_employee_summary_excelList = this.selectByCondition(condition2);
          if(record_employee_summary_excelList!=null&&record_employee_summary_excelList.size()!=0){
-             throw new Exception("PostId 为空");
+             throw new Exception("以下员工的公司部门不到"+"  "+ErrorReturn(record_employee_summary_excelList));
          }
 
          this.recordEmployeeSummaryExcelMapper.updateExcelWorkTypeId();
@@ -171,7 +174,7 @@ public class record_employee_summary_excelServiceImpl extends AbstractService<re
          condition3.createCriteria().andIsNull("workTypeId");
          record_employee_summary_excelList = this.selectByCondition(condition3);
          if(record_employee_summary_excelList!=null&&record_employee_summary_excelList.size()!=0){
-             throw new Exception("workTypeId 为空");
+             throw new Exception("以下员工的工种查询不到"+"  "+ErrorReturn(record_employee_summary_excelList));
          }
          this.recordEmployeeSummaryExcelMapper.insertExcelToRecordEmployeeSummary();
          this.recordEmployeeSummaryExcelMapper.insertEmployeeContactTime();
@@ -217,6 +220,12 @@ public class record_employee_summary_excelServiceImpl extends AbstractService<re
 
 
     }
-
+  public static  StringBuffer ErrorReturn(List<record_employee_summary_excel> list){
+        StringBuffer errorMessage =new StringBuffer();
+    for(int i=0; i<list.size();i++){
+         errorMessage =errorMessage.append(list.get(i).getName()+",");
+   }
+    return errorMessage;
+  }
 
 }
