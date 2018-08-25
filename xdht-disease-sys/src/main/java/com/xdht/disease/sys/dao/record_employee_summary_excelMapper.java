@@ -3,6 +3,8 @@ package com.xdht.disease.sys.dao;
 import com.xdht.disease.common.core.Mapper;
 import com.xdht.disease.sys.model.record_employee_summary_excel;
 
+import java.util.List;
+
 public interface record_employee_summary_excelMapper extends Mapper<record_employee_summary_excel> {
     /*
     根据公司名称 查找公司的 ID
@@ -35,7 +37,7 @@ public interface record_employee_summary_excelMapper extends Mapper<record_emplo
 
     查询身份证号判断是否在为员工
      */
-     Integer selectIdentity();
+     List<record_employee_summary_excel> selectIdentity();
      /*
      * 删除全部
      * */
