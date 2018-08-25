@@ -1,6 +1,7 @@
 package com.xdht.disease.sys.controller;
 
 import com.xdht.disease.common.authorization.annotation.Authorization;
+import com.xdht.disease.common.constant.ResultCode;
 import com.xdht.disease.common.core.PageResult;
 import com.xdht.disease.common.core.Result;
 import com.xdht.disease.sys.constant.SysConstant;
@@ -37,7 +38,14 @@ public class RecordEmployeeSummaryController {
     @RequestMapping(value = "/add", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     @ApiOperation(value = "添加")
     public ResponseEntity<Result<String>> add(@RequestBody RecordEmployeeSummary RecordEmployeeSummary) {
-        recordEmployeeSummaryService.add(RecordEmployeeSummary);
+        try{
+            recordEmployeeSummaryService.add(RecordEmployeeSummary);
+        }
+        catch(Exception e){
+            return  new ResponseEntity<>(Result.error(ResultCode.FAIL ,e.getMessage()),HttpStatus.OK);
+
+        }
+
         return new ResponseEntity<>(Result.ok(SysEnum.ResultEnum.RESULT_SUCCESS.getCode()), HttpStatus.OK);
     }
 

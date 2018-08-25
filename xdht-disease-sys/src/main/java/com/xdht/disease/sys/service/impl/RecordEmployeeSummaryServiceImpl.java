@@ -4,6 +4,7 @@ import com.xdht.disease.common.core.AbstractService;
 import com.xdht.disease.common.core.PageResult;
 import com.xdht.disease.sys.constant.SysEnum;
 import com.xdht.disease.sys.dao.RecordEmployeeSummaryMapper;
+import com.xdht.disease.sys.model.RecordCompanySummary;
 import com.xdht.disease.sys.model.RecordEmployeeSummary;
 import com.xdht.disease.sys.service.RecordEmployeeSummaryService;
 import com.xdht.disease.sys.vo.request.RecordEmployeeSummaryRequest;
@@ -11,7 +12,9 @@ import com.xdht.disease.sys.vo.response.RecordEmployeeSummaryResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import tk.mybatis.mapper.entity.Condition;
 
+import java.util.Calendar;
 import java.util.List;
 
 
@@ -38,7 +41,19 @@ public class RecordEmployeeSummaryServiceImpl extends AbstractService<RecordEmpl
     }
 
     @Override
-    public void add(RecordEmployeeSummary recordEmployeeSummary) {
+    public void add(RecordEmployeeSummary recordEmployeeSummary) throws  Exception{
+        Calendar calendar=Calendar.getInstance();
+        calendar.setTime(recordEmployeeSummary.getInspectDate());
+        recordEmployeeSummary.setInspectYear(calendar.get(calendar.YEAR));
+        Condition condition=new Condition(RecordEmployeeSummary.class);
+        condition.createCriteria().andEqualTo("empId",recordEmployeeSummary.getEmpId())
+                .andEqualTo("inspectYear",recordEmployeeSummary.getInspectYear()).andEqualTo("status",SysEnum.StatusEnum.STATUS_NORMAL.getCode());
+        List<RecordEmployeeSummary> list = this.selectByCondition(condition);
+        if(list.size()>0){
+         throw new Exception("企业员工在该年份已经体检完毕，请勿重复提交");
+        }
+
+
         recordEmployeeSummary.setStatus(SysEnum.StatusEnum.STATUS_NORMAL.getCode());
         this.insertUseGeneratedKeys(recordEmployeeSummary);
     }

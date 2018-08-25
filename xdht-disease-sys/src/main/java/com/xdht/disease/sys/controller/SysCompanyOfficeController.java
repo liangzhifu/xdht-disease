@@ -32,6 +32,7 @@ public class SysCompanyOfficeController {
     @RequestMapping(value = "/list", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     @ApiOperation(value = "查询单位部门列表")
     public ResponseEntity<Result<List<SysCompanyOffice>>> companyOfficeList(@RequestBody SysCompanyOfficeRequest sysCompanyOfficeRequest) {
+
         return new ResponseEntity<>(Result.ok(sysCompanyOfficeService.querySysCompanyOfficeList(sysCompanyOfficeRequest)), HttpStatus.OK);
     }
 

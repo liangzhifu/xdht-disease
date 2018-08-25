@@ -32,7 +32,7 @@ public interface SysEmployeeService extends Service<SysEmployee> {
      * 添加员工
      * @param sysEmployeeResponse 员工实体
      */
-    void addEmployee(SysEmployeeResponse sysEmployeeResponse);
+    void addEmployee(SysEmployeeResponse sysEmployeeResponse) throws Exception ;
 
     /**
      * 删除员工

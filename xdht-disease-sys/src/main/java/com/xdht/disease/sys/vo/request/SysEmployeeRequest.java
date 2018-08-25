@@ -1,5 +1,6 @@
 package com.xdht.disease.sys.vo.request;
 
+import com.xdht.disease.sys.model.SysCompanyOffice;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
