@@ -5,6 +5,7 @@ import com.xdht.disease.common.core.AbstractService;
 import com.xdht.disease.common.core.PageResult;
 import com.xdht.disease.common.util.Md5Utils;
 import com.xdht.disease.sys.constant.SysEnum;
+import com.xdht.disease.sys.dao.SysEmployeeMapper;
 import com.xdht.disease.sys.model.*;
 import com.xdht.disease.sys.service.*;
 import com.xdht.disease.sys.vo.request.SysEmployeeRequest;
@@ -35,7 +36,8 @@ public class SysEmployeeServiceImpl extends AbstractService<SysEmployee> impleme
     private SysCompanyOfficeService sysCompanyOfficeService;
     @Autowired
     private SysUserService sysUserService;
-
+    @Autowired
+    private SysEmployeeMapper sysEmployeeMapper;
     @Override
     public PageResult<SysEmployee> querySysEmpPage(SysEmployeeRequest sysEmployeeRequest) {
         Condition condition = new Condition(SysEmployee.class);
@@ -93,8 +95,15 @@ public class SysEmployeeServiceImpl extends AbstractService<SysEmployee> impleme
     }
 
     @Override
-    public void addEmployee(SysEmployeeResponse sysEmployeeResponse) {
+    public void addEmployee(SysEmployeeResponse sysEmployeeResponse)throws Exception {
         SysEmployee sysEmployee = sysEmployeeResponse.getSysEmployee();
+        Condition condition = new Condition(SysEmployee.class);
+        condition.createCriteria().andEqualTo("empIdentityNumber", sysEmployee.getEmpIdentityNumber())
+        .andEqualTo("status",SysEnum.StatusEnum.STATUS_NORMAL.getCode());
+        int num = this.selectCountByCondition(condition);
+        if (num > 0) {
+            throw new Exception("该身份证已经存在");
+        }
         sysEmployee.setStatus(SysEnum.StatusEnum.STATUS_NORMAL.getCode());
         this.insertUseGeneratedKeys(sysEmployee);
         // 同时添加数据到用户表中

@@ -10,6 +10,7 @@
     <result column="office_id" jdbcType="BIGINT" property="officeId" />
     <result column="work_type" jdbcType="BIGINT" property="workType" />
     <result column="inspect_date" jdbcType="DATE" property="inspectDate" />
+      <result column="inspect_year" jdbcType="INTEGER" property="inspectYear" />
     <result column="inspect" jdbcType="VARCHAR" property="inspect" />
     <result column="contact_time" jdbcType="INTEGER" property="contactTime" />
     <result column="hazard_factor" jdbcType="VARCHAR" property="hazardFactor" />
@@ -70,6 +71,7 @@
     (SELECT sco.office_name FROM sys_company_office sco WHERE sco.id = res.work_type) as workTypeName,
     res.inspect_date as inspectDate,
     res.inspect as inspect,
+      res.inspect_year as inspectYear,
     res.contact_time as contactTime,
     res.hazard_factor as hazardFactor,
     res.blood_pressure_shrink as bloodPressureShrink,

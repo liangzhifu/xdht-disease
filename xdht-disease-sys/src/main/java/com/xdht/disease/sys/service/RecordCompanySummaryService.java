@@ -28,7 +28,7 @@ public interface RecordCompanySummaryService extends Service<RecordCompanySummar
      * 添加
      * @param recordCompanySummary 实体
      */
-    void add(RecordCompanySummary recordCompanySummary);
+    void add(RecordCompanySummary recordCompanySummary)throws  Exception;
 
     /**
      * 删除

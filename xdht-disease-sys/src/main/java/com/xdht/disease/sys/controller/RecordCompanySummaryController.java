@@ -1,6 +1,7 @@
 package com.xdht.disease.sys.controller;
 
 import com.xdht.disease.common.authorization.annotation.Authorization;
+import com.xdht.disease.common.constant.ResultCode;
 import com.xdht.disease.common.core.PageResult;
 import com.xdht.disease.common.core.Result;
 import com.xdht.disease.sys.constant.SysEnum;
@@ -44,7 +45,13 @@ public class RecordCompanySummaryController {
             @ApiImplicitParam(name = "authorization", value = "authorization", required = true, dataType = "string", paramType = "header"),
     })
     public ResponseEntity<Result<String>> add(@RequestBody RecordCompanySummary recordCompanySummary) {
-        recordCompanySummaryService.add(recordCompanySummary);
+        try{
+            recordCompanySummaryService.add(recordCompanySummary);
+        }
+        catch (Exception e){
+          return  new ResponseEntity< >(Result.error(ResultCode.FAIL,e.getMessage()),HttpStatus.OK);
+        }
+
         return new ResponseEntity<>(Result.ok(SysEnum.ResultEnum.RESULT_SUCCESS.getCode()), HttpStatus.OK);
     }
 
