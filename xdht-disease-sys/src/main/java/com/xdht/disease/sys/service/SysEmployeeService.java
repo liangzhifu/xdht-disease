@@ -6,6 +6,7 @@ import com.xdht.disease.sys.vo.request.SysEmployeeRequest;
 import com.xdht.disease.sys.vo.response.SysEmployeeResponse;
 
 import java.util.List;
+import java.util.Map;
 
 
 /**
@@ -18,8 +19,7 @@ public interface SysEmployeeService extends Service<SysEmployee> {
      * @param sysEmployeeRequest 查询条件
      * @return 返回结果
      */
-    PageResult<SysEmployee> querySysEmpPage(SysEmployeeRequest sysEmployeeRequest);
-
+    PageResult<Map<String, Object>> querySysEmpPage(SysEmployeeRequest sysEmployeeRequest);
 
     /**
      * 查询员工列表

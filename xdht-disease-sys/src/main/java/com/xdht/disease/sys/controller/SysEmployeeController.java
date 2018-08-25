@@ -20,6 +20,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by L on 2018/5/30.
@@ -34,7 +35,7 @@ public class SysEmployeeController {
 
     @RequestMapping(value = "/pageList", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     @ApiOperation(value = "分页查询员工列表")
-    public ResponseEntity<Result<PageResult<SysEmployee>>> queryPageList(@RequestBody SysEmployeeRequest sysEmployeeRequest) {
+    public ResponseEntity<Result<PageResult<Map<String, Object>>>> queryPageList(@RequestBody SysEmployeeRequest sysEmployeeRequest) {
         return new ResponseEntity<>(Result.ok(sysEmployeeService.querySysEmpPage(sysEmployeeRequest)), HttpStatus.OK);
     }
 

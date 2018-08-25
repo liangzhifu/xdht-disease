@@ -1,6 +1,5 @@
 package com.xdht.disease.sys.service.impl;
 
-import com.github.pagehelper.PageHelper;
 import com.xdht.disease.common.core.AbstractService;
 import com.xdht.disease.common.core.PageResult;
 import com.xdht.disease.common.util.Md5Utils;
@@ -15,8 +14,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import tk.mybatis.mapper.entity.Condition;
 
-import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 
 
 /**
@@ -28,53 +27,31 @@ public class SysEmployeeServiceImpl extends AbstractService<SysEmployee> impleme
 
     @Autowired
     private SysEmployeeCaseService sysEmployeeCaseService;
+
     @Autowired
     private SysEmployeeDiseaseService sysEmployeeDiseaseService;
+
     @Autowired
     private SysEmployeeJobService sysEmployeeJobService;
+
     @Autowired
     private SysCompanyOfficeService sysCompanyOfficeService;
+
     @Autowired
     private SysUserService sysUserService;
+
     @Autowired
     private SysEmployeeMapper sysEmployeeMapper;
+
     @Override
-    public PageResult<SysEmployee> querySysEmpPage(SysEmployeeRequest sysEmployeeRequest) {
-        Condition condition = new Condition(SysEmployee.class);
-        condition.createCriteria().andEqualTo("status", SysEnum.StatusEnum.STATUS_NORMAL.getCode());
-        if (sysEmployeeRequest.getCompanyId() != null) {
-            Condition sysOfficeCondition = new Condition(SysCompanyOffice.class);
-            sysOfficeCondition.createCriteria().andEqualTo("status", SysEnum.StatusEnum.STATUS_NORMAL.getCode())
-                    .andEqualTo("companyId", sysEmployeeRequest.getCompanyId());
-            List<SysCompanyOffice> sysCompanyOfficeList = this.sysCompanyOfficeService.selectByCondition(sysOfficeCondition);
-            List<Long> sysOfficeIdList = new LinkedList<>();
-            if (sysCompanyOfficeList != null && sysCompanyOfficeList.size()>0) {
-                for (SysCompanyOffice sysCompanyOffice : sysCompanyOfficeList) {
-                    sysOfficeIdList.add(sysCompanyOffice.getId());
-                }
-                condition.getOredCriteria().get(0).andIn("officeId", sysOfficeIdList);
-            }
-        }
-        if (sysEmployeeRequest.getEmpName() != null && !"".equals(sysEmployeeRequest.getEmpName())) {
-            condition.getOredCriteria().get(0).andLike("empName","%"+sysEmployeeRequest.getEmpName()+"%");
-        }
-        if (sysEmployeeRequest.getEmpIdentityNumber() != null && !"".equals(sysEmployeeRequest.getEmpIdentityNumber())) {
-            condition.getOredCriteria().get(0).andLike("empIdentityNumber","%"+sysEmployeeRequest.getEmpIdentityNumber()+"%");
-        }
-        if (sysEmployeeRequest.getEmpSex() != null && !"".equals(sysEmployeeRequest.getEmpSex())) {
-            condition.getOredCriteria().get(0).andEqualTo("empSex",sysEmployeeRequest.getEmpSex());
-        }
-        if(sysEmployeeRequest.getEmpNative() != null && !"".equals(sysEmployeeRequest.getEmpNative())){
-            condition.getOredCriteria().get(0).andLike("empNative","%" + sysEmployeeRequest.getEmpNative() + "%");
-        }
-        if(sysEmployeeRequest.getEmpMarriage() != null && !"".equals(sysEmployeeRequest.getEmpMarriage())){
-            condition.getOredCriteria().get(0).andEqualTo("empMarriage",sysEmployeeRequest.getEmpMarriage());
-        }
-        condition.orderBy("createDate").desc();
-        PageHelper.startPage(sysEmployeeRequest.getPageNumber(), sysEmployeeRequest.getPageSize());
-        List<SysEmployee> dataList = this.selectByCondition(condition);
-        Integer total = this.selectCountByCondition(condition);
-        PageResult<SysEmployee> pageList = new PageResult<SysEmployee>();
+    public PageResult<Map<String, Object>> querySysEmpPage(SysEmployeeRequest sysEmployeeRequest) {
+        Integer pageNumber = sysEmployeeRequest.getPageNumber();
+        Integer pageSize = sysEmployeeRequest.getPageSize();
+        Integer start = (pageNumber - 1) * pageSize;
+        sysEmployeeRequest.setStart(start);
+        List<Map<String, Object>> dataList = this.sysEmployeeMapper.selectCompanyEmployeeListByRequest(sysEmployeeRequest);
+        Integer total = this.sysEmployeeMapper.selectCompanyEmployeeCountByRequest(sysEmployeeRequest);
+        PageResult<Map<String, Object>> pageList = new PageResult<>();
         pageList.setDataList(dataList);
         pageList.setTotal(total);
         return pageList;
@@ -86,9 +63,6 @@ public class SysEmployeeServiceImpl extends AbstractService<SysEmployee> impleme
         condition.createCriteria().andEqualTo("officeId", sysEmployeeRequest.getOfficeId());
         if (sysEmployeeRequest.getEmpName() != null && !"".equals(sysEmployeeRequest.getEmpName())) {
             condition.getOredCriteria().get(0).andLike("empName","%"+sysEmployeeRequest.getEmpName()+"%");
-        }
-        if(sysEmployeeRequest.getEmpNative() != null && !"".equals(sysEmployeeRequest.getEmpNative())){
-            condition.getOredCriteria().get(0).andLike("empNative",sysEmployeeRequest.getEmpNative());
         }
         condition.setOrderByClause("id desc");
         return this.selectByCondition(condition);
@@ -182,8 +156,6 @@ public class SysEmployeeServiceImpl extends AbstractService<SysEmployee> impleme
                 this.sysEmployeeJobService.updateByPrimaryKeySelective(sysEmployeeJob);
             }
         }
-
-
     }
 
     /**
@@ -294,6 +266,5 @@ public class SysEmployeeServiceImpl extends AbstractService<SysEmployee> impleme
         sysEmployeeResponse.setSysEmployeeJobList(sysEmployeeJobs);
         return sysEmployeeResponse;
     }
-
 
 }
