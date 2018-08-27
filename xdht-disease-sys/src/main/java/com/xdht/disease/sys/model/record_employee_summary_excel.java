@@ -328,6 +328,9 @@ public class record_employee_summary_excel {
     * */
     @Column(name = "inspect")
    private String inspect;
+
+    @Column(name = "inspect_year")
+    private Integer inspectYear;
     /**
      * @return id
      */
@@ -1211,5 +1214,13 @@ public class record_employee_summary_excel {
 
     public void setInspect(String inspect) {
         this.inspect = inspect;
+    }
+
+    public Integer getInspectYear() {
+        return inspectYear;
+    }
+
+    public void setInspectYear(Integer inspectYear) {
+        this.inspectYear = inspectYear;
     }
 }

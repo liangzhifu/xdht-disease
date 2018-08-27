@@ -131,8 +131,10 @@ public class record_employee_summary_excelServiceImpl extends AbstractService<re
                          }
                      }
                  }
-
-                 re.setInspect("0");
+                 re.setInspect("0");//全部为初诊
+             Calendar calendar=Calendar.getInstance();
+             calendar.setTime(re.getInspectDate());
+             re.setInspectYear(calendar.get(Calendar.YEAR));//检查年份
                   re.setStatus("0");
                  re.setCreateBy((long)11);
                  Date date =new Date();
@@ -176,6 +178,11 @@ public class record_employee_summary_excelServiceImpl extends AbstractService<re
          if(record_employee_summary_excelList!=null&&record_employee_summary_excelList.size()!=0){
              throw new Exception("以下员工的工种查询不到"+"  "+ErrorReturn(record_employee_summary_excelList));
          }
+         record_employee_summary_excelList=this.recordEmployeeSummaryExcelMapper.physicalExaminationInfOnce();
+         if(record_employee_summary_excelList!=null&&record_employee_summary_excelList.size()!=0){
+             throw new Exception("以下员工的已经录入"+"  "+ErrorReturn(record_employee_summary_excelList));
+         }
+
          this.recordEmployeeSummaryExcelMapper.insertExcelToRecordEmployeeSummary();
          this.recordEmployeeSummaryExcelMapper.insertEmployeeContactTime();
         this.recordEmployeeSummaryExcelMapper.deleteAll();
