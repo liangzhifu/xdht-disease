@@ -6,7 +6,11 @@ import com.xdht.disease.sys.constant.SysEnum;
 import com.xdht.disease.sys.dao.RecordEmployeeSummaryMapper;
 import com.xdht.disease.sys.model.RecordCompanySummary;
 import com.xdht.disease.sys.model.RecordEmployeeSummary;
+import com.xdht.disease.sys.model.SysCompanyOffice;
+import com.xdht.disease.sys.model.SysEmployee;
 import com.xdht.disease.sys.service.RecordEmployeeSummaryService;
+import com.xdht.disease.sys.service.SysCompanyOfficeService;
+import com.xdht.disease.sys.service.SysEmployeeService;
 import com.xdht.disease.sys.vo.request.RecordEmployeeSummaryRequest;
 import com.xdht.disease.sys.vo.response.RecordEmployeeSummaryResponse;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,6 +31,8 @@ public class RecordEmployeeSummaryServiceImpl extends AbstractService<RecordEmpl
 
     @Autowired
     private RecordEmployeeSummaryMapper recordEmployeeSummaryMapper;
+    @Autowired
+    private SysCompanyOfficeService sysCompanyOfficeService;
 
     @Override
     public PageResult<RecordEmployeeSummaryResponse> queryListPage(RecordEmployeeSummaryRequest recordEmployeeSummaryRequest) {
@@ -53,7 +59,9 @@ public class RecordEmployeeSummaryServiceImpl extends AbstractService<RecordEmpl
          throw new Exception("企业员工在该年份已经体检完毕，请勿重复提交");
         }
 
-
+        SysCompanyOffice sysCompanyOffice= new SysCompanyOffice();
+        sysCompanyOffice=this.sysCompanyOfficeService.selectByPrimaryKey(recordEmployeeSummary.getWorkType());
+         recordEmployeeSummary.setOfficeId(sysCompanyOffice.getParentId());
         recordEmployeeSummary.setStatus(SysEnum.StatusEnum.STATUS_NORMAL.getCode());
         this.insertUseGeneratedKeys(recordEmployeeSummary);
     }
