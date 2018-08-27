@@ -48,5 +48,10 @@ public interface record_employee_summary_excelMapper extends Mapper<record_emplo
      *
      * */
      void insertEmployeeContactTime();
+     /*
+     * 相同信息不要重复加入
+     *
+     * */
+     List<record_employee_summary_excel> physicalExaminationInfOnce();
 
 }
