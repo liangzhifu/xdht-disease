@@ -20,6 +20,8 @@
     <result column="create_date" jdbcType="TIMESTAMP" property="createDate" />
     <result column="update_by" jdbcType="BIGINT" property="updateBy" />
     <result column="update_date" jdbcType="TIMESTAMP" property="updateDate" />
+    <result column="eqp_post_id" jdbcType="BIGINT" property="eqpPostId" />
+    <result column="eqp_name" jdbcType="VARCHAR" property="eqpName" />
   </resultMap>
 
   <select id="selectRecordWorkplaceNoiseEcharsDetail" parameterType="java.lang.Long" resultType="com.xdht.disease.sys.vo.response.RecordWorkplaceNoiseResponse">
@@ -50,5 +52,42 @@
 )
       GROUP BY rwn.post_id ,rwn.contact_time HAVING ( year(now())- year(rwn.contact_time) <  3)
      ]]>
+  </select>
+
+  <sql id="WHERE_SQL">
+    <where>
+      rwn.`work_type_id` = sco1.`id`
+      AND rwn.`post_id` = sco2.`id`
+      AND rwn.`company_id` = sc.id
+      AND rwn.`status` = '0'
+    </where>
+  </sql>
+
+  <select id="selectRecordWorkplaceNoiseList" resultType="java.util.HashMap" parameterType="com.xdht.disease.sys.vo.request.RecordWorkplaceNoiseRequest">
+    SELECT rwn.id,
+    rwn.company_id as companyId,
+    rwn.post_id as postId,
+    rwn.inspect_date as inspectDate,
+    rwn.inspect_Year as inspectYear,
+    rwn.work_type_id as workTypeId,
+    rwn.analysis_result as analysisResult,
+    rwn.contact_time as contactTime,
+    rwn.sound_level as soundLevel,
+    rwn.check_place as checkPlace,
+    rwn.eqp_post_id as eqpPostId,
+    rwn.eqp_name as eqpName,
+    sco1.`office_name` AS workTypeName,
+    sco2.`office_name` AS companyOfficeName,
+    sc.`company_name` AS companyName
+    FROM record_workplace_noise rwn, sys_company_office sco1, sys_company_office sco2, sys_company sc
+    <include refid="WHERE_SQL"></include>
+    order by rwn.id
+    limit #{start}, #{pageSize}
+  </select>
+
+  <select id="selectRecordWorkplaceNoiseCount" resultType="java.lang.Integer" parameterType="com.xdht.disease.sys.vo.request.RecordWorkplaceNoiseRequest">
+    SELECT count(1)
+    FROM record_workplace_noise rwn, sys_company_office sco1, sys_company_office sco2, sys_company sc
+    <include refid="WHERE_SQL"></include>
   </select>
 </mapper>

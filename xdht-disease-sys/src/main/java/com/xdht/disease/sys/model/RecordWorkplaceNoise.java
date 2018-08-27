@@ -95,6 +95,14 @@ public class RecordWorkplaceNoise {
     @Column(name = "update_date")
     private Date updateDate;
 
+    /**
+     * 部门
+     */
+    @Column(name = "eqp_post_id")
+    private Long eqpPostId;
+
+    @Column(name = "eqp_name")
+    private String eqpName;
 
     /**
      * @return id
@@ -262,5 +270,21 @@ public class RecordWorkplaceNoise {
      */
     public void setCheckPlace(String checkPlace) {
         this.checkPlace = checkPlace;
+    }
+
+    public Long getEqpPostId() {
+        return eqpPostId;
+    }
+
+    public void setEqpPostId(Long eqpPostId) {
+        this.eqpPostId = eqpPostId;
+    }
+
+    public String getEqpName() {
+        return eqpName;
+    }
+
+    public void setEqpName(String eqpName) {
+        this.eqpName = eqpName;
     }
 }
