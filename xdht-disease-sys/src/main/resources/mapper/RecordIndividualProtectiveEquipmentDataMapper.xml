@@ -25,7 +25,7 @@
     riped.technical_parameter as technicalParameter,
     riped.number as number,
     riped.usaged as usaged,
-    sco.`office_name` AS officeName
+    sco.`office_name` AS companyOfficeName
     FROM `record_individual_protective_equipment_data` riped, sys_company_office sco
     WHERE riped.`company_office_id` = sco.`id`
     AND riped.`relation_id` = #{id, jdbcType=BIGINT}

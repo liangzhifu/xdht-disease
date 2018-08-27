@@ -27,7 +27,7 @@
     rwld.work_content as workContent,
     rwld.hazard_factors as hazardFactors,
     rwld.remarks as remarks,
-    sco.`office_name` AS officeName
+    sco.`office_name` AS companyOfficeName
     FROM `record_work_log_data` rwld, sys_company_office sco
     WHERE rwld.`company_office_id` = sco.`id`
     AND rwld.`relation_id` = #{id, jdbcType=BIGINT}

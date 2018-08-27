@@ -24,7 +24,7 @@
     rhfd.exposure_mode as exposureMode,
     rhfd.exposure_time as exposureTime,
     rhfd.remarks as remarks,
-    sco.`office_name` AS officeName
+    sco.`office_name` AS companyOfficeName
     FROM `record_hazard_factors_data` rhfd, sys_company_office sco
     WHERE rhfd.`office_id` = sco.`id`
     AND rhfd.`relation_id` = #{id, jdbcType=BIGINT}
