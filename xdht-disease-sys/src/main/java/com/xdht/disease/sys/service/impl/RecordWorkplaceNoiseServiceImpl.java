@@ -18,6 +18,7 @@ import tk.mybatis.mapper.entity.Condition;
 
 import java.util.Calendar;
 import java.util.List;
+import java.util.Map;
 
 
 /**
@@ -29,21 +30,19 @@ public class RecordWorkplaceNoiseServiceImpl extends AbstractService<RecordWorkp
 
     @Autowired
     private RecordWorkplaceNoiseMapper recordWorkplaceNoiseMapper;
+
     @Autowired
     private SysCompanyOfficeMapper sysCompanyOfficeMapper;
 
     @Override
-    public PageResult<RecordWorkplaceNoise> queryListPage(RecordWorkplaceNoiseRequest recordWorkplaceNoiseRequest) {
-        Condition condition =  new Condition(RecordWorkplaceNoise.class);
-        condition.createCriteria() .andEqualTo("id", recordWorkplaceNoiseRequest.getId()).
-                andEqualTo("companyId",recordWorkplaceNoiseRequest.getCompanyId())
-                .andEqualTo("workTypeId",recordWorkplaceNoiseRequest.getWorkTypeId());
-        condition.getOredCriteria().get(0).andEqualTo("status", SysEnum.StatusEnum.STATUS_NORMAL.getCode());
-        condition.orderBy("id").desc();
-        PageHelper.startPage(recordWorkplaceNoiseRequest.getPageNumber(), recordWorkplaceNoiseRequest.getPageSize());
-        List<RecordWorkplaceNoise> dataList = this.recordWorkplaceNoiseMapper.selectByCondition(condition);
-        Integer count = this.recordWorkplaceNoiseMapper.selectCountByCondition(condition);
-        PageResult<RecordWorkplaceNoise> pageList = new  PageResult<RecordWorkplaceNoise>();
+    public PageResult<Map<String, Object>> queryListPage(RecordWorkplaceNoiseRequest recordWorkplaceNoiseRequest) {
+        Integer pageNumber = recordWorkplaceNoiseRequest.getPageNumber();
+        Integer pageSize = recordWorkplaceNoiseRequest.getPageSize();
+        Integer start = (pageNumber - 1) * pageSize;
+        recordWorkplaceNoiseRequest.setStart(start);
+        List<Map<String, Object>> dataList = this.recordWorkplaceNoiseMapper.selectRecordWorkplaceNoiseList(recordWorkplaceNoiseRequest);
+        Integer count = this.recordWorkplaceNoiseMapper.selectRecordWorkplaceNoiseCount(recordWorkplaceNoiseRequest);
+        PageResult<Map<String, Object>> pageList = new  PageResult<Map<String, Object>>();
         pageList.setTotal(count);
         pageList.setDataList(dataList);
         return pageList;

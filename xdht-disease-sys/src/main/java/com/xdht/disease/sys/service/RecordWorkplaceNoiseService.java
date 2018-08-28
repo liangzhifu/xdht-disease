@@ -7,6 +7,7 @@ import com.xdht.disease.sys.vo.request.RecordWorkplaceNoiseRequest;
 import com.xdht.disease.sys.vo.response.RecordWorkplaceNoiseResponse;
 
 import java.util.List;
+import java.util.Map;
 
 
 /**
@@ -19,7 +20,7 @@ public interface RecordWorkplaceNoiseService extends Service<RecordWorkplaceNois
      * @param recordWorkplaceNoiseRequest
      * @return 返回结果
      */
-    PageResult<RecordWorkplaceNoise> queryListPage(RecordWorkplaceNoiseRequest recordWorkplaceNoiseRequest);
+    PageResult<Map<String, Object>> queryListPage(RecordWorkplaceNoiseRequest recordWorkplaceNoiseRequest);
 
     /**
      * 新增
