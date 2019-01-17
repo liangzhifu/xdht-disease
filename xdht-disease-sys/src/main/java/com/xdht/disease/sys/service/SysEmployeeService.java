@@ -4,6 +4,7 @@ import com.xdht.disease.sys.model.SysEmployee;
 import com.xdht.disease.common.core.Service;
 import com.xdht.disease.sys.vo.request.SysEmployeeRequest;
 import com.xdht.disease.sys.vo.response.SysEmployeeResponse;
+import org.apache.poi.ss.usermodel.Workbook;
 
 import java.util.List;
 import java.util.Map;
@@ -48,4 +49,11 @@ public interface SysEmployeeService extends Service<SysEmployee> {
 
 
     SysEmployeeResponse getEmployeeDetail(Long id);
+
+    /**
+     * Excel上传员工
+     * @param workbook excel信息
+     * @throws Exception 返回异常
+     */
+    void saveEmployeeExcel(Workbook workbook ) throws Exception;
 }

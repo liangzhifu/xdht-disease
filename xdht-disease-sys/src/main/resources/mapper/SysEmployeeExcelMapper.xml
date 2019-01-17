@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.xdht.disease.sys.dao.SysEmployeeExcelMapper">
+  <resultMap id="BaseResultMap" type="com.xdht.disease.sys.model.SysEmployeeExcel">
+    <!--
+      WARNING - @mbg.generated
+    -->
+    <id column="id" jdbcType="BIGINT" property="id" />
+    <result column="company_name" jdbcType="VARCHAR" property="companyName" />
+    <result column="office_name" jdbcType="VARCHAR" property="officeName" />
+    <result column="work_type_name" jdbcType="VARCHAR" property="workTypeName" />
+    <result column="emp_name" jdbcType="VARCHAR" property="empName" />
+    <result column="emp_sex_name" jdbcType="VARCHAR" property="empSexName" />
+    <result column="emp_native" jdbcType="VARCHAR" property="empNative" />
+    <result column="emp_marriage_name" jdbcType="VARCHAR" property="empMarriageName" />
+    <result column="emp_education" jdbcType="VARCHAR" property="empEducation" />
+    <result column="emp_hobby" jdbcType="VARCHAR" property="empHobby" />
+    <result column="contact_time" jdbcType="INTEGER" property="contactTime" />
+    <result column="emp_work_date" jdbcType="DATE" property="empWorkDate" />
+    <result column="emp_identity_number" jdbcType="VARCHAR" property="empIdentityNumber" />
+    <result column="company_id" jdbcType="BIGINT" property="companyId" />
+    <result column="office_id" jdbcType="BIGINT" property="officeId" />
+    <result column="work_type_id" jdbcType="BIGINT" property="workTypeId" />
+    <result column="emp_sex" jdbcType="CHAR" property="empSex" />
+    <result column="emp_marriage" jdbcType="VARCHAR" property="empMarriage" />
+  </resultMap>
+
+  <update id="updateCopanyId">
+    UPDATE sys_employee_excel
+    SET company_id = (SELECT id FROM sys_company company WHERE company.company_name = sys_employee_excel.`company_name` and status = '0')
+  </update>
+
+  <update id="updateOfficeId">
+    UPDATE sys_employee_excel
+    SET office_id = (SELECT id FROM sys_company_office office
+    WHERE office.office_name = sys_employee_excel.`office_name`
+    AND STATUS = '0' AND office_type = 1
+    AND company_id = sys_employee_excel.`company_id`)
+  </update>
+
+  <update id="updateWorkTypeId">
+    UPDATE sys_employee_excel
+    SET work_type_id = (SELECT id FROM sys_company_office office
+    WHERE office.office_name = sys_employee_excel.`work_type_name`
+    AND STATUS = '0' AND office_type = 2
+    AND office.parent_id = sys_employee_excel.`office_id`)
+  </update>
+
+  <update id="updateEmpSex">
+    UPDATE sys_employee_excel
+    SET emp_sex = (CASE sys_employee_excel.emp_sex_name
+    WHEN '男' THEN '1'
+    WHEN '女' THEN '0'
+    ELSE NULL END)
+  </update>
+
+  <update id="updateEmpMarriage">
+    UPDATE sys_employee_excel
+    SET emp_marriage = (CASE sys_employee_excel.emp_marriage_name
+    WHEN '已婚' THEN '1'
+    WHEN '未婚' THEN '0'
+    ELSE NULL END)
+  </update>
+
+  <delete id="updateClearSysEmployeeExcel">
+    delete from sys_employee_excel
+  </delete>
+
+</mapper>

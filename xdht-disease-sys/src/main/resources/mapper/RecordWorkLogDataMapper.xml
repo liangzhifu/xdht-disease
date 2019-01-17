@@ -15,6 +15,7 @@
     <result column="hazard_factors" jdbcType="VARCHAR" property="hazardFactors" />
     <result column="remarks" jdbcType="VARCHAR" property="remarks" />
     <result column="relation_id" jdbcType="BIGINT" property="relationId" />
+    <result column="time_consuming" jdbcType="VARCHAR" property="timeConsuming" />
   </resultMap>
 
   <select id="selectRecordDataByWorkLog" parameterType="java.lang.Long" resultType="java.util.HashMap">
@@ -27,6 +28,7 @@
     rwld.work_content as workContent,
     rwld.hazard_factors as hazardFactors,
     rwld.remarks as remarks,
+    rwld.time_consuming as timeConsuming,
     sco.`office_name` AS companyOfficeName
     FROM `record_work_log_data` rwld, sys_company_office sco
     WHERE rwld.`company_office_id` = sco.`id`

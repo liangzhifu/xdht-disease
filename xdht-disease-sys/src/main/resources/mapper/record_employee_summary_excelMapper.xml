@@ -58,49 +58,54 @@
   </resultMap>
 
 <update id="updateExcelCompanyId">
-update record_employee_summary_excel  set
-company_id=(select sc.id from sys_company sc where sc.company_name= record_employee_summary_excel.company and status="0");
+    update record_employee_summary_excel  set
+    company_id=(select sc.id from sys_company sc where sc.company_name= record_employee_summary_excel.company and status="0");
 </update>
-  <update id="updateExcelPostId">
+
+ <update id="updateExcelPostId">
   update record_employee_summary_excel   set
-post_id=(select sco.id from sys_company_office sco where sco.office_name=record_employee_summary_excel.post and sco.company_id=record_employee_summary_excel.company_id  and status="0");
+  post_id=(select sco.id from sys_company_office sco where sco.office_name=record_employee_summary_excel.post and sco.company_id=record_employee_summary_excel.company_id  and status="0" and office_type = 1);
 </update>
-  <update id="updateExcelWorkTypeId">
-update record_employee_summary_excel set
-work_type_id=(select sco.id  from sys_company_office sco where sco.office_name=record_employee_summary_excel.work_type and sco.parent_id=record_employee_summary_excel.post_id and status="0");
+
+<update id="updateExcelWorkTypeId">
+    update record_employee_summary_excel set
+    work_type_id=(select sco.id  from sys_company_office sco where sco.office_name=record_employee_summary_excel.work_type and sco.parent_id=record_employee_summary_excel.post_id and status="0" and office_type = 2);
 </update>
 
 <insert id="insertExcelToRecordEmployeeSummary">
-  insert into record_employee_summary
-(emp_id,office_id,work_type,name,age,sex,inspect_date,hazard_factor,inspect,contact_time,blood_pressure_shrink,
-blood_pressure_diastole,heart,lungs,skin_mucous_membrane,lymph_node,thyroid_gland,ear,
-white_blood_cell,neutrophile_granulocyte,red_blood_cell,hemoglobin,platelet,
-electrocardiogram,dbhl_500_l,dbhl_1k_l,
-dbhl_2k_l,dbhl_3k_l,dbhl_4k_l,dbhl_6k_l,dbhl_500_r,dbhl_1k_r,dbhl_2k_r,dbhl_3k_r,dbhl_4k_r,dbhl_6k_r,
-status,create_by,create_date,update_by,update_date,inspect_year
-)
-select sc.id,post_id,work_type_id,rese.name,age,sex,inspect_date,hazard_factor,inspect,rese.contact_time,blood_pressure_shrink,
-blood_pressure_diastole,heart,lungs,skin_mucous_membrane,lymph_node,thyroid_gland,ear,
-white_blood_cell,neutrophile_granulocyte,red_blood_cell,hemoglobin,platelet,
-electrocardiogram,dbhl_500_l,dbhl_1k_l,
-dbhl_2k_l,dbhl_3k_l,dbhl_4k_l,dbhl_6k_l,dbhl_500_r,dbhl_1k_r,dbhl_2k_r,dbhl_3k_r,dbhl_4k_r,dbhl_6k_r,
-rese.status,rese.create_by,rese.create_date,rese.update_by,rese.update_date,inspect_year
-from record_employee_summary_excel rese left join sys_employee sc on  rese.emp_identity_number= sc.emp_identity_number where sc.status='0';
-
+      insert into record_employee_summary
+    (emp_id,office_id,work_type,name,age,sex,inspect_date,hazard_factor,inspect,contact_time,blood_pressure_shrink,
+    blood_pressure_diastole,heart,lungs,skin_mucous_membrane,lymph_node,thyroid_gland,ear,
+    white_blood_cell,neutrophile_granulocyte,red_blood_cell,hemoglobin,platelet,
+    electrocardiogram,dbhl_500_l,dbhl_1k_l,
+    dbhl_2k_l,dbhl_3k_l,dbhl_4k_l,dbhl_6k_l,dbhl_500_r,dbhl_1k_r,dbhl_2k_r,dbhl_3k_r,dbhl_4k_r,dbhl_6k_r,
+    status,create_by,create_date,update_by,update_date,inspect_year
+    )
+    select sc.id,post_id,work_type_id,rese.name,age,sex,inspect_date,hazard_factor,inspect,rese.contact_time,blood_pressure_shrink,
+    blood_pressure_diastole,heart,lungs,skin_mucous_membrane,lymph_node,thyroid_gland,ear,
+    white_blood_cell,neutrophile_granulocyte,red_blood_cell,hemoglobin,platelet,
+    electrocardiogram,dbhl_500_l,dbhl_1k_l,
+    dbhl_2k_l,dbhl_3k_l,dbhl_4k_l,dbhl_6k_l,dbhl_500_r,dbhl_1k_r,dbhl_2k_r,dbhl_3k_r,dbhl_4k_r,dbhl_6k_r,
+    rese.status,rese.create_by,rese.create_date,rese.update_by,rese.update_date,inspect_year
+    from record_employee_summary_excel rese left join sys_employee sc on  rese.emp_identity_number= sc.emp_identity_number where sc.status='0';
 </insert>
-  <select id="selectIdentity"  resultType="com.xdht.disease.sys.model.record_employee_summary_excel">
-  select * from record_employee_summary_excel rese where rese.emp_identity_number  not in (
-select sys_employee.emp_identity_number from sys_employee where status='0');
 
-  </select>
-  <select id="physicalExaminationInfOnce" resultType="com.xdht.disease.sys.model.record_employee_summary_excel">
- select rese.*  from record_employee_summary_excel rese,record_employee_summary res ,sys_employee se where rese.status=res.status=se.status='0'
- and res.emp_id=se.id and rese.emp_identity_number=se.emp_identity_number and rese.inspect_year=res.inspect_year;
-  </select>
-  <delete id="deleteAll">
- delete from record_employee_summary_excel;
-  </delete>
-<update id="insertEmployeeContactTime">
-update sys_employee set contact_time= (select distinct contact_time from record_employee_summary where emp_id= sys_employee.id and status='0' order by update_date desc limit 1);
+ <select id="selectIdentity"  resultType="com.xdht.disease.sys.model.record_employee_summary_excel">
+      select * from record_employee_summary_excel rese where rese.emp_identity_number  not in (
+      select sys_employee.emp_identity_number from sys_employee where status='0');
+</select>
+
+ <select id="physicalExaminationInfOnce" resultType="com.xdht.disease.sys.model.record_employee_summary_excel">
+     select rese.*  from record_employee_summary_excel rese,record_employee_summary res ,sys_employee se where rese.status=res.status=se.status='0'
+     and res.emp_id=se.id and rese.emp_identity_number=se.emp_identity_number and rese.inspect_year=res.inspect_year;
+</select>
+
+<delete id="deleteAll">
+  delete from record_employee_summary_excel;
+</delete>
+
+ <update id="insertEmployeeContactTime">
+    update sys_employee set contact_time= (select distinct contact_time from record_employee_summary where emp_id= sys_employee.id and status='0' order by update_date desc limit 1);
 </update>
+
 </mapper>

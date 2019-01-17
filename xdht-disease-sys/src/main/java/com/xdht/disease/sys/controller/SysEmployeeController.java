@@ -13,12 +13,18 @@ import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.log4j.Log4j;
+import org.apache.poi.hssf.usermodel.HSSFWorkbook;
+import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.List;
 import java.util.Map;
 
@@ -88,5 +94,40 @@ public class SysEmployeeController {
     @ApiOperation(value = "获取职工信息")
     public ResponseEntity<Result<SysEmployeeResponse>> getEmployeeDetail(@PathVariable Long id) {
         return new ResponseEntity<>(Result.ok(sysEmployeeService.getEmployeeDetail(id)), HttpStatus.OK);
+    }
+
+    @RequestMapping(value="/upload", method = RequestMethod.POST)
+    @ApiOperation(value = "职工Excel上传")
+    @Authorization
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "authorization", value = "authorization", required = true, dataType = "string", paramType = "header"),
+    })
+    public ResponseEntity<Result<Object>> upload(@RequestParam("uploadFile") MultipartFile file) {
+        String contentType = file.getContentType();
+        String fileName = file.getOriginalFilename();
+        Workbook workbook = null;
+        try {
+            //获取excel文件的io流
+            InputStream is = file.getInputStream();
+            //根据文件后缀名不同(xls和xlsx)获得不同的Workbook实现类对象
+            if(fileName.endsWith("xls")){
+                //2003
+                workbook = new HSSFWorkbook(is);
+            }else if(fileName.endsWith("xlsx")){
+                //2007 及2007以上
+                workbook = new XSSFWorkbook(is);
+
+            }
+        } catch (IOException e) {
+
+        }
+
+        try {
+            this.sysEmployeeService.saveEmployeeExcel(workbook);
+            //FileUtil.uploadFile(file.getBytes(), fileName);
+        } catch (Exception e) {
+            return new ResponseEntity<>(Result.error(ResultCode.FAIL, e.getMessage()), HttpStatus.OK);
+        }
+        return new ResponseEntity<>(Result.ok(null), HttpStatus.OK);
     }
 }
