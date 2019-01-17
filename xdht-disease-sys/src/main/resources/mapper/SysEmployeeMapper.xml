@@ -84,6 +84,9 @@
       <if test="empIdentityNumber != null and empIdentityNumber != ''">
         and sem.emp_identity_number like concat('%', #{empIdentityNumber, jdbcType=VARCHAR}, '%')
       </if>
+      <if test="companyId != null and companyId != ''">
+        and company.id=#{companyId, jdbcType=BIGINT}
+      </if>
     </where>
   </sql>
 
