@@ -55,6 +55,54 @@ public class RecordIndividualProtectiveEquipmentData {
     private Long relationId;
 
     /**
+     * 耳塞型号
+     */
+    @Column(name = "earplugs_model")
+    private String earplugsModel;
+
+    /**
+     * 耳塞NRR
+     */
+    @Column(name = "earplugs_nrr")
+    private String earplugsNrr;
+
+    /**
+     * 耳塞SNR
+     */
+    @Column(name = "earplugs_snr")
+    private String earplugsSnr;
+
+    /**
+     * 耳罩型号
+     */
+    @Column(name = "earmuff_model")
+    private String earmuffModel;
+
+    /**
+     * 耳罩NRR
+     */
+    @Column(name = "earmuff_nrr")
+    private String earmuffNrr;
+
+    /**
+     * 耳罩SNR
+     */
+    @Column(name = "earmuff_snr")
+    private String earmuffSnr;
+
+    /**
+     * 配备情况
+     */
+    @Column(name = "allocation_situation")
+    private String allocationSituation;
+
+    /**
+     * 使用情况
+     */
+    @Column(name = "usage_situation")
+    private String usageSituation;
+
+    /**
      * @return id
      */
     public Long getId() {
@@ -179,7 +227,7 @@ public class RecordIndividualProtectiveEquipmentData {
     /**
      * 获取使用情况
      *
-     * @return usaged- 使用情况
+     * @return usaged - 使用情况
      */
     public String getUsaged() {
         return usaged;
@@ -196,14 +244,163 @@ public class RecordIndividualProtectiveEquipmentData {
 
     /**
      * 获取关联id
-     * @return relationId
+     *
+     * @return relation_id - 关联id
      */
     public Long getRelationId() {
         return relationId;
     }
 
-    /** 设置关联id
-     * @param relationId
+    /**
+     * 设置关联id
+     *
+     * @param relationId 关联id
      */
-    public void setRelationId(Long relationId) { this.relationId = relationId; }
+    public void setRelationId(Long relationId) {
+        this.relationId = relationId;
+    }
+
+    /**
+     * 获取耳塞型号
+     *
+     * @return earplugs_model - 耳塞型号
+     */
+    public String getEarplugsModel() {
+        return earplugsModel;
+    }
+
+    /**
+     * 设置耳塞型号
+     *
+     * @param earplugsModel 耳塞型号
+     */
+    public void setEarplugsModel(String earplugsModel) {
+        this.earplugsModel = earplugsModel;
+    }
+
+    /**
+     * 获取耳塞NRR
+     *
+     * @return earplugs_nrr - 耳塞NRR
+     */
+    public String getEarplugsNrr() {
+        return earplugsNrr;
+    }
+
+    /**
+     * 设置耳塞NRR
+     *
+     * @param earplugsNrr 耳塞NRR
+     */
+    public void setEarplugsNrr(String earplugsNrr) {
+        this.earplugsNrr = earplugsNrr;
+    }
+
+    /**
+     * 获取耳塞SNR
+     *
+     * @return earplugs_snr - 耳塞SNR
+     */
+    public String getEarplugsSnr() {
+        return earplugsSnr;
+    }
+
+    /**
+     * 设置耳塞SNR
+     *
+     * @param earplugsSnr 耳塞SNR
+     */
+    public void setEarplugsSnr(String earplugsSnr) {
+        this.earplugsSnr = earplugsSnr;
+    }
+
+    /**
+     * 获取耳罩型号
+     *
+     * @return earmuff_model - 耳罩型号
+     */
+    public String getEarmuffModel() {
+        return earmuffModel;
+    }
+
+    /**
+     * 设置耳罩型号
+     *
+     * @param earmuffModel 耳罩型号
+     */
+    public void setEarmuffModel(String earmuffModel) {
+        this.earmuffModel = earmuffModel;
+    }
+
+    /**
+     * 获取耳罩NRR
+     *
+     * @return earmuff_nrr - 耳罩NRR
+     */
+    public String getEarmuffNrr() {
+        return earmuffNrr;
+    }
+
+    /**
+     * 设置耳罩NRR
+     *
+     * @param earmuffNrr 耳罩NRR
+     */
+    public void setEarmuffNrr(String earmuffNrr) {
+        this.earmuffNrr = earmuffNrr;
+    }
+
+    /**
+     * 获取耳罩SNR
+     *
+     * @return earmuff_snr - 耳罩SNR
+     */
+    public String getEarmuffSnr() {
+        return earmuffSnr;
+    }
+
+    /**
+     * 设置耳罩SNR
+     *
+     * @param earmuffSnr 耳罩SNR
+     */
+    public void setEarmuffSnr(String earmuffSnr) {
+        this.earmuffSnr = earmuffSnr;
+    }
+
+    /**
+     * 获取配备情况
+     *
+     * @return allocation_situation - 配备情况
+     */
+    public String getAllocationSituation() {
+        return allocationSituation;
+    }
+
+    /**
+     * 设置配备情况
+     *
+     * @param allocationSituation 配备情况
+     */
+    public void setAllocationSituation(String allocationSituation) {
+        this.allocationSituation = allocationSituation;
+    }
+
+    /**
+     * 获取使用情况
+     *
+     * @return usage_situation - 使用情况
+     */
+    public String getUsageSituation() {
+        return usageSituation;
+    }
+
+    /**
+     * 设置使用情况
+     *
+     * @param usageSituation 使用情况
+     */
+    public void setUsageSituation(String usageSituation) {
+        this.usageSituation = usageSituation;
+    }
 }
