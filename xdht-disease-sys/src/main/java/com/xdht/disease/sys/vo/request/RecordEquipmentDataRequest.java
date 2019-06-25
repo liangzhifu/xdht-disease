@@ -21,7 +21,10 @@ public class RecordEquipmentDataRequest {
     @ApiModelProperty(value = "设备名称")
     private String equipmentName;
 
-    @ApiModelProperty(value = "数量   （台/套）")
+    @ApiModelProperty(value = "是否噪声")
+    private String equipmentNoise;
+
+    @ApiModelProperty(value = "数量  （台/套）")
     private Long epuipmentNumber;
 
 }

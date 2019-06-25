@@ -35,6 +35,10 @@ public class RecordEmployeeSummary {
     @JSONField(format="yyyy-MM-dd")
     @Column(name = "inspect_date")
     private Date inspectDate;
+    /*检查年份
+    * */
+    @Column(name = "inspect_year")
+    private Integer inspectYear;
 
     /**
      * 0：初检  1：复检
@@ -225,6 +229,14 @@ public class RecordEmployeeSummary {
      */
     @Column(name = "update_date")
     private Date updateDate;
+
+    public Integer getInspectYear() {
+        return inspectYear;
+    }
+
+    public void setInspectYear(Integer inspectYear) {
+        this.inspectYear = inspectYear;
+    }
 
     /**
      * @return id

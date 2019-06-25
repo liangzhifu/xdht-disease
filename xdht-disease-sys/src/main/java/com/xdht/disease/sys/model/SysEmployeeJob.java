@@ -25,7 +25,7 @@ public class SysEmployeeJob {
     private Date beginDate;
 
     /**
-     * 介绍日期
+     * 结束日期
      */
     @JSONField(format="yyyy-MM-dd")
     @Column(name = "end_date")

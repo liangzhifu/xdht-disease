@@ -24,7 +24,7 @@ public interface RecordEmployeeSummaryService extends Service<RecordEmployeeSumm
      * 添加
      * @param recordEmployeeSummary 实体
      */
-    void add(RecordEmployeeSummary recordEmployeeSummary);
+    void add(RecordEmployeeSummary recordEmployeeSummary) throws Exception;
 
     /**
      * 删除

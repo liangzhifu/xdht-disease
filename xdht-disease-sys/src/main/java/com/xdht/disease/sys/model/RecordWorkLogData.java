@@ -61,6 +61,9 @@ public class RecordWorkLogData {
     @Column(name = "relation_id")
     private Long relationId;
 
+    @Column(name = "time_consuming")
+    private String timeConsuming;
+
     /**
      * @return id
      */
@@ -233,4 +236,11 @@ public class RecordWorkLogData {
     public void setRelationId(Long relationId) { this.relationId = relationId; }
 
 
+    public String getTimeConsuming() {
+        return timeConsuming;
+    }
+
+    public void setTimeConsuming(String timeConsuming) {
+        this.timeConsuming = timeConsuming;
+    }
 }

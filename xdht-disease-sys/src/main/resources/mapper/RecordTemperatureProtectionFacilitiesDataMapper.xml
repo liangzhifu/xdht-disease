@@ -23,7 +23,7 @@
     rtpfd.operation_and_maintenance as operationAndMaintenance,
     rtpfd.productive_heat_source as productiveHeatSource,
     rtpfd.temperature_protection_facilities as temperatureProtectionFacilities,
-    sco.`office_name` AS officeName
+    sco.`office_name` AS companyOfficeName
     FROM `record_temperature_protection_facilities_data` rtpfd, sys_company_office sco
     WHERE rtpfd.`company_office_id` = sco.`id`
     AND rtpfd.`relation_id` = #{id, jdbcType=BIGINT}

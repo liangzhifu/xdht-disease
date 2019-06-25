@@ -10,6 +10,7 @@
     <result column="office_id" jdbcType="BIGINT" property="officeId" />
     <result column="work_type" jdbcType="BIGINT" property="workType" />
     <result column="inspect_date" jdbcType="DATE" property="inspectDate" />
+      <result column="inspect_year" jdbcType="INTEGER" property="inspectYear" />
     <result column="inspect" jdbcType="VARCHAR" property="inspect" />
     <result column="contact_time" jdbcType="INTEGER" property="contactTime" />
     <result column="hazard_factor" jdbcType="VARCHAR" property="hazardFactor" />
@@ -67,9 +68,10 @@
     (SELECT sco.company_id FROM sys_company_office sco WHERE sco.id = res.`office_id`) AS companyId,
     (SELECT sc.company_name FROM sys_company_office sco, sys_company sc WHERE sco.company_id = sc.id AND sco.id = res.`office_id`) AS companyName,
     res.work_type as workType,
-    (SELECT sd.`dictionary_name` FROM sys_dictionary sd WHERE sd.`id` = res.work_type) as workTypeName,
+    (SELECT sco.office_name FROM sys_company_office sco WHERE sco.id = res.work_type) as workTypeName,
     res.inspect_date as inspectDate,
     res.inspect as inspect,
+      res.inspect_year as inspectYear,
     res.contact_time as contactTime,
     res.hazard_factor as hazardFactor,
     res.blood_pressure_shrink as bloodPressureShrink,
@@ -124,7 +126,7 @@
     (SELECT sco.company_id FROM sys_company_office sco WHERE sco.id = res.`office_id`) AS companyId,
     (SELECT sc.company_name FROM sys_company_office sco, sys_company sc WHERE sco.company_id = sc.id AND sco.id = res.`office_id`) AS companyName,
     res.work_type as workType,
-    (SELECT sd.`dictionary_name` FROM sys_dictionary sd WHERE sd.`id` = res.work_type) as workTypeName,
+    (SELECT sco.office_name FROM sys_company_office sco WHERE sco.id = res.work_type) as workTypeName,
     res.inspect_date as inspectDate,
     res.inspect as inspect,
     res.contact_time as contactTime,
@@ -173,7 +175,7 @@
     (SELECT sco.company_id FROM sys_company_office sco WHERE sco.id = res.`office_id`) AS companyId,
     (SELECT sc.company_name FROM sys_company_office sco, sys_company sc WHERE sco.company_id = sc.id AND sco.id = res.`office_id`) AS companyName,
     res.work_type as workType,
-    (SELECT sd.`dictionary_name` FROM sys_dictionary sd WHERE sd.`id` = res.work_type) as workTypeName,
+   (SELECT sco.office_name FROM sys_company_office sco WHERE sco.id = res.work_type) as workTypeName,
     res.inspect_date as inspectDate,
     res.inspect as inspect,
     res.contact_time as contactTime,
@@ -214,7 +216,7 @@
     AND res.inspect_date in (
     SELECT MAX(rs.inspect_date) as newTime FROM `record_employee_summary` rs
     WHERE
-	  rs.emp_id = 16
+	  rs.emp_id = #{id}
     GROUP BY
 	  year(rs.inspect_date)
     )

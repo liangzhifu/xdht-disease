@@ -7,9 +7,9 @@ spring:
 #MySQL
   write:
     datasource:
-        url: jdbc:mysql://120.77.251.154:3306/jessite?useUnicode=true&characterEncoding=utf-8&allowMultiQueries=true&zeroDateTimeBehavior=convertToNull
-        username: jessite
-        password: jessite
+        url: jdbc:mysql://39.106.167.74:3306/disease?useUnicode=true&characterEncoding=utf-8&allowMultiQueries=true&zeroDateTimeBehavior=convertToNull
+        username: dise
+        password: 123456
         driver-class-name: com.mysql.jdbc.Driver
         initializeSize: 5
         minIdle: 5
@@ -27,9 +27,9 @@ spring:
 #MySQL
   read:
     datasource:
-      url: jdbc:mysql://120.77.251.154:3306/jessite?useUnicode=true&characterEncoding=utf-8&allowMultiQueries=true&zeroDateTimeBehavior=convertToNull
-      username: jessite
-      password: jessite
+      url: jdbc:mysql://39.106.167.74:3306/disease?useUnicode=true&characterEncoding=utf-8&allowMultiQueries=true&zeroDateTimeBehavior=convertToNull
+      username: dise
+      password: 123456
       driver-class-name: com.mysql.jdbc.Driver
       initializeSize: 5
       minIdle: 5

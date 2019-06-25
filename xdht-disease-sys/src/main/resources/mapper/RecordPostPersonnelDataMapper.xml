@@ -27,7 +27,7 @@
     rppd.day_of_week as dayOfWeek,
     rppd.class_of_date as classOfDate,
     rppd.hour_of_class as hourOfClass,
-    sco.`office_name` AS officeName
+    sco.`office_name` AS companyOfficeName
     FROM `record_post_personnel_data` rppd, sys_company_office sco
     WHERE rppd.`company_office_id` = sco.`id`
     AND rppd.`post_personnel_id` = #{id, jdbcType=BIGINT}

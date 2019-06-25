@@ -12,7 +12,7 @@ logging:
         com.onepro.custom.mapper: DEBUG
         com.xdht: DEBUG
 server:
-  port: 7071
+  port: 7081
 eureka:
     client:
       serviceUrl:

@@ -13,6 +13,7 @@
     <result column="emp_marriage" jdbcType="CHAR" property="empMarriage" />
     <result column="emp_education" jdbcType="CHAR" property="empEducation" />
     <result column="emp_hobby" jdbcType="VARCHAR" property="empHobby" />
+    <result column="contact_time" jdbcType="INTEGER" property="contactTime"/>
     <result column="emp_work_date" jdbcType="DATE" property="empWorkDate" />
     <result column="emp_identity_number" jdbcType="VARCHAR" property="empIdentityNumber" />
     <result column="emp_photo_url" jdbcType="VARCHAR" property="empPhotoUrl" />
@@ -36,6 +37,7 @@
     emp_marriage,
     emp_education,
     emp_hobby,
+    contact_time
     emp_work_date,
     emp_identity_number,
     emp_photo_url,
@@ -59,5 +61,59 @@
         and sco.company_id = #{companyId, jdbcType=BIGINT})
       </if>
     </where>
+  </select>
+
+  <sql id="WHERE_SQL">
+    <where>
+      sem.`office_id` = sof1.`id`
+      AND sof1.`company_id` = company.`id`
+      AND sof1.`parent_id` = sof2.`id`
+      AND sem.`status` = '0'
+      <if test="companyName != null and companyName != ''">
+        and company.company_name like concat('%', #{companyName, jdbcType=VARCHAR}, '%')
+      </if>
+      <if test="officeName != null and officeName != ''">
+        and sof2.`office_name` like concat('%', #{officeName, jdbcType=VARCHAR}, '%')
+      </if>
+      <if test="workTypeName != null and workTypeName != ''">
+        and sof1.`office_name` like concat('%', #{workTypeName, jdbcType=VARCHAR}, '%')
+      </if>
+      <if test="empName != null and empName != ''">
+        and sem.emp_name like concat('%', #{empName, jdbcType=VARCHAR}, '%')
+      </if>
+      <if test="empIdentityNumber != null and empIdentityNumber != ''">
+        and sem.emp_identity_number like concat('%', #{empIdentityNumber, jdbcType=VARCHAR}, '%')
+      </if>
+      <if test="companyId != null and companyId != ''">
+        and company.id=#{companyId, jdbcType=BIGINT}
+      </if>
+    </where>
+  </sql>
+
+  <select id="selectCompanyEmployeeListByRequest" resultType="java.util.HashMap" parameterType="com.xdht.disease.sys.vo.request.SysEmployeeRequest">
+    SELECT sem.id,
+    sem.office_id as officeId,
+    sem.emp_name as empName,
+    sem.emp_sex as empSex,
+    sem.emp_native as empNative,
+    sem.emp_marriage as empMarriage,
+    sem.emp_education as empEducation,
+    sem.emp_hobby as empHobby,
+    sem.contact_time as contactTime,
+    sem.emp_work_date as empWorkDate,
+    sem.emp_identity_number as empIdentityNumber,
+    sof1.`office_name` AS workTypeName,
+    company.company_name AS companyName,
+    sof2.`office_name` AS officeName
+    FROM sys_employee sem, sys_company_office sof1, sys_company company, sys_company_office sof2
+    <include refid="WHERE_SQL"></include>
+    order by sem.id DESC
+    limit #{start}, #{pageSize}
+  </select>
+
+  <select id="selectCompanyEmployeeCountByRequest" resultType="java.lang.Integer" parameterType="com.xdht.disease.sys.vo.request.SysEmployeeRequest">
+    select count(1)
+    FROM sys_employee sem, sys_company_office sof1, sys_company company, sys_company_office sof2
+    <include refid="WHERE_SQL"></include>
   </select>
 </mapper>

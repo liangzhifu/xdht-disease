@@ -34,6 +34,12 @@ public class SysCompanyOffice {
     private String officeName;
 
     /**
+     * 1--部门，2--工种
+     */
+    @Column(name = "office_type")
+    private Integer officeType;
+
+    /**
      * 创建人
      */
     @Column(name = "create_by")
@@ -216,5 +222,13 @@ public class SysCompanyOffice {
 
     public void setParentIds(String parentIds) {
         this.parentIds = parentIds;
+    }
+
+    public Integer getOfficeType() {
+        return officeType;
+    }
+
+    public void setOfficeType(Integer officeType) {
+        this.officeType = officeType;
     }
 }

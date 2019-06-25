@@ -26,7 +26,7 @@
     rved.poison_or_dust_name as poisonOrDustName,
     rved.number as number,
     rved.operation_and_maintenance as operationAndMaintenance,
-    sco.`office_name` AS officeName
+    sco.`office_name` AS companyOfficeName
     FROM `record_vdd_equipment_data` rved, sys_company_office sco
     WHERE rved.`office_id` = sco.`id`
     AND rved.`relation_id` = #{id, jdbcType=BIGINT}

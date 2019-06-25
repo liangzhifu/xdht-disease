@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.xdht.disease.sys.dao.RecordWorkplaceNoiseMapper">
+  <resultMap id="BaseResultMap" type="com.xdht.disease.sys.model.RecordWorkplaceNoise">
+    <!--
+      WARNING - @mbg.generated
+    -->
+    <id column="id" jdbcType="BIGINT" property="id" />
+    <result column="company_id" jdbcType="BIGINT" property="companyId" />
+    <result column="post_id" jdbcType="BIGINT" property="postId" />
+    <result column="inspect_date" javaType="DATE" property="inspectDate"/>
+    <result column="inspect_Year" jdbcType="INTEGER" property="inspectYear" />
+    <result column="work_type_id" jdbcType="BIGINT" property="workTypeId"/>
+    <result column="analysis_result" jdbcType="VARCHAR" property="analysisResult" />
+    <result column="contact_time" jdbcType="DECIMAL" property="contactTime" />
+    <result column="sound_level" jdbcType="DECIMAL" property="soundLevel" />
+    <result column="status" jdbcType="CHAR" property="status" />
+    <result column="check_place" jdbcType="VARCHAR" property="checkPlace" />
+    <result column="create_by" jdbcType="BIGINT" property="createBy" />
+    <result column="create_date" jdbcType="TIMESTAMP" property="createDate" />
+    <result column="update_by" jdbcType="BIGINT" property="updateBy" />
+    <result column="update_date" jdbcType="TIMESTAMP" property="updateDate" />
+    <result column="eqp_post_id" jdbcType="BIGINT" property="eqpPostId" />
+    <result column="eqp_name" jdbcType="VARCHAR" property="eqpName" />
+  </resultMap>
+
+  <select id="selectRecordWorkplaceNoiseEcharsDetail" parameterType="java.lang.Long" resultType="com.xdht.disease.sys.vo.response.RecordWorkplaceNoiseResponse">
+    <![CDATA[
+    SELECT
+        rwn.id as id,
+        rwn.workshop as workshop,
+        rwn.post_id as postId,
+        rwn.stop_place as stopPlace,
+        rwn.test_result as testResult,
+        rwn.analysis_result as analysisResult,
+        rwn.contact_time as contactTime,
+        rwn.sound_level as soundLevel,
+        rwn.check_place as checkPlace,
+        (SELECT sd.`dictionary_name` FROM sys_dictionary sd WHERE sd.`id` = rwn.post_id) as postName
+      FROM
+      record_workplace_noise rwn
+      WHERE rwn.`status` = 0
+      AND rwn.contact_time in (
+        SELECT
+            MAX(r.contact_time) as newTime
+        FROM
+            `record_workplace_noise` r
+        WHERE
+            r.status = '0'
+        GROUP BY
+            year(r.contact_time),r.post_id ORDER BY r.contact_time DESC
+)
+      GROUP BY rwn.post_id ,rwn.contact_time HAVING ( year(now())- year(rwn.contact_time) <  3)
+     ]]>
+  </select>
+
+  <sql id="WHERE_SQL">
+    <where>
+      rwn.`work_type_id` = sco1.`id`
+      AND rwn.`post_id` = sco2.`id`
+      AND rwn.`company_id` = sc.id
+      AND rwn.`status` = '0'
+    </where>
+  </sql>
+
+  <select id="selectRecordWorkplaceNoiseList" resultType="java.util.HashMap" parameterType="com.xdht.disease.sys.vo.request.RecordWorkplaceNoiseRequest">
+    SELECT rwn.id,
+    rwn.company_id as companyId,
+    rwn.post_id as postId,
+    rwn.inspect_date as inspectDate,
+    rwn.inspect_Year as inspectYear,
+    rwn.work_type_id as workTypeId,
+    rwn.analysis_result as analysisResult,
+    rwn.contact_time as contactTime,
+    rwn.sound_level as soundLevel,
+    rwn.check_place as checkPlace,
+    rwn.eqp_post_id as eqpPostId,
+    rwn.eqp_name as eqpName,
+    sco1.`office_name` AS workTypeName,
+    sco2.`office_name` AS companyOfficeName,
+    sc.`company_name` AS companyName
+    FROM record_workplace_noise rwn, sys_company_office sco1, sys_company_office sco2, sys_company sc
+    <include refid="WHERE_SQL"></include>
+    order by rwn.id
+    limit #{start}, #{pageSize}
+  </select>
+
+  <select id="selectRecordWorkplaceNoiseCount" resultType="java.lang.Integer" parameterType="com.xdht.disease.sys.vo.request.RecordWorkplaceNoiseRequest">
+    SELECT count(1)
+    FROM record_workplace_noise rwn, sys_company_office sco1, sys_company_office sco2, sys_company sc
+    <include refid="WHERE_SQL"></include>
+  </select>
+</mapper>

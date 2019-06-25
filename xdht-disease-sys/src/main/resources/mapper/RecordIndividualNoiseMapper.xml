@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.xdht.disease.sys.dao.RecordIndividualNoiseMapper">
+  <resultMap id="BaseResultMap" type="com.xdht.disease.sys.model.RecordIndividualNoise">
+    <!--
+      WARNING - @mbg.generated
+    -->
+    <id column="id" jdbcType="BIGINT" property="id" />
+    <result column="company_id" jdbcType="BIGINT" property="companyId" />
+    <result column="office_id" jdbcType="BIGINT" property="officeId" />
+    <result column="work_type_id" jdbcType="BIGINT" property="workTypeId" />
+    <result column="inspect_date" jdbcType="DATE" property="inspectDate" />
+    <result column="inspect_year" jdbcType="INTEGER" property="inspectYear" />
+    <result column="Working_hours_per_shift" jdbcType="DECIMAL" property="workingHoursPerShift" />
+    <result column="workday_week" jdbcType="DECIMAL" property="workdayWeek" />
+    <result column="sound_level" jdbcType="DECIMAL" property="soundLevel" />
+    <result column="decision_result" jdbcType="VARCHAR" property="decisionResult" />
+    <result column="status" jdbcType="CHAR" property="status" />
+    <result column="create_by" jdbcType="BIGINT" property="createBy" />
+    <result column="carete_date" jdbcType="TIMESTAMP" property="careteDate" />
+    <result column="update_by" jdbcType="BIGINT" property="updateBy" />
+    <result column="update_date" jdbcType="TIMESTAMP" property="updateDate" />
+  </resultMap>
+
+  <select id="selectRecordIndividualNoiseEcharsDetail" parameterType="java.lang.Long" resultType="com.xdht.disease.sys.vo.response.RecordIndividualNoiseResponse">
+    <![CDATA[
+    SELECT
+    rin.id as id,
+    rin.workshop as workshop,
+    rin.post_id as postId,
+    rin.stop_place as stopPlace,
+    rin.contact_time as contactTime,
+    rin.sound_level as soundLevel,
+    (SELECT sd.`dictionary_name` FROM sys_dictionary sd WHERE sd.`id` = rin.post_id) as postName
+    FROM
+    record_individual_noise rin
+    WHERE rin.`status` = 0
+    AND rin.contact_time in (
+        SELECT
+            MAX(r.contact_time) AS newTime
+        FROM
+            `record_individual_noise` r
+        WHERE
+            r. STATUS = '0'
+        GROUP BY
+            YEAR (r.contact_time),
+            r.post_id
+        ORDER BY
+            r.contact_time DESC
+    )
+    GROUP BY rin.post_id,year(rin.contact_time) HAVING( year(now())- year(rin.contact_time) < 3)
+  ]]>
+  </select>
+</mapper>

@@ -23,7 +23,7 @@
     ranf.noise_source as noiseSource,
     ranf.noise_protection_facilities as noiseProtectionFacilities,
     ranf.operation_and_maintenance as operationAndMaintenance,
-    sco.`office_name` AS officeName
+    sco.`office_name` AS companyOfficeName
     FROM `record_anti_noise_facilities_data` ranf, sys_company_office sco
     WHERE ranf.`company_office_id` = sco.`id`
     AND ranf.`relation_id` = #{id, jdbcType=BIGINT}

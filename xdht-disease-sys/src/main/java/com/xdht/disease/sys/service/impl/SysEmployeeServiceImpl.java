@@ -1,78 +1,64 @@
 package com.xdht.disease.sys.service.impl;
 
-import com.github.pagehelper.PageHelper;
+import com.xdht.disease.common.annotation.ExcelImport;
 import com.xdht.disease.common.core.AbstractService;
 import com.xdht.disease.common.core.PageResult;
 import com.xdht.disease.common.util.Md5Utils;
 import com.xdht.disease.sys.constant.SysEnum;
+import com.xdht.disease.sys.dao.SysEmployeeMapper;
 import com.xdht.disease.sys.model.*;
 import com.xdht.disease.sys.service.*;
 import com.xdht.disease.sys.vo.request.SysEmployeeRequest;
 import com.xdht.disease.sys.vo.response.SysEmployeeResponse;
+import org.apache.poi.ss.usermodel.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import tk.mybatis.mapper.entity.Condition;
 
-import java.util.LinkedList;
-import java.util.List;
+import java.lang.reflect.Field;
+import java.lang.reflect.Modifier;
+import java.text.SimpleDateFormat;
+import java.util.*;
 
 
 /**
- * Created by lzf on 2018/06/01.
+ * @author Created by lzf on 2018/06/01.
  */
 @Service
-@Transactional
-public class SysEmployeeServiceImpl extends AbstractService<SysEmployee> implements SysEmployeeService{
+@Transactional(rollbackFor = Exception.class)
+public class SysEmployeeServiceImpl extends AbstractService<SysEmployee> implements SysEmployeeService {
 
     @Autowired
     private SysEmployeeCaseService sysEmployeeCaseService;
+
     @Autowired
     private SysEmployeeDiseaseService sysEmployeeDiseaseService;
+
     @Autowired
     private SysEmployeeJobService sysEmployeeJobService;
+
     @Autowired
     private SysCompanyOfficeService sysCompanyOfficeService;
+
     @Autowired
     private SysUserService sysUserService;
 
+    @Autowired
+    private SysEmployeeMapper sysEmployeeMapper;
+
+    @Autowired
+    private SysEmployeeExcelService sysEmployeeExcelService;
+
     @Override
-    public PageResult<SysEmployee> querySysEmpPage(SysEmployeeRequest sysEmployeeRequest) {
-        Condition condition = new Condition(SysEmployee.class);
-        condition.createCriteria().andEqualTo("status", SysEnum.StatusEnum.STATUS_NORMAL.getCode());
-        if (sysEmployeeRequest.getCompanyId() != null) {
-            Condition sysOfficeCondition = new Condition(SysCompanyOffice.class);
-            sysOfficeCondition.createCriteria().andEqualTo("status", SysEnum.StatusEnum.STATUS_NORMAL.getCode())
-                    .andEqualTo("companyId", sysEmployeeRequest.getCompanyId());
-            List<SysCompanyOffice> sysCompanyOfficeList = this.sysCompanyOfficeService.selectByCondition(sysOfficeCondition);
-            List<Long> sysOfficeIdList = new LinkedList<>();
-            if (sysCompanyOfficeList != null && sysCompanyOfficeList.size()>0) {
-                for (SysCompanyOffice sysCompanyOffice : sysCompanyOfficeList) {
-                    sysOfficeIdList.add(sysCompanyOffice.getId());
-                }
-                condition.getOredCriteria().get(0).andIn("officeId", sysOfficeIdList);
-            }
-        }
-        if (sysEmployeeRequest.getEmpName() != null && !"".equals(sysEmployeeRequest.getEmpName())) {
-            condition.getOredCriteria().get(0).andLike("empName","%"+sysEmployeeRequest.getEmpName()+"%");
-        }
-        if (sysEmployeeRequest.getEmpIdentityNumber() != null && !"".equals(sysEmployeeRequest.getEmpIdentityNumber())) {
-            condition.getOredCriteria().get(0).andLike("empIdentityNumber","%"+sysEmployeeRequest.getEmpIdentityNumber()+"%");
-        }
-        if (sysEmployeeRequest.getEmpSex() != null && !"".equals(sysEmployeeRequest.getEmpSex())) {
-            condition.getOredCriteria().get(0).andEqualTo("empSex",sysEmployeeRequest.getEmpSex());
-        }
-        if(sysEmployeeRequest.getEmpNative() != null && !"".equals(sysEmployeeRequest.getEmpNative())){
-            condition.getOredCriteria().get(0).andLike("empNative","%" + sysEmployeeRequest.getEmpNative() + "%");
-        }
-        if(sysEmployeeRequest.getEmpMarriage() != null && !"".equals(sysEmployeeRequest.getEmpMarriage())){
-            condition.getOredCriteria().get(0).andEqualTo("empMarriage",sysEmployeeRequest.getEmpMarriage());
-        }
-        condition.orderBy("createDate").desc();
-        PageHelper.startPage(sysEmployeeRequest.getPageNumber(), sysEmployeeRequest.getPageSize());
-        List<SysEmployee> dataList = this.selectByCondition(condition);
-        Integer total = this.selectCountByCondition(condition);
-        PageResult<SysEmployee> pageList = new PageResult<SysEmployee>();
+    public PageResult<Map<String, Object>> querySysEmpPage(SysEmployeeRequest sysEmployeeRequest) {
+        Integer pageNumber = sysEmployeeRequest.getPageNumber();
+        Integer pageSize = sysEmployeeRequest.getPageSize();
+        Integer start = (pageNumber - 1) * pageSize;
+        sysEmployeeRequest.setStart(start);
+        List<Map<String, Object>> dataList = this.sysEmployeeMapper.selectCompanyEmployeeListByRequest(sysEmployeeRequest);
+        Integer total = this.sysEmployeeMapper.selectCompanyEmployeeCountByRequest(sysEmployeeRequest);
+        PageResult<Map<String, Object>> pageList = new PageResult<>();
         pageList.setDataList(dataList);
         pageList.setTotal(total);
         return pageList;
@@ -83,18 +69,22 @@ public class SysEmployeeServiceImpl extends AbstractService<SysEmployee> impleme
         Condition condition = new Condition(SysEmployee.class);
         condition.createCriteria().andEqualTo("officeId", sysEmployeeRequest.getOfficeId());
         if (sysEmployeeRequest.getEmpName() != null && !"".equals(sysEmployeeRequest.getEmpName())) {
-            condition.getOredCriteria().get(0).andLike("empName","%"+sysEmployeeRequest.getEmpName()+"%");
-        }
-        if(sysEmployeeRequest.getEmpNative() != null && !"".equals(sysEmployeeRequest.getEmpNative())){
-            condition.getOredCriteria().get(0).andLike("empNative",sysEmployeeRequest.getEmpNative());
+            condition.getOredCriteria().get(0).andLike("empName", "%" + sysEmployeeRequest.getEmpName() + "%");
         }
         condition.setOrderByClause("id desc");
         return this.selectByCondition(condition);
     }
 
     @Override
-    public void addEmployee(SysEmployeeResponse sysEmployeeResponse) {
+    public void addEmployee(SysEmployeeResponse sysEmployeeResponse) throws Exception {
         SysEmployee sysEmployee = sysEmployeeResponse.getSysEmployee();
+        Condition condition = new Condition(SysEmployee.class);
+        condition.createCriteria().andEqualTo("empIdentityNumber", sysEmployee.getEmpIdentityNumber())
+                .andEqualTo("status", SysEnum.StatusEnum.STATUS_NORMAL.getCode());
+        int num = this.selectCountByCondition(condition);
+        if (num > 0) {
+            throw new Exception("该身份证已经存在");
+        }
         sysEmployee.setStatus(SysEnum.StatusEnum.STATUS_NORMAL.getCode());
         this.insertUseGeneratedKeys(sysEmployee);
         // 同时添加数据到用户表中
@@ -173,12 +163,11 @@ public class SysEmployeeServiceImpl extends AbstractService<SysEmployee> impleme
                 this.sysEmployeeJobService.updateByPrimaryKeySelective(sysEmployeeJob);
             }
         }
-
-
     }
 
     /**
      * 修改
+     *
      * @param sysEmployeeResponse
      */
     @Override
@@ -201,7 +190,7 @@ public class SysEmployeeServiceImpl extends AbstractService<SysEmployee> impleme
         }
 
         Condition condition = new Condition(SysEmployeeCase.class);
-        condition.createCriteria().andEqualTo("employeeId", sysEmployeeId).andEqualTo("status",SysEnum.StatusEnum.STATUS_NORMAL.getCode());
+        condition.createCriteria().andEqualTo("employeeId", sysEmployeeId).andEqualTo("status", SysEnum.StatusEnum.STATUS_NORMAL.getCode());
         List<SysEmployeeCase> sysEmployeeCases = this.sysEmployeeCaseService.selectByCondition(condition);
         if (sysEmployeeCases != null && sysEmployeeCases.size() > 0) {
             for (SysEmployeeCase sysEmployeeCase : sysEmployeeCases) {
@@ -219,7 +208,7 @@ public class SysEmployeeServiceImpl extends AbstractService<SysEmployee> impleme
         }
 
         Condition condition1 = new Condition(SysEmployeeDisease.class);
-        condition1.createCriteria().andEqualTo("employeeId", sysEmployeeId).andEqualTo("status",SysEnum.StatusEnum.STATUS_NORMAL.getCode());
+        condition1.createCriteria().andEqualTo("employeeId", sysEmployeeId).andEqualTo("status", SysEnum.StatusEnum.STATUS_NORMAL.getCode());
         List<SysEmployeeDisease> sysEmployeeDiseases = this.sysEmployeeDiseaseService.selectByCondition(condition1);
         if (sysEmployeeDiseases != null && sysEmployeeDiseases.size() > 0) {
             for (SysEmployeeDisease sysEmployeeDisease : sysEmployeeDiseases) {
@@ -237,7 +226,7 @@ public class SysEmployeeServiceImpl extends AbstractService<SysEmployee> impleme
         }
 
         Condition condition2 = new Condition(SysEmployeeJob.class);
-        condition2.createCriteria().andEqualTo("employeeId", sysEmployeeId).andEqualTo("status",SysEnum.StatusEnum.STATUS_NORMAL.getCode());
+        condition2.createCriteria().andEqualTo("employeeId", sysEmployeeId).andEqualTo("status", SysEnum.StatusEnum.STATUS_NORMAL.getCode());
         List<SysEmployeeJob> sysEmployeeJobs = this.sysEmployeeJobService.selectByCondition(condition1);
         if (sysEmployeeJobs != null && sysEmployeeJobs.size() > 0) {
             for (SysEmployeeJob sysEmployeeJob : sysEmployeeJobs) {
@@ -264,27 +253,182 @@ public class SysEmployeeServiceImpl extends AbstractService<SysEmployee> impleme
         if (officeId != null) {
             sysCompanyOffice = this.sysCompanyOfficeService.selectByPrimaryKey(officeId);
             sysEmployeeResponse.setSysCompanyOffice(sysCompanyOffice);
-        }else{
+        } else {
             sysEmployeeResponse.setSysCompanyOffice(sysCompanyOffice);
         }
         sysEmployeeResponse.setSysEmployee(sysEmployee);
 
         Condition condition = new Condition(SysEmployeeCase.class);
-        condition.createCriteria().andEqualTo("employeeId", id).andEqualTo("status",SysEnum.StatusEnum.STATUS_NORMAL.getCode());
+        condition.createCriteria().andEqualTo("employeeId", id).andEqualTo("status", SysEnum.StatusEnum.STATUS_NORMAL.getCode());
         List<SysEmployeeCase> sysEmployeeCases = this.sysEmployeeCaseService.selectByCondition(condition);
         sysEmployeeResponse.setSysEmployeeCaseList(sysEmployeeCases);
 
         Condition condition1 = new Condition(SysEmployeeDisease.class);
-        condition1.createCriteria().andEqualTo("employeeId", id).andEqualTo("status",SysEnum.StatusEnum.STATUS_NORMAL.getCode());
+        condition1.createCriteria().andEqualTo("employeeId", id).andEqualTo("status", SysEnum.StatusEnum.STATUS_NORMAL.getCode());
         List<SysEmployeeDisease> sysEmployeeDiseases = this.sysEmployeeDiseaseService.selectByCondition(condition1);
         sysEmployeeResponse.setSysEmployeeDiseaseList(sysEmployeeDiseases);
 
         Condition condition2 = new Condition(SysEmployeeJob.class);
-        condition2.createCriteria().andEqualTo("employeeId", id).andEqualTo("status",SysEnum.StatusEnum.STATUS_NORMAL.getCode());
+        condition2.createCriteria().andEqualTo("employeeId", id).andEqualTo("status", SysEnum.StatusEnum.STATUS_NORMAL.getCode());
         List<SysEmployeeJob> sysEmployeeJobs = this.sysEmployeeJobService.selectByCondition(condition1);
         sysEmployeeResponse.setSysEmployeeJobList(sysEmployeeJobs);
         return sysEmployeeResponse;
     }
 
+    @Override
+    public void saveEmployeeExcel(Workbook workbook) throws Exception {
+        Workbook wb = null;
+        Sheet sheet = null;
+        Row row = null;
+        List<Map<String, Object>> list = null;
+        Object cellData = null;
+
+        String columns[] = new String[50];
+        Class rese = SysEmployeeExcel.class;
+        Field[] field = rese.getDeclaredFields(); //获取字段类型，返回 Field 对象的一个数组，这些对象反映此 Class 对象所表示的类或接口所声明的所有字段。
+        int n = 0;
+        for (int i = 0; i < field.length; i++) {
+            Field field1 = field[i];
+            if (field1.isAnnotationPresent(ExcelImport.class)) {
+                columns[n] = field[i].getName();
+                n += 1;
+            }
+        }
+        wb = workbook;
+
+        if (wb != null) {
+            //用来存放表中数据
+            list = new ArrayList<>();
+            //获取第一个sheet
+            sheet = wb.getSheetAt(0);
+            //获取最大行数
+            int rownum = sheet.getPhysicalNumberOfRows();
+            //获取第一行
+            row = sheet.getRow(0);
+            //获取最大列数
+            int colnum = row.getPhysicalNumberOfCells();
+
+            for (int i = 1; i < rownum; i++) {
+                Map<String, Object> map = new LinkedHashMap<>();
+                row = sheet.getRow(i);
+                if (row != null) {
+                    for (int j = 0; j < colnum; j++) {
+                        cellData = getCellFormatValue(row.getCell(j));
+                        map.put(columns[j], cellData);
+                    }
+                } else {
+                    break;
+                }
+                list.add(map);
+                for (Map.Entry<String, Object> entry : map.entrySet()) {
+                    System.out.print(entry.getKey() + ":" + entry.getValue() + ",");
+                }
+            }
+        }
+
+        List<SysEmployeeExcel> list1 = new LinkedList<>();
+        //遍历解析出来的list
+        for (Map<String, Object> map : list) {
+
+            try {
+                SysEmployeeExcel sysEmployeeExcel = new SysEmployeeExcel();
+
+                Field[] fields = sysEmployeeExcel.getClass().getDeclaredFields();
+                for (Field field1 : fields) {
+                    if (field1.isAnnotationPresent(ExcelImport.class)) {
+                        int mod = field1.getModifiers();
+                        if (Modifier.isStatic(mod) || Modifier.isFinal(mod)) {
+                            continue;
+                        }
+                        field1.setAccessible(true);
+                        String type = field1.getAnnotatedType().getType().getTypeName();
+
+                        switch (type) {
+                            case "java.lang.String":
+                                field1.set(sysEmployeeExcel, map.get(field1.getName()));
+                                break;
+                            case "java.lang.Integer":
+                                field1.set(sysEmployeeExcel, Double.valueOf((String)map.get(field1.getName())).intValue());
+                                break;
+                            case "java.util.Date":
+                                SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+                                field1.set(sysEmployeeExcel, sdf.parse((String)map.get(field1.getName())));
+                                break;
+                            default:
+                                break;
+                        }
+                    }
+                }
+                list1.add(sysEmployeeExcel);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+        this.sysEmployeeExcelService.insertList(list1);
+        this.sysEmployeeExcelService.updateCheckSysEmployeeExcel();
+        List<SysEmployeeExcel> employeeExcelList = this.sysEmployeeExcelService.selectAll();
+        if (employeeExcelList != null && !employeeExcelList.isEmpty()) {
+            for (SysEmployeeExcel sysEmployeeExcel : employeeExcelList) {
+                SysEmployee sysEmployee = new SysEmployee();
+                sysEmployee.setOfficeId(sysEmployeeExcel.getWorkTypeId());
+                sysEmployee.setEmpName(sysEmployeeExcel.getEmpName());
+                sysEmployee.setEmpSex(sysEmployeeExcel.getEmpSex());
+                sysEmployee.setEmpNative(sysEmployeeExcel.getEmpNative());
+                sysEmployee.setEmpMarriage(sysEmployeeExcel.getEmpMarriage());
+                sysEmployee.setEmpEducation(sysEmployeeExcel.getEmpEducation());
+                sysEmployee.setEmpHobby(sysEmployeeExcel.getEmpHobby());
+                sysEmployee.setContactTime(sysEmployeeExcel.getContactTime());
+                sysEmployee.setEmpWorkDate(sysEmployeeExcel.getEmpWorkDate());
+                sysEmployee.setStatus(SysEnum.StatusEnum.STATUS_NORMAL.getCode());
+                sysEmployee.setEmpIdentityNumber(sysEmployeeExcel.getEmpIdentityNumber());
+                this.insertUseGeneratedKeys(sysEmployee);
+
+                SysUser sysUser = new SysUser();
+                sysUser.setUserName(sysEmployee.getEmpName());
+                sysUser.setSex(sysEmployee.getEmpSex());
+                sysUser.setMgrType(SysEnum.MgrTypeEnum.MGR_TYPE_NOT.getCode());
+                sysUser.setLoginCode(sysEmployee.getEmpIdentityNumber());
+                sysUser.setPassword(Md5Utils.md5("111111"));
+                sysUser.setStatus(SysEnum.StatusEnum.STATUS_NORMAL.getCode());
+                sysUser.setEmpId(sysEmployee.getId());
+                sysUser.setAvatar(sysEmployee.getImageName());
+                this.sysUserService.insertUseGeneratedKeys(sysUser);
+            }
+        }
+
+        this.sysEmployeeExcelService.updateClearSysEmployeeExcel();
+    }
+
+    private Object getCellFormatValue(Cell cell) {
+        Object cellValue = null;
+        if (cell != null) {
+            //判断cell类型
+            switch (cell.getCellTypeEnum()) {
+                case NUMERIC:
+                    cellValue = String.valueOf(cell.getNumericCellValue());
+                    break;
+                case FORMULA:
+                    //判断cell是否为日期格式
+                    if (DateUtil.isCellDateFormatted(cell)) {
+                        //转换为日期格式YYYY-mm-dd
+                        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+                        cellValue = sdf.format(cell.getDateCellValue());
+                    } else {
+                        //数字
+                        cellValue = String.valueOf(cell.getNumericCellValue());
+                    }
+                    break;
+                case STRING:
+                    cellValue = cell.getRichStringCellValue().getString();
+                    break;
+
+                default:
+                    cellValue = "";
+            }
+        } else {
+            cellValue = "";
+        }
+        return cellValue;
+    }
 
 }

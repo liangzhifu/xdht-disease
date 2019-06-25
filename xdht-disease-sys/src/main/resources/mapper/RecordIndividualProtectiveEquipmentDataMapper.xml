@@ -5,7 +5,7 @@
     <!--
       WARNING - @mbg.generated
     -->
-    <result column="id" jdbcType="BIGINT" property="id" />
+    <id column="id" jdbcType="BIGINT" property="id" />
     <result column="company_office_id" jdbcType="BIGINT" property="companyOfficeId" />
     <result column="post_id" jdbcType="BIGINT" property="postId" />
     <result column="hazard_factors" jdbcType="VARCHAR" property="hazardFactors" />
@@ -14,6 +14,14 @@
     <result column="number" jdbcType="BIGINT" property="number" />
     <result column="usaged" jdbcType="VARCHAR" property="usaged" />
     <result column="relation_id" jdbcType="BIGINT" property="relationId" />
+    <result column="earplugs_model" jdbcType="VARCHAR" property="earplugsModel" />
+    <result column="earplugs_nrr" jdbcType="VARCHAR" property="earplugsNrr" />
+    <result column="earplugs_snr" jdbcType="VARCHAR" property="earplugsSnr" />
+    <result column="earmuff_model" jdbcType="VARCHAR" property="earmuffModel" />
+    <result column="earmuff_nrr" jdbcType="VARCHAR" property="earmuffNrr" />
+    <result column="earmuff_snr" jdbcType="VARCHAR" property="earmuffSnr" />
+    <result column="allocation_situation" jdbcType="VARCHAR" property="allocationSituation" />
+    <result column="usage_situation" jdbcType="VARCHAR" property="usageSituation" />
   </resultMap>
 
   <select id="selectRecordDataByIndividualProtective" parameterType="java.lang.Long" resultType="java.util.HashMap">
@@ -25,7 +33,15 @@
     riped.technical_parameter as technicalParameter,
     riped.number as number,
     riped.usaged as usaged,
-    sco.`office_name` AS officeName
+    sco.`office_name` AS companyOfficeName,
+    riped.earplugs_model as earplugsModel,
+    riped.earplugs_nrr as earplugsNrr,
+    riped.earplugs_snr as earplugsSnr,
+    riped.earmuff_model as earmuffModel,
+    riped.earmuff_nrr as earmuffNrr,
+    riped.earmuff_snr as earmuffSnr,
+    riped.allocation_situation as allocationSituation,
+    riped.usage_situation as usageSituation
     FROM `record_individual_protective_equipment_data` riped, sys_company_office sco
     WHERE riped.`company_office_id` = sco.`id`
     AND riped.`relation_id` = #{id, jdbcType=BIGINT}

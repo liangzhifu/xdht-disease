@@ -19,10 +19,13 @@ import java.util.List;
 public class SysQuestionnaireServiceImpl extends AbstractService<SysQuestionnaire> implements SysQuestionnaireService{
 
     @Override
-    public List<SysQuestionnaire> queryList() {
+    public List<SysQuestionnaire> queryList( ) {
         Condition condition = new Condition(SysQuestionnaire.class);
         condition.createCriteria() .andEqualTo("status", SysEnum.StatusEnum.STATUS_NORMAL.getCode());
         return this.selectByCondition(condition);
     }
-
+    @Override
+    public SysQuestionnaire selectOne(Long id){
+      return this.selectByPrimaryKey(id);
+    }
 }
